@@ -1,0 +1,5 @@
+class Molecule {
+    double velocity;
+    
+
+};
