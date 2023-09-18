@@ -17,6 +17,8 @@ struct Vect {
 			  x (x),
 					    y (y)
 	{}
+	
+	Vect() {}
 };
 
 Vect  operator  +  (const Vect &a, const Vect &b);

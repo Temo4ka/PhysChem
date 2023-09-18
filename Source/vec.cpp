@@ -1,5 +1,5 @@
-#include "config.h"
-#include "vec.h"
+#include "../Headers/Config.h"
+#include "../Headers/Vec.h"
 
 Vect& Vect:: operator += (const Vect& other) {
 	this -> x += other.x;

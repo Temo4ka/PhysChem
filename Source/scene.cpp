@@ -1,6 +1,9 @@
 #include "../Headers/Scene.h"
 
-Molecule::Molecule (const Vect& startPos, const int rangeX, const int rangeY, const double weight) {
+// #define DEBUG_
+// #include "../Headers/Log.h"
+
+Molecule::Molecule (const Vect startPos, const int rangeX, const int rangeY, const double weight) {
 
     int r1 = rand() % rangeX;
     int r2 = rand() % rangeY;
@@ -26,8 +29,9 @@ Piston::Piston (const Vect &startPos, const double w, const double h, const doub
     return;
 }
 
-int Piston::Move (const double deltaTime) {
+int Piston::move (const double deltaTime) {
     catchNullptr(this, EXIT_FAILURE);
+
 
     sf::Vector2f pos = this -> pistonShape.getPosition();
     pos.y += this -> velocity * deltaTime;
@@ -71,6 +75,33 @@ int Molecule::absorb(Molecule *molecule) {
     this -> weight += molecule->getWeight();
 
     delete molecule;
+
+    return EXIT_SUCCESS;
+}
+
+int separateScreen(sf::RenderWindow *window, sf::Color color) {
+    catchNullptr(window, EXIT_FAILURE);
+
+    sf::RectangleShape block;
+    block.setPosition(WINDOW_WIDTH / 2 - 2, 0);
+    block.setSize(sf::Vector2f(5, WINDOW_HEIGHT));
+    block.setFillColor(color);
+
+    window -> draw(block);
+
+    block.setPosition(0, WINDOW_HEIGHT / 3 - 2);
+    block.setSize(sf::Vector2f(WINDOW_WIDTH / 2, 5));
+    block.setFillColor(color);
+
+    window -> draw(block);
+
+    return EXIT_SUCCESS;
+}
+
+int Piston::draw(sf::RenderWindow *window) {
+    catchNullptr(window, EXIT_FAILURE);
+
+    window -> draw(this -> pistonShape);
 
     return EXIT_SUCCESS;
 }

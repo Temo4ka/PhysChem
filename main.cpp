@@ -1,4 +1,5 @@
-#include "./Headers/Objects.h"
+#include "./Headers/Scene.h"
+
 
 //-----------------------------------------------------------
 //                      Screen Sheme                        
@@ -18,6 +19,10 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Reaction");
 
+    Piston piston(Vect(PISTON_X, 0), PISTON_WIDTH, PISTON_HEIGHT, PISTON_VELOCITY);
+    
+    sf::Clock clock;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -28,8 +33,16 @@ int main()
         }
 
         window.clear();
+
+        separateScreen(&window);
+        piston.draw(&window);
+
+        piston.move(clock.getElapsedTime().asSeconds());
+        clock.restart();
+
         window.display();
     }
+
 
     return EXIT_SUCCESS;
 }
