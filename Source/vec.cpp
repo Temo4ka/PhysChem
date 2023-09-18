@@ -1,50 +1,50 @@
 #include "config.h"
 #include "vec.h"
 
-myVec& myVec:: operator += (const myVec& other) {
+Vect& Vect:: operator += (const Vect& other) {
 	this -> x += other.x;
 	this -> y += other.y;
 
 	return *this;
 }
 
-myVec& myVec:: operator *= (const myVec& other) {
+Vect& Vect:: operator *= (const Vect& other) {
 	this -> x *= other.x;
 	this -> y *= other.y;
 
 	return *this;
 }
 
-myVec& myVec:: operator -= (const myVec& other) {
+Vect& Vect:: operator -= (const Vect& other) {
 	this -> x -= other.x;
 	this -> y -= other.y;
 	
 	return *this;
 }
 
-myVec operator + (const myVec& a, const myVec& b) {
-	myVec res = a;
+Vect operator + (const Vect& a, const Vect& b) {
+	Vect res = a;
 	res += b;
 	
 	return res;
 }
 
-myVec operator - (const myVec& a, const myVec& b) {
-	myVec res = a;
+Vect operator - (const Vect& a, const Vect& b) {
+	Vect res = a;
 	res -= b;
 	
 	return res;
 }
 
-myVec operator * (const myVec& a, const myVec& b) {
-	myVec res = a;
+Vect operator * (const Vect& a, const Vect& b) {
+	Vect res = a;
 	res *= b;
 	
 	return res;
 }
 
-myVec operator ^ (const myVec& a, const double& angle) {
-	myVec res = a;
+Vect operator ^ (const Vect& a, const double& angle) {
+	Vect res = a;
 	
 	res.x = a.x * cos(angle) - a.y * sin(angle);
 	res.y = a.x * sin(angle) + a.y * cos(angle);
@@ -52,26 +52,26 @@ myVec operator ^ (const myVec& a, const double& angle) {
 	return res;
 }
 
-myVec operator && (const myVec& a, const myVec& b) {
-	myVec *res = (myVec *)((size_t)(&a) & (size_t)(&b));
+Vect operator && (const Vect& a, const Vect& b) {
+	Vect *res = (Vect *)((size_t)(&a) & (size_t)(&b));
 	
 	return *res;
 }
 
-double operator , (const myVec& a, const myVec& b) {
+double operator , (const Vect& a, const Vect& b) {
 	return a.x * b.x + a.y * b.y;
 }
 
-myVec myVec::operator - () {
+Vect Vect::operator - () {
 	this -> x *= -1;
 	this -> y *= -1;
 
 	return *this;
 }
 
-void shoot(double bullet, myVec *victim);
+void shoot(double bullet, Vect *victim);
 
-myVec myVec::operator ~ () {
+Vect Vect::operator ~ () {
 	int bullet = (rand() % 6);
 	
 	shoot(bullet, this);
@@ -79,7 +79,7 @@ myVec myVec::operator ~ () {
 	return *this;
 }
 
-void shoot(double bullet, myVec *victim) {
+void shoot(double bullet, Vect *victim) {
 	if (bullet == 0) fprintf(stderr, "Headshot!!!\n");
 
 	victim -> x /= bullet;

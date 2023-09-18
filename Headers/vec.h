@@ -2,26 +2,26 @@
 #include <cmath>
 #include <cstdio>
 
-struct myVec {
+struct Vect {
 	double x;
 	double y;
 
-	myVec& operator  += (const myVec &other);
-	myVec& operator  -= (const myVec &other);
-	myVec& operator  *= (const myVec &other);
+	Vect& operator  += (const Vect &other);
+	Vect& operator  -= (const Vect &other);
+	Vect& operator  *= (const Vect &other);
 	
-	myVec operator - ();
-	myVec operator ~ (); // Russkaya ruletka
+	Vect operator - ();
+	Vect operator ~ (); // Russkaya ruletka
 
-	myVec(double x, double y):
+	Vect(double x, double y):
 			  x (x),
 					    y (y)
 	{}
 };
 
-myVec  operator  +  (const myVec &a, const myVec &b);
-myVec  operator  -  (const myVec &a, const myVec &b);
-double operator  ,  (const myVec &a, const myVec &b);
-myVec  operator  *  (const myVec &a, const myVec &b);
-myVec  operator  ^  (const myVec &a, const double &angle);
-myVec  operator  && (const myVec &a, const myVec &b);
+Vect  operator  +  (const Vect &a, const Vect &b);
+Vect  operator  -  (const Vect &a, const Vect &b);
+double operator  ,  (const Vect &a, const Vect &b);
+Vect  operator  *  (const Vect &a, const Vect &b);
+Vect  operator  ^  (const Vect &a, const double &angle);
+Vect  operator  && (const Vect &a, const Vect &b);
