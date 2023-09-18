@@ -13,14 +13,23 @@ class Molecule {
 
         ~Molecule() {}
 
+        double  getWeight()  { return this ->  weight;  };
+        double getVelocity() { return this -> velocity; };
+
 };
 
-class TypeA : Molecule {
+class TypeA : public Molecule {
 
+    public:
+        int collide(TypeA *a);
 };
 
-class TypeB : Molecule {
+class TypeB : public Molecule {
+    public:
 
+        overload collide;
+        int collide(TypeA *a);
+        int collide(TypeB *b);
 };
 
 class Button {
@@ -51,4 +60,4 @@ class Piston {
         ~Piston() {};
 
         int Move(const double deltaTime);
-}
+};

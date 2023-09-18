@@ -3,7 +3,9 @@
 const signed WINDOW_WIDTH  = 1440;
 const signed WINDOW_HEIGHT = 720;
 
-const signed MAX_START_VELOCITY  = 20;
+const double MAX_START_VELOCITY  = 20;
+
+const double REACTION_CONST  = 4;
 
 #define catchNullptr(POINTER, RETURN_IN_CASE_OF_FAILURE) {                                                         \
     if ((POINTER) == nullptr) {                                                                                     \

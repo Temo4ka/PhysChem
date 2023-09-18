@@ -1,4 +1,4 @@
-#include "../Headers/Objects.h"
+#include "../Headers/Scene.h"
 
 Molecule::Molecule (const Vect& startPos, const int rangeX, const int rangeY, const double weight) {
 
@@ -33,6 +33,44 @@ int Piston::Move (const double deltaTime) {
     pos.y += this -> velocity * deltaTime;
 
     this -> pistonShape.setPosition(pos.x, pos.y);
+
+    return EXIT_SUCCESS;
+}
+
+// int TypeA::collide(TypeA *a) {
+//     catchNulptr(a, EXIT_FAILURE);
+
+//     if (SQR(this -> getVelocity()) * this -> getWeight + SQR(a -> getVelocity()) * a -> getWeight() > REACTION_CONST)
+//         this -> absorb(a);
+
+//     return EXIT_SUCCESS;
+// }
+
+// int TypeB::collide(TypeA *a) {
+//     catchNulptr(a, EXIT_FAILURE);
+
+//     if (SQR(this -> getVelocity()) * this -> getWeight + SQR(a -> getVelocity()) * a -> getWeight() > REACTION_CONST)
+//         this -> absorb(a);
+
+//     return EXIT_SUCCESS;
+// }
+
+// int TypeB::collide(TypeB *b) {
+//     catchNulptr(a, EXIT_FAILURE);
+
+//     if (SQR(this -> getVelocity()) * this -> getWeight + SQR(a -> getVelocity()) * a -> getWeight() > REACTION_CONST)
+//         this -> absorb(a);
+
+//     return EXIT_SUCCESS;
+// }
+
+
+int Molecule::absorb(Molecule *molecule) {
+    catchNullptr(molecule, EXIT_FAILURE);
+
+    this -> weight += molecule->getWeight();
+
+    delete molecule;
 
     return EXIT_SUCCESS;
 }

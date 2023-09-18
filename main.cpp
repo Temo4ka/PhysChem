@@ -1,5 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include "./Headers/Config.h"
+#include "./Headers/Objects.h"
 
 //-----------------------------------------------------------
 //                      Screen Sheme                        
@@ -32,5 +31,5 @@ int main()
         window.display();
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
