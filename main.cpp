@@ -21,9 +21,10 @@ int main()
 
     Piston piston(Vect(PISTON_X, PISTON_Y), PISTON_WIDTH, PISTON_HEIGHT, PISTON_VELOCITY);
 
-    TypeA FirstMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 12);
-
+    TypeA  FirstMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 12);
     TypeB SecondMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 24);
+
+    MoleculeManager manager();
 
     sf::Clock clock;
 

@@ -62,7 +62,7 @@ class TypeB : public Molecule {
 
         int draw(sf::Image *image);
 
-        double getLen() { return len; }
+        double getLen() { return len / 2; }
 
         TypeB(const Vect startPos, const double weight, const double len):
             Molecule(startPos, weight),
@@ -86,6 +86,9 @@ class MoleculeManager {
         int eraseMolecule(const int ind);
 
         int update();
+
+        int createTypeA(const Piston *piston);
+        int createTypeB(const Piston *piston);
 
 };
 

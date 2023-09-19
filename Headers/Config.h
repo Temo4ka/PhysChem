@@ -28,6 +28,9 @@ const signed RANGE_Y = 120;
 
 const signed MAX_MOLEC_NUM = 120;
 
+const signed BASE_TYPEA_RADIUS = 12;
+const signed BASE_TYPEB_RADIUS = 24;
+
 #define catchNullptr(POINTER, RETURN_IN_CASE_OF_FAILURE) {                                                         \
     if ((POINTER) == nullptr) {                                                                                     \
         fprintf(stderr, "%s pointer at %s at %s(%d) is NULL\n", #POINTER, __PRETTY_FUNCTION__, __FILE__, __LINE__);	 \

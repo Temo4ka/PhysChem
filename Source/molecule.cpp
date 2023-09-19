@@ -121,7 +121,7 @@ int TypeA::collide(TypeA *a, MoleculeManager *manager) {
                                                                                                dist < this -> radius + a -> getRadius())
     {
 
-        TypeB res = new TypeB(Vect(0, 0), a -> getWeight() + this -> weight, 20);
+        TypeB res = new TypeB(Vect(0, 0), a -> getWeight() + this -> weight, BASE_TYPEB_RADIUS);
         res.setPosition(a -> getPosition() + distV * 0.5);
 
         manager -> addMolecule(&res);
@@ -148,7 +148,7 @@ int TypeA::collide(TypeB *b, MoleculeManager *manager) {
                                                                                                dist < this -> radius + b -> getLen())
     {
 
-        TypeB res = new TypeB(Vect(0, 0), b -> getWeight() + this -> weight, 20);
+        TypeB res = new TypeB(Vect(0, 0), b -> getWeight() + this -> weight, BASE_TYPEB_RADIUS);
         res.setPosition(b -> getPosition());
 
         manager -> addMolecule(&res);
@@ -178,16 +178,16 @@ int TypeB::collide(TypeB *b, MoleculeManager *manager) {
     int dist = (distV.x > distV.y) ? distV.y : disV.x;
 
     if (SQR(this -> getVelocity()) * this -> getWeight + SQR(b -> getVelocity()) * b -> getWeight() > REACTION_CONST &&
-                                                                                               dist < this -> len + b -> getLen())
+                                                                                               dist < this -> len / 2 + b -> getLen())
     {
         
         for (int curMolecule = 0; curMolecule < b -> getWeight() + this -> weight; curMolecule++) {
-            TypeA newMolecule = new TypeA(b -> getPosition() + distV * 0.5, 1, 12);
+            TypeA newMolecule = new TypeA(b -> getPosition() + distV * 0.5, 1, BASE_TYPEA_RADIUS);
             manager -> addMolecule(&newMolecule);
         }
 
         return COLLISION;
-    } else if (dist < this -> len + b -> getLen()){
+    } else if (dist < this -> len / 2 + b -> getLen()){
         this -> reverseDir();
            b -> reverseDir();
     }
@@ -206,6 +206,9 @@ MoleculeManager::MoleculeManager() {
 }
 
 MoleculeManager::~MoleculeManager() {
+    for (int cur = 0; cur < MAX_MOLEC_NUM; cur++)
+        delete this -> array[cur];
+        
     delete[] this -> array;
     this -> size = -1;
 
@@ -254,4 +257,13 @@ int MoleculeManager::update() {
             }
 
         }
+}
+
+int MoleculeManager::createTypeA(const Piston *piston) {
+    catchNullptr(piston, EXIT_FAILURE);
+    
+    TypeA newMolecule = new Molecule(Vect(LEFT_WALL, piston -> getPosition()), 1, BASE_TYPEA_RADIUS);
+    this -> addMolecule(&newMolecule);
+
+    return EXIT_SUCCESS;
 }
