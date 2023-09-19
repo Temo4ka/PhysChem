@@ -21,10 +21,15 @@ int main()
 
     Piston piston(Vect(PISTON_X, PISTON_Y), PISTON_WIDTH, PISTON_HEIGHT, PISTON_VELOCITY);
 
-    TypeA  FirstMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 12);
-    TypeB SecondMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 24);
+    // TypeA  FirstMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 12);
+    // TypeB SecondMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 24);
 
     MoleculeManager manager();
+
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeB(&piston);
+    manager.createTypeB(&piston);
 
     sf::Clock clock;
 
@@ -47,13 +52,12 @@ int main()
         clock.restart();
 
         piston.move(time);
-        FirstMolecule.move(time, piston.getPosition());
-        SecondMolecule.move(time, piston.getPosition());
+        manager.update(time, piston.getPosition());
 
         window.clear();
 
-            FirstMolecule.draw(&canvas);
-            SecondMolecule.draw(&canvas);
+            manager.draw(&canvas);
+
             canvasTexture.loadFromImage(canvas);
              canvasSprite.setTexture(canvasTexture);
 

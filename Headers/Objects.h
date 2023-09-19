@@ -79,17 +79,18 @@ class MoleculeManager {
         MoleculeManager();
         ~MoleculeManager();
 
-        int addMolecule(const Molecule *newMolecule);
-
-        int swap(Molecule *a, Molecule *b);
-
-        int eraseMolecule(const int ind);
-
-        int update();
-
         int createTypeA(const Piston *piston);
         int createTypeB(const Piston *piston);
 
+        int addMolecule(const Molecule *newMolecule);
+
+        int eraseMolecule(const int ind);
+
+        int swap(Molecule *a, Molecule *b);
+
+        int update(const double deltaTime, const double pistonY);
+
+        int  draw (sf::Image *image);
 };
 
 class Button {

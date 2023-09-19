@@ -208,11 +208,29 @@ MoleculeManager::MoleculeManager() {
 MoleculeManager::~MoleculeManager() {
     for (int cur = 0; cur < MAX_MOLEC_NUM; cur++)
         delete this -> array[cur];
-        
+
     delete[] this -> array;
     this -> size = -1;
 
     return;
+}
+
+int MoleculeManager::createTypeA(const Piston *piston) {
+    catchNullptr(piston, EXIT_FAILURE);
+    
+    TypeA newMolecule = new Molecule(Vect(LEFT_WALL, piston -> getPosition()), 1, BASE_TYPEA_RADIUS);
+    this -> addMolecule(&newMolecule);
+
+    return EXIT_SUCCESS;
+}
+
+int MoleculeManager::createTypeB(const Piston *piston) {
+    catchNullptr(piston, EXIT_FAILURE);
+    
+    TypeB newMolecule = new Molecule(Vect(LEFT_WALL, piston -> getPosition()), 1, BASE_TYPEB_RADIUS);
+    this -> addMolecule(&newMolecule);
+
+    return EXIT_SUCCESS;
 }
 
 int MoleculeManager::addMolecule(const Molecule *molecule) {
@@ -245,7 +263,10 @@ int MoleculeManager::eraseMolecule(const int ind) {
     return EXIT_SUCCESS;
 }
 
-int MoleculeManager::update() {
+int MoleculeManager::update(const double deltaTime, const double pistonY) {
+    for (int curMolecule = 0; curMolecule < this -> size; curMolecule++)
+        (this -> array[curMolecule]) -> move(deltaTime, pistonY);
+    
     for (int firstPointer = 0; firstPointer < this -> size; firstPointer++)
         for (int secondPointer = firstPointer + 1; secondPointer < this -> size; secondPointer++) {
             Molecule *a = this -> array[firstPointer];
@@ -257,13 +278,15 @@ int MoleculeManager::update() {
             }
 
         }
+    
+    return EXIT_SUCCESS;
 }
 
-int MoleculeManager::createTypeA(const Piston *piston) {
-    catchNullptr(piston, EXIT_FAILURE);
-    
-    TypeA newMolecule = new Molecule(Vect(LEFT_WALL, piston -> getPosition()), 1, BASE_TYPEA_RADIUS);
-    this -> addMolecule(&newMolecule);
+int MoleculeManager::draw(sf::Image *image) {
+    catchNullptr(image, EXIT_FAILURE);
+
+    for (int curMolecule = 0; curMolecule < this -> size; curMolecule++)
+        (this -> array[curMolecule]) -> draw(image);
 
     return EXIT_SUCCESS;
 }
