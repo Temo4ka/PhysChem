@@ -31,13 +31,16 @@ class Molecule {
 
         int reverseDir()     { this -> dir = this -> dir * -1; }
 
+        virtual int collide() {}
+
 };
 
 class TypeA : public Molecule {
     double radius;
 
     public:
-        int collide(TypeA *a);
+        int collide(TypeA *a, MoleculeManager *manager);
+        int collide(TypeB *a, MoleculeManager *manager);
 
         int draw(sf::Image *image);
 
@@ -54,8 +57,8 @@ class TypeB : public Molecule {
     
     public:
 
-        int collide(TypeA *a);
-        int collide(TypeB *b);
+        int collide(TypeA *a, MoleculeManager *manager);
+        int collide(TypeB *b, MoleculeManager *manager);
 
         int draw(sf::Image *image);
 
@@ -81,6 +84,8 @@ class MoleculeManager {
         int swap(Molecule *a, Molecule *b);
 
         int eraseMolecule(const int ind);
+
+        int update();
 
 };
 

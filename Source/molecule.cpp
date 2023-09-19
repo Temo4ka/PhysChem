@@ -106,6 +106,9 @@ int TypeB::draw(sf::Image *image) {
     return EXIT_SUCCESS;
 }
 
+
+//------------------------------------CRINGE_MOMENT--------------------------------------------------------------------------------------
+
 int TypeA::collide(TypeA *a, MoleculeManager *manager) {
     catchNulptr(   a   , NO_COLLISION);
     catchNulptr(manager, NO_COLLISION);
@@ -193,7 +196,7 @@ int TypeB::collide(TypeB *b, MoleculeManager *manager) {
     return NO_COLLISION;
 }
 
-//-----------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------
 
 MoleculeManager::MoleculeManager() {
     this -> size = 0;
@@ -237,4 +240,18 @@ int MoleculeManager::eraseMolecule(const int ind) {
     this -> size--;
 
     return EXIT_SUCCESS;
+}
+
+int MoleculeManager::update() {
+    for (int firstPointer = 0; firstPointer < this -> size; firstPointer++)
+        for (int secondPointer = firstPointer + 1; secondPointer < this -> size; secondPointer++) {
+            Molecule *a = this -> array[firstPointer];
+            Molecule *b = this -> array[secondPointer];
+
+            if (a->collide(b, this)) {
+                this -> eraseMolecule(secondPointer);               //  The order of the pointers erased is
+                this -> eraseMolecule(firstPointer);                //             ESSENTIAL
+            }
+
+        }
 }
