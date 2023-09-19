@@ -3,7 +3,7 @@
 const signed WINDOW_WIDTH  = 1440;
 const signed WINDOW_HEIGHT = 720;
 
-const int MAX_START_VELOCITY  = 20;
+const int MAX_START_VELOCITY  = 1000;
 
 const double REACTION_CONST  = 4;
 
@@ -11,9 +11,22 @@ const double  PISTON_WIDTH = WINDOW_WIDTH / 2 - 2;
 
 const double    PISTON_X   = WINDOW_WIDTH / 2 + 3;
 
+const double    PISTON_Y   =          20         ;
+
 const double PISTON_HEIGHT = 30;
 
-const double PISTON_VELOCITY = 80;
+const double PISTON_VELOCITY = 30;
+
+const double PISTON_LIMIT = WINDOW_HEIGHT - 120;
+
+const double LEFT_WALL = WINDOW_WIDTH / 2 + 10;
+
+const double RIGHT_WALL = WINDOW_WIDTH - 5;
+
+const signed RANGE_X = WINDOW_WIDTH / 2 - 4;
+const signed RANGE_Y = 120;
+
+const signed MAX_MOLEC_NUM = 120;
 
 #define catchNullptr(POINTER, RETURN_IN_CASE_OF_FAILURE) {                                                         \
     if ((POINTER) == nullptr) {                                                                                     \

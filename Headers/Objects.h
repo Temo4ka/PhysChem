@@ -1,6 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "Config.h"
-#include "vec.h"
+#include "Vect.h"
+
+enum Collision {
+    NO_COLLISION = 0,
+       COLLISION = 1
+};
 
 class Molecule {
     double velocity;
@@ -9,30 +14,74 @@ class Molecule {
     Vect   position;
 
     public:
-        Molecule (const Vect startPos, const int rangeX, const int rangeY, const double weight);
+        Molecule (const Vect startPos, const double weight);
 
         ~Molecule() {}
 
-        double  getWeight()  { return this ->  weight;  };
-        double getVelocity() { return this -> velocity; };
+        double  getWeight()   { return this ->  weight;  }
+        double getVelocity()  { return this -> velocity; }
+        Vect   getPosition()  { return this -> position; }
+        // Vect   getDirection() { return this ->    dir;   }
+
+        int    setPosition(const Vect newPos);
+
+        int  move(const double deltaTime, const double PistonY);
 
         int absorb(Molecule *molecule);
+
+        int reverseDir()     { this -> dir = this -> dir * -1; }
 
 };
 
 class TypeA : public Molecule {
+    double radius;
 
     public:
-        // int collide(TypeA *a);
-        int draw(sf::RenderWindow *window);
+        int collide(TypeA *a);
+
+        int draw(sf::Image *image);
+
+        double getRadius() { return this -> radius; }
+
+        TypeA(const Vect startPos, const double weight, const double radius):
+            Molecule(startPos, weight),
+            radius (radius)
+        {}
 };
 
 class TypeB : public Molecule {
+    double len;
+    
     public:
 
-        // overload collide;
-        // int collide(TypeA *a);
-        // int collide(TypeB *b);
+        int collide(TypeA *a);
+        int collide(TypeB *b);
+
+        int draw(sf::Image *image);
+
+        double getLen() { return len; }
+
+        TypeB(const Vect startPos, const double weight, const double len):
+            Molecule(startPos, weight),
+            len (len)
+        {}
+};
+
+class MoleculeManager {
+    int size;
+
+    Molecule **array;
+
+    public:
+        MoleculeManager();
+        ~MoleculeManager();
+
+        int addMolecule(const Molecule *newMolecule);
+
+        int swap(Molecule *a, Molecule *b);
+
+        int eraseMolecule(const int ind);
+
 };
 
 class Button {
@@ -65,4 +114,6 @@ class Piston {
         int move(const double deltaTime);
 
         int draw(sf::RenderWindow *window);
+
+        double getPosition();
 };

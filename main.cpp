@@ -19,26 +19,47 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Reaction");
 
-    Piston piston(Vect(PISTON_X, 0), PISTON_WIDTH, PISTON_HEIGHT, PISTON_VELOCITY);
-    
+    Piston piston(Vect(PISTON_X, PISTON_Y), PISTON_WIDTH, PISTON_HEIGHT, PISTON_VELOCITY);
+
+    TypeA FirstMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 12);
+
+    TypeB SecondMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 24);
+
     sf::Clock clock;
 
-    while (window.isOpen())
-    {
+    sf::Image       canvas;
+    sf::Texture canvasTexture;
+    sf::Sprite   canvasSprite;
+    
+
+    while (window.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
 
+        canvas.create(2 * WINDOW_WIDTH, 2 * WINDOW_HEIGHT, sf::Color::Black);
+
+
+        double time = clock.getElapsedTime().asSeconds();
+        clock.restart();
+
+        piston.move(time);
+        FirstMolecule.move(time, piston.getPosition());
+        SecondMolecule.move(time, piston.getPosition());
+
         window.clear();
 
-        separateScreen(&window);
-        piston.draw(&window);
+            FirstMolecule.draw(&canvas);
+            SecondMolecule.draw(&canvas);
+            canvasTexture.loadFromImage(canvas);
+             canvasSprite.setTexture(canvasTexture);
 
-        piston.move(clock.getElapsedTime().asSeconds());
-        clock.restart();
+            window.draw(canvasSprite);
+
+            piston.draw(&window); 
+            separateScreen(&window);
 
         window.display();
     }
