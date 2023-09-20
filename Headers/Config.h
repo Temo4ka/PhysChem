@@ -26,7 +26,8 @@ const double RIGHT_WALL = WINDOW_WIDTH - 5;
 const signed RANGE_X = 50;
 const signed RANGE_Y = 50;
 
-const signed MAX_MOLEC_NUM = 120;
+const signed  MAX_MOLEC_NUM = 120;
+const signed MAX_BUTTON_NUM =  40;
 
 const signed BASE_TYPEA_RADIUS = 12;
 const signed BASE_TYPEB_RADIUS = 24;

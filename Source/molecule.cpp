@@ -1,9 +1,8 @@
-#include "../Headers/Config.h"
 #include "../Headers/Scene.h"
 #include <cmath>
 
-#define DEBUG_
-#include "../Headers/Log.h"
+// #define DEBUG_
+// #include "../Headers/Log.h"
 
 Molecule::Molecule (const Vect startPos, const double weight) {
 
@@ -78,12 +77,11 @@ int TypeA::draw(sf::Image *image) {
     for (double x = x0 - r; x <= x0 + r; x++)
         for (double y = y0 - r; y <= y0 + r; y++) {
             if (SQR(x - x0) + SQR(y - y0) <= SQR(r)) {
-                double k = 1 -  (SQR(x - x0) + SQR(y - y0)) / SQR(r);
+                double k = 1 - (SQR(x - x0) + SQR(y - y0)) / SQR(r);
                 if (k > 1) k = 1;
 
                 image -> setPixel(x, y, sf::Color(k * 255, k * 255, k * 255));
-            }  else 
-                image -> setPixel(x, y, sf::Color::Black);
+            }
         }
 
     return EXIT_SUCCESS;
