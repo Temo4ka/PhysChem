@@ -7,6 +7,13 @@ enum Collision {
        COLLISION = 1
 };
 
+class Molecule;
+class TypeA;
+class TypeB;
+class MoleculeManager;
+
+class Piston;
+
 class Molecule {
     double velocity;
     double  weight ;
@@ -29,9 +36,14 @@ class Molecule {
 
         int absorb(Molecule *molecule);
 
-        int reverseDir()     { this -> dir = this -> dir * -1; }
+        void reverseDir()     { this -> dir = this -> dir * -1; }
 
-        virtual int collide() {}
+        virtual int collide (Molecule *m, MoleculeManager *manager) { return NO_COLLISION; }
+        virtual int collide2(  TypeA  *a, MoleculeManager *manager) { return NO_COLLISION; }
+        virtual int collide2(  TypeB  *b, MoleculeManager *manager) { return NO_COLLISION; }
+        // virtual int collide(TypeB *b, MoleculeManager *manager) { return EXIT_FAILURE; }
+
+        virtual int draw(sf::Image *image) { return EXIT_FAILURE; }
 
 };
 
@@ -39,8 +51,9 @@ class TypeA : public Molecule {
     double radius;
 
     public:
-        int collide(TypeA *a, MoleculeManager *manager);
-        int collide(TypeB *a, MoleculeManager *manager);
+        int collide( Molecule *m, MoleculeManager *manager);
+        int collide2(  TypeA  *a, MoleculeManager *manager);
+        int collide2(  TypeB  *a, MoleculeManager *manager);
 
         int draw(sf::Image *image);
 
@@ -56,9 +69,9 @@ class TypeB : public Molecule {
     double len;
     
     public:
-
-        int collide(TypeA *a, MoleculeManager *manager);
-        int collide(TypeB *b, MoleculeManager *manager);
+        int collide(Molecule *m, MoleculeManager *manager);
+        int collide2(  TypeA  *a, MoleculeManager *manager);
+        int collide2(  TypeB  *a, MoleculeManager *manager);
 
         int draw(sf::Image *image);
 
@@ -79,14 +92,14 @@ class MoleculeManager {
         MoleculeManager();
         ~MoleculeManager();
 
-        int createTypeA(const Piston *piston);
-        int createTypeB(const Piston *piston);
+        int createTypeA(Piston *piston);
+        int createTypeB(Piston *piston);
 
-        int addMolecule(const Molecule *newMolecule);
+        int addMolecule(Molecule *newMolecule);
 
         int eraseMolecule(const int ind);
 
-        int swap(Molecule *a, Molecule *b);
+        int swap(Molecule **a, Molecule **b);
 
         int update(const double deltaTime, const double pistonY);
 

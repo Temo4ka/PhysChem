@@ -1,10 +1,14 @@
+#include "../Headers/Config.h"
 #include "../Headers/Scene.h"
 #include <cmath>
 
+#define DEBUG_
+#include "../Headers/Log.h"
+
 Molecule::Molecule (const Vect startPos, const double weight) {
 
-    int r1 = rand() % RANGE_X;
-    int r2 = rand() % RANGE_Y;
+    int r1 = rand() % RANGE_X - rand() % RANGE_X;
+    int r2 = rand() % RANGE_Y - rand() % RANGE_Y;
 
     this -> position = Vect(startPos.x + r1, startPos.y + r2);
 
@@ -34,7 +38,7 @@ int Molecule::move(double deltaTime, const double PistonY) {
 
     if (this -> position.x > RIGHT_WALL) {
         this -> dir.x *= -1;
-        this -> position.x = RIGHT_WALL;
+        this -> position.x = RIGHT_WALL - 3;
     }
 
     if (this -> position.y > WINDOW_HEIGHT) {
@@ -109,25 +113,41 @@ int TypeB::draw(sf::Image *image) {
 
 //------------------------------------CRINGE_MOMENT--------------------------------------------------------------------------------------
 
-int TypeA::collide(TypeA *a, MoleculeManager *manager) {
-    catchNulptr(   a   , NO_COLLISION);
-    catchNulptr(manager, NO_COLLISION);
+int TypeA::collide(Molecule *m, MoleculeManager *manager) {
+    catchNullptr(m, NO_COLLISION);
 
-    Vect distV = this -> position - a -> getPosition();
+    // fprintf(logFile, "HERE1!\n");
 
-    int dist = sqrt(SQR(distV.x) - SQR(distV.y));
+    return (m->collide2)(this, manager);
+}
 
-    if (SQR(this -> getVelocity()) * this -> getWeight + SQR(a -> getVelocity()) * a -> getWeight() > REACTION_CONST &&
-                                                                                               dist < this -> radius + a -> getRadius())
+int TypeB::collide(Molecule *m, MoleculeManager *manager) {
+    catchNullptr(m, NO_COLLISION);
+
+    // fprintf(logFile, "HERE2!\n");
+
+    return (m->collide2)(this, manager);
+}
+
+int TypeA::collide2(TypeA *a, MoleculeManager *manager) {
+    catchNullptr(   a   , NO_COLLISION);
+    catchNullptr(manager, NO_COLLISION);
+
+    Vect distV = this -> getPosition() - a -> getPosition();
+
+    int dist = sqrt(SQR(distV.x) + SQR(distV.y));
+
+    if (SQR(this->getVelocity()) * this->getWeight() + SQR(a->getVelocity()) * a->getWeight() > REACTION_CONST &&
+                                                                                               dist < this->radius + a->getRadius())
     {
 
-        TypeB res = new TypeB(Vect(0, 0), a -> getWeight() + this -> weight, BASE_TYPEB_RADIUS);
-        res.setPosition(a -> getPosition() + distV * 0.5);
+        TypeB *res = new TypeB(Vect(0, 0), a->getWeight() + this->getWeight(), BASE_TYPEB_RADIUS);
+        res -> setPosition(a->getPosition() + distV * 0.5);
 
-        manager -> addMolecule(&res);
+        manager -> addMolecule(res);
 
         return COLLISION;
-    } else if (dist < this -> radius + a -> getRadius()) {
+    } else if (dist < this->radius + a->getRadius()) {
         this -> reverseDir();
            a -> reverseDir();
     }
@@ -136,25 +156,25 @@ int TypeA::collide(TypeA *a, MoleculeManager *manager) {
     return NO_COLLISION;
 }
 
-int TypeA::collide(TypeB *b, MoleculeManager *manager) {
-    catchNulptr(   b   , NO_COLLISION);
-    catchNulptr(manager, NO_COLLISION);
+int TypeA::collide2(TypeB *b, MoleculeManager *manager) {
+    catchNullptr(   b   , NO_COLLISION);
+    catchNullptr(manager, NO_COLLISION);
 
-    Vect distV = this -> position - b -> getPosition();
+    Vect distV = this->getPosition() - b->getPosition();
 
-    int dist = sqrt(SQR(distV.x) - SQR(distV.y));
+    int dist = sqrt(SQR(distV.x) + SQR(distV.y));
 
-    if (SQR(this -> getVelocity()) * this -> getWeight + SQR(b -> getVelocity()) * b -> getWeight() > REACTION_CONST &&
-                                                                                               dist < this -> radius + b -> getLen())
+    if (SQR(this->getVelocity()) * this->getWeight() + SQR(b->getVelocity()) * b->getWeight() > REACTION_CONST &&
+                                                                                         dist < this->radius + b->getLen())
     {
 
-        TypeB res = new TypeB(Vect(0, 0), b -> getWeight() + this -> weight, BASE_TYPEB_RADIUS);
-        res.setPosition(b -> getPosition());
+        TypeB *res = new TypeB(Vect(0, 0), b -> getWeight() + this->getWeight(), BASE_TYPEB_RADIUS);
+        res -> setPosition(b -> getPosition());
 
-        manager -> addMolecule(&res);
+        manager -> addMolecule(res);
 
         return COLLISION;
-    } else if (dist < this -> radius + b -> getLen()){
+    } else if (dist < this->radius + b->getLen()){
         this -> reverseDir();
            b -> reverseDir();
     }
@@ -163,31 +183,32 @@ int TypeA::collide(TypeB *b, MoleculeManager *manager) {
     return NO_COLLISION;
 }
 
-int TypeB::collide(TypeA *a, MoleculeManager *manager) {
-    catchNulptr(   a   , NO_COLLISION);
+int TypeB::collide2(TypeA *a, MoleculeManager *manager) {
+    catchNullptr(   a   , NO_COLLISION);
 
-    return a.collide(this, manager);
+    return a->collide2(this, manager);
 }
 
-int TypeB::collide(TypeB *b, MoleculeManager *manager) {
-    catchNulptr(   b   , NO_COLLISION);
-    catchNulptr(manager, NO_COLLISION);
+int TypeB::collide2(TypeB *b, MoleculeManager *manager) {
+    catchNullptr(   b   , NO_COLLISION);
+    catchNullptr(manager, NO_COLLISION);
 
-    Vect distV = this -> position - b -> getPosition();
+    Vect distV = this->getPosition() - b->getPosition();
 
-    int dist = (distV.x > distV.y) ? distV.y : disV.x;
+    int dist = sqrt(SQR(distV.x) + SQR(distV.y));
 
-    if (SQR(this -> getVelocity()) * this -> getWeight + SQR(b -> getVelocity()) * b -> getWeight() > REACTION_CONST &&
-                                                                                               dist < this -> len / 2 + b -> getLen())
+    if (SQR(this->getVelocity()) * this->getWeight() + SQR(b->getVelocity()) * b->getWeight() > REACTION_CONST &&
+                                                                                         dist < this->getLen() + b->getLen())
     {
         
-        for (int curMolecule = 0; curMolecule < b -> getWeight() + this -> weight; curMolecule++) {
-            TypeA newMolecule = new TypeA(b -> getPosition() + distV * 0.5, 1, BASE_TYPEA_RADIUS);
-            manager -> addMolecule(&newMolecule);
+        for (int curMolecule = 0; curMolecule < b -> getWeight() + this->getWeight(); curMolecule++) {
+            TypeA *newMolecule = new TypeA(b -> getPosition() + distV * 0.5, 1, BASE_TYPEA_RADIUS);
+            
+            manager -> addMolecule(newMolecule);
         }
 
         return COLLISION;
-    } else if (dist < this -> len / 2 + b -> getLen()){
+    } else if (dist < this->getLen() + b->getLen()){
         this -> reverseDir();
            b -> reverseDir();
     }
@@ -215,25 +236,25 @@ MoleculeManager::~MoleculeManager() {
     return;
 }
 
-int MoleculeManager::createTypeA(const Piston *piston) {
+int MoleculeManager::createTypeA(Piston *piston) {
     catchNullptr(piston, EXIT_FAILURE);
     
-    TypeA newMolecule = new Molecule(Vect(LEFT_WALL, piston -> getPosition()), 1, BASE_TYPEA_RADIUS);
-    this -> addMolecule(&newMolecule);
+    TypeA *newMolecule = new TypeA(Vect(LEFT_WALL, piston->getPosition()), 1, BASE_TYPEA_RADIUS);
+    this -> addMolecule(newMolecule);
 
     return EXIT_SUCCESS;
 }
 
-int MoleculeManager::createTypeB(const Piston *piston) {
+int MoleculeManager::createTypeB(Piston *piston) {
     catchNullptr(piston, EXIT_FAILURE);
     
-    TypeB newMolecule = new Molecule(Vect(LEFT_WALL, piston -> getPosition()), 1, BASE_TYPEB_RADIUS);
-    this -> addMolecule(&newMolecule);
+    TypeB *newMolecule = new TypeB(Vect(LEFT_WALL, piston -> getPosition()), 1, BASE_TYPEB_RADIUS);
+    this -> addMolecule(newMolecule);
 
     return EXIT_SUCCESS;
 }
 
-int MoleculeManager::addMolecule(const Molecule *molecule) {
+int MoleculeManager::addMolecule(Molecule *molecule) {
     catchNullptr(molecule, EXIT_FAILURE);
     if (this -> size == MAX_MOLEC_NUM) return EXIT_SUCCESS;
 
@@ -243,11 +264,11 @@ int MoleculeManager::addMolecule(const Molecule *molecule) {
     return EXIT_SUCCESS;
 }
 
-int MoleculeManager::swap(Molecule *a, Molecule *b) {
+int MoleculeManager::swap(Molecule **a, Molecule **b) {
     catchNullptr(a, EXIT_FAILURE);
     catchNullptr(b, EXIT_FAILURE);
 
-    Molecule c = *a;
+    Molecule *c = *a;
     *a = *b;
     *b =  c;
 
@@ -255,9 +276,9 @@ int MoleculeManager::swap(Molecule *a, Molecule *b) {
 }
 
 int MoleculeManager::eraseMolecule(const int ind) {
-    if (ind >= this -> size || this -> size == 0) return EXIT_FAILURE;
+    if (ind >= this -> size || this -> size <= 1) return EXIT_FAILURE;
 
-    this -> swap(this -> array[ind], this -> array[this -> size - 1]);
+    this -> swap(this->array + ind, this -> array + this->size - 1);
     this -> size--;
 
     return EXIT_SUCCESS;
@@ -267,17 +288,23 @@ int MoleculeManager::update(const double deltaTime, const double pistonY) {
     for (int curMolecule = 0; curMolecule < this -> size; curMolecule++)
         (this -> array[curMolecule]) -> move(deltaTime, pistonY);
     
+    // fprintf(logFile, "---------------------------------------\nSIZE:%d\n", this -> size);
     for (int firstPointer = 0; firstPointer < this -> size; firstPointer++)
         for (int secondPointer = firstPointer + 1; secondPointer < this -> size; secondPointer++) {
             Molecule *a = this -> array[firstPointer];
             Molecule *b = this -> array[secondPointer];
 
-            if (a->collide(b, this)) {
+
+            if ((a->collide)(b, this) == COLLISION) {
+                // fprintf(logFile, "\nSIZE:%d\n", this -> size);
                 this -> eraseMolecule(secondPointer);               //  The order of the pointers erased is
                 this -> eraseMolecule(firstPointer);                //             ESSENTIAL
+                break;
             }
 
         }
+    // fprintf(logFile, "\nSIZE:%d\n===================================\n", this -> size);
+    
     
     return EXIT_SUCCESS;
 }

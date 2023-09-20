@@ -24,10 +24,36 @@ int main()
     // TypeA  FirstMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 12);
     // TypeB SecondMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 24);
 
-    MoleculeManager manager();
+    MoleculeManager manager = MoleculeManager();
 
     manager.createTypeA(&piston);
     manager.createTypeA(&piston);
+    manager.createTypeB(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeA(&piston);
+    manager.createTypeB(&piston);
+    manager.createTypeB(&piston);
+    manager.createTypeB(&piston);
+    manager.createTypeB(&piston);
+    manager.createTypeB(&piston);
+    manager.createTypeB(&piston);
     manager.createTypeB(&piston);
     manager.createTypeB(&piston);
 
