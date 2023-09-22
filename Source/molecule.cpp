@@ -217,7 +217,9 @@ int TypeB::collide2(TypeB *b, MoleculeManager *manager) {
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
-MoleculeManager::MoleculeManager() {
+MoleculeManager::MoleculeManager(Piston *piston) {
+    this -> piston = piston;
+
     this -> size = 0;
     this -> array = new Molecule*[MAX_MOLEC_NUM];
 
@@ -282,7 +284,9 @@ int MoleculeManager::eraseMolecule(const int ind) {
     return EXIT_SUCCESS;
 }
 
-int MoleculeManager::update(const double deltaTime, const double pistonY) {
+int MoleculeManager::update(const double deltaTime) {
+    double pistonY = (this->piston)->getPosition();
+
     for (int curMolecule = 0; curMolecule < this -> size; curMolecule++)
         (this -> array[curMolecule]) -> move(deltaTime, pistonY);
     

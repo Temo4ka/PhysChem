@@ -1,8 +1,5 @@
 #include "./Headers/Scene.h"
 
-// #define DEBUG_
-// #include "./Headers/Log.h"
-
 //-----------------------------------------------------------
 //                      Screen Sheme                        
 //----------------------------------------------------------\
@@ -23,15 +20,12 @@ int main()
 
     Piston piston(Vect(PISTON_X, PISTON_Y), PISTON_WIDTH, PISTON_HEIGHT, PISTON_VELOCITY);
 
-    // TypeA  FirstMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 12);
-    // TypeB SecondMolecule(Vect(LEFT_WALL, piston.getPosition() + 100), 1, 24);
+    MoleculeManager manager = MoleculeManager(&piston);
 
-    MoleculeManager manager = MoleculeManager();
-
-    for (int i = 0; i < 15; i++)
-        manager.createTypeA(&piston);
-    for (int i = 0; i < 10; i++)
-        manager.createTypeB(&piston);
+    // for (int i = 0; i < 15; i++)
+    //     manager.createTypeA(&piston);
+    // for (int i = 0; i < 10; i++)
+    //     manager.createTypeB(&piston);
 
     sf::Clock clock;
 
@@ -44,16 +38,13 @@ int main()
 
     ButtonManager buttonManager = ButtonManager();
 
-    Button addTypeA_button(Vect(121, 31), 240, 60, 0, 1, 0);
-    addTypeA_button.setText("Type_A", 6, &font);
-
-    Button addTypeB_button(Vect(121, 91), 240, 60, 1, 0, 0);
-    addTypeB_button.setText("Type_B", 6, &font);
-
-    buttonManager.addButton(&addTypeA_button);
-    buttonManager.addButton(&addTypeB_button);
+    if (organiseButtons(&buttonManager, &manager, &font) == EXIT_FAILURE) return EXIT_FAILURE;
 
     while (window.isOpen()) {
+        FILE* logFile = freopen("logFile", "w", stdout);
+        fprintf(logFile, "%d active Molecules\n", manager.getSize());
+        fclose(logFile);
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
@@ -74,14 +65,13 @@ int main()
         clock.restart();
 
         piston.move(time);
-        manager.update(time, piston.getPosition());
+        manager.update(time);
 
         window.clear();
 
             manager.draw(&canvas);
             
             buttonManager.draw(&canvas);
-            addTypeA_button.draw(&canvas);
 
             canvasTexture.loadFromImage(canvas);
              canvasSprite.setTexture(canvasTexture);

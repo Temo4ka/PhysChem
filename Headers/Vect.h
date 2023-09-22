@@ -1,3 +1,5 @@
+#pragma once
+
 struct Vect {
     double x;
     double y;

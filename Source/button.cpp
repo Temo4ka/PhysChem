@@ -45,17 +45,11 @@ int Button::showText(sf::RenderWindow *window) {
 
 int Button::checkIsPressed(const Vect mousePosition, int buttonStatus) {
     Vect dist = Vect(abs(mousePosition.x - this->position.x), abs(mousePosition.y - this->position.y));
-
-    FILE* logFile = freopen("logFile", "w", stdout);
-
-    fprintf(logFile, "%lg - %lg\n", mousePosition.x, mousePosition.y);
     
     if (dist.x <= this->width / 2 && dist.y <= this->height / 2)
         this->isPressed = buttonStatus;
     else
         this->isPressed = BUTTON_NOT_PRESSED;
-
-    fclose(logFile);
 
     return EXIT_SUCCESS;
 }
@@ -109,14 +103,31 @@ int ButtonManager::showText(sf::RenderWindow *window) {
 int ButtonManager::checkPression(sf::RenderWindow *window, const int buttonStatus) {
     Vect mousePosition = Vect(sf::Mouse::getPosition(*window).x, sf::Mouse::getPosition(*window).y);
 
-    for (int curButton = 0; curButton < this -> size; curButton++)
+    for (int curButton = 0; curButton < this -> size; curButton++) {
         ((this->array[curButton])->checkIsPressed)(mousePosition, buttonStatus);
+        
+        if ((this->array[curButton])->getPression()) {
+                (this->array[curButton])->run();
+        }
+    }
 
     return EXIT_SUCCESS;
 }
 
 //--------------------------------------------------------------------------------------------------------------------
+int AddTypeA::run() {
+    catchNullptr(this->getManager(), EXIT_FAILURE);
 
-AddTypeA::AddTypeA() {
+    (this->getManager())->createTypeA((this->getManager())->getPiston());
 
+    return EXIT_SUCCESS;
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+int AddTypeB::run() {
+    catchNullptr(this->getManager(), EXIT_FAILURE);
+
+    (this->getManager())->createTypeB((this->getManager())->getPiston());
+
+    return EXIT_SUCCESS;
 }

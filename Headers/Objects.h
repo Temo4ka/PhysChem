@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include "Config.h"
 #include "Vect.h"
@@ -93,8 +95,10 @@ class MoleculeManager {
 
     Molecule **array;
 
+    Piston *piston;
+
     public:
-        MoleculeManager();
+        MoleculeManager(Piston *piston);
         ~MoleculeManager();
 
         int createTypeA(Piston *piston);
@@ -106,80 +110,13 @@ class MoleculeManager {
 
         int swap(Molecule **a, Molecule **b);
 
-        int update(const double deltaTime, const double pistonY);
+        int update(const double deltaTime);
 
         int  draw (sf::Image *image);
-};
 
-class Button {
-    Vect   position;
-    
-    double    width;
-    double   height;
+        int      getSize()  { return this-> size;  }
 
-    double r;
-    double g;
-    double b;
-
-    bool isPressed;
-
-    sf::Text text;
-
-    public:
-        Button(const Vect pos, const double w, const double h, const double r, const double g, const double b) :
-                position (pos),
-                                     width (w),
-                                                    height (h),
-                                                                         r (r),
-                                                                                         g (g),
-                                                                                                         b (b),
-        isPressed (0)
-        {}
-
-        int draw(sf::Image *image);
-
-        int setText(const char *text, const signed textSize, sf::Font *font);
-
-        int showText(sf::RenderWindow *window);
-
-        int checkIsPressed(const Vect mousePosition, const int buttonStatus);
-
-        virtual void run();
-
-        ~Button() {}
-
-};
-
-class AddTypeA : public Button {
-    MoleculeManager *manager;
-
-    public:
-        AddTypeA(const Vect pos, const double w, const double h, const double r, const double g, const double b, MoleculeManager *manager)
-        Button(pos, w, h, r, g, b),
-        manager(manager)
-        {}
-        
-        ~AddTypeA();
-
-        void run();
-};
-
-class ButtonManager {
-    signed size;
-
-    Button **array;
-
-    public:
-        ButtonManager();
-        ~ButtonManager();
-
-        int addButton(Button *button);
-
-        int showText(sf::RenderWindow *window);
-
-        int draw(sf::Image *image);
-
-        int checkPression(sf::RenderWindow *window, const int buttonStatus);
+        Piston* getPiston() { return this->piston; }
 };
 
 class Piston {
