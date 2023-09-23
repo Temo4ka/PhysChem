@@ -34,7 +34,10 @@ const signed MAX_BUTTON_NUM =  40;
 const signed BASE_TYPEA_RADIUS = 12;
 const signed BASE_TYPEB_RADIUS = 24;
 
-const double GRPAHIC_TIMER = 1;
+const double GRAPHIC_TIMER = 1;
+
+const int GRAPHIC_WIDTH  = 700;
+const int GRAPHIC_HEIGHT = 100;
 
 #define catchNullptr(POINTER, RETURN_IN_CASE_OF_FAILURE) {                                                         \
     if ((POINTER) == nullptr) {                                                                                     \

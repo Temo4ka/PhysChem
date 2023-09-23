@@ -22,6 +22,8 @@ int main()
 
     MoleculeManager manager = MoleculeManager(&piston);
 
+    Time_Molecules graph1(Vect(0, WINDOW_HEIGHT / 3 + 3), GRAPHIC_HEIGHT, GRAPHIC_WIDTH);
+
     // for (int i = 0; i < 15; i++)
     //     manager.createTypeA(&piston);
     // for (int i = 0; i < 10; i++)
@@ -70,8 +72,8 @@ int main()
         window.clear();
 
             buttonManager.draw(&canvas);
-            
-            manager.draw(&canvas);
+               manager   .draw(&canvas);
+               graph1    .draw(&canvas);
 
             canvasTexture.loadFromImage(canvas);
              canvasSprite.setTexture(canvasTexture);
@@ -80,6 +82,7 @@ int main()
 
             piston.draw(&window); 
             buttonManager.showText(&window);
+
             separateScreen(&window);
 
         window.display();

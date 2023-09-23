@@ -144,11 +144,14 @@ class Graphics {
     int w;
     int h;
 
+    int curX;
+
     public:
         Graphics(Vect pos, int h, int w):
             position (pos),
                                h (h),
-                                         w (w)
+                                         w (w),
+        curX (pos.x)
         {}
 
         ~Graphics() {}
@@ -170,10 +173,11 @@ class Time_Molecules : public Graphics {
         Time_Molecules(Vect pos, int h, int w):
                   position (pos),
                                   h (h),
-                                         w (w)
+                                         w (w),
+        updTime (GRAPHIC_TIMER)
         {}
 
-        int update(double deltaTime, int molecules, sf::Image *image);
+        int update(double deltaTime, int molecules, sf::Image *image, sf::Color color = sf::Color(160, 160, 0));
 
         int showText(sf::RenderWindow *window, sf::Font *font);
 }
