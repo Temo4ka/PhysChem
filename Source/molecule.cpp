@@ -1,4 +1,5 @@
 #include "../Headers/Scene.h"
+#include "../RayCasting/Headers/GraphicObjects.h"
 #include <cmath>
 
 // #define DEBUG_
@@ -36,9 +37,9 @@ int Molecule::setPosition(const Vect newPos) {
 int Molecule::move(double deltaTime, const double PistonY) {
     this -> position = this -> position + (this -> velocity * deltaTime);
 
-    if (this -> position.x < LEFT_WALL) {
+    if (this -> position.x < LEFT_WALL + 5) {
         this -> velocity.x *= -1;
-        this -> position.x = LEFT_WALL;
+        this -> position.x = LEFT_WALL + 5;
     }
 
     if (this -> position.x > RIGHT_WALL) {
@@ -71,13 +72,15 @@ int Molecule::absorb(Molecule *molecule) {
 
 //------------------------------------------------------------------------------------------------
 
-int TypeA::draw(sf::Image *image) {
+int TypeA::draw(sf::Image *image, Light *light, Vision *vis) {
     catchNullptr(image, EXIT_FAILURE);
 
     Vect curPos = this -> getPosition();
 
     double x0 = curPos.x, y0 = curPos.y;
     double r = this -> radius;
+
+    Sphere curSphere(Vect3(x0, y0, 0), r, Vect3(0.3, 0.3, 0.3));
     
 
     for (double x = x0 - r; x <= x0 + r; x++)
@@ -86,7 +89,12 @@ int TypeA::draw(sf::Image *image) {
                 double k = 1 - (SQR(x - x0) + SQR(y - y0)) / SQR(r);
                 if (k > 1) k = 1;
 
-                image -> setPixel(x, y, sf::Color(k * 255, k * 255, k * 255));
+                Vect3 curColor(0, 0, k);
+                curSphere.setMaterial(curColor);
+
+                double z = sqrt(SQR(r) - SQR(x - x0) - SQR(y - y0));
+
+                image -> setPixel(x, y, getPixelColor(&curSphere, light, vis, Vect3(x - x0, y - y0, z)));
             }
         }
 
@@ -95,7 +103,7 @@ int TypeA::draw(sf::Image *image) {
 
 //------------------------------------------------------------------------------------------------
 
-int TypeB::draw(sf::Image *image) {
+int TypeB::draw(sf::Image *image, Light *light, Vision *vis) {
     catchNullptr(image, EXIT_FAILURE);
 
     Vect curPos = this -> getPosition();
@@ -103,12 +111,26 @@ int TypeB::draw(sf::Image *image) {
     double x0 = curPos.x, y0 = curPos.y;
     double a = this -> len / 2;
 
+    Sphere curSphere(Vect3(x0, y0, 0), a, Vect3(1, 1, 1));
+
     for (double x = x0 - a; x <= x0 + a; x++)
         for (double y = y0 - a; y <= y0 + a; y++) {
-            double k = 1 -  (SQR(x - x0) + SQR(y - y0)) / SQR(a) + 0.3;
-            if (k > 1) k = 1;
+            if (SQR(x - x0) + SQR(y - y0) <= SQR(a)) {
+                double k = 1 - (SQR(x - x0) + SQR(y - y0)) / SQR(a) + 0.3;
+                if (k > 1) k = 1;
 
-            image -> setPixel(x, y, sf::Color(0, k * 255, k * 255));
+                Vect3 curColor(k, 0, k);
+                curSphere.setMaterial(curColor);
+
+                double z = sqrt(SQR(a) - SQR(x - x0) - SQR(y - y0));
+
+                image -> setPixel(x, y, getPixelColor(&curSphere, light, vis, Vect3(x - x0, y - y0, z)));
+            } else {
+                double k = 1 - (SQR(x - x0) + SQR(y - y0)) / SQR(a) + 0.3;
+                if (k > 1) k = 1;
+
+                image -> setPixel(x, y, sf::Color(0, k * 255, k * 255));
+            }
         }
 
     return EXIT_SUCCESS;
@@ -225,7 +247,9 @@ int TypeB::collide2(TypeB *b, MoleculeManager *manager) {
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
-MoleculeManager::MoleculeManager(Piston *piston) {
+MoleculeManager::MoleculeManager(Piston *piston, Light *light, Vision *vision) {
+    this -> vision = vision;
+    this -> light  =  light; 
     this -> piston = piston;
 
     this -> size = 0;
@@ -334,7 +358,7 @@ int MoleculeManager::draw(sf::Image *image) {
     catchNullptr(image, EXIT_FAILURE);
 
     for (int curMolecule = 0; curMolecule < this -> size; curMolecule++)
-        (this -> array[curMolecule]) -> draw(image);
+        (this -> array[curMolecule]) -> draw(image, this -> light, this -> vision);
 
     return EXIT_SUCCESS;
 }

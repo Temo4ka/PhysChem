@@ -1,18 +1,18 @@
 #include "./Headers/Scene.h"
 
-//-----------------------------------------------------------
-//                      Screen Sheme                        
-//----------------------------------------------------------\
-//                           \        Free                 \    
-//      Buttons HERE         \             Space           \     
-//                           \=============================\     
-// --------------------------\=============================\ 
-//                           \                             \             
-//                           \                             \ 
-//       Graphics HERE       \       Reaction HERE         \ 
-//                           \                             \ 
-//                           \                             \
-//----------------------------------------------------------\
+//----------------------------------------------------------\\
+//                      Screen Sheme                       \\
+//---------------------------------------------------------\\
+//                           \        Free                 \\   
+//      Buttons HERE         \             Space           \\    
+//                           \=============================\\    
+// --------------------------\=============================\\
+//                           \                             \\             
+//                           \                             \\
+//       Graphics HERE       \       Reaction HERE         \\
+//                           \                             \\
+//                           \                             \\
+//----------------------------------------------------------\\
 
 int main()
 {
@@ -20,7 +20,11 @@ int main()
 
     Piston piston(Vect(PISTON_X, PISTON_Y), PISTON_WIDTH, PISTON_HEIGHT, PISTON_VELOCITY);
 
-    MoleculeManager manager = MoleculeManager(&piston);
+	Light light(Vect3(700, WINDOW_HEIGHT / 2, 100), WHITE_LIGHT);
+
+    Vision vision(Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 500));
+
+    MoleculeManager manager = MoleculeManager(&piston, &light, &vision);
 
     Time_Molecules graph1(Vect(0, 0), GRAPHIC_HEIGHT, GRAPHIC_WIDTH);
 
@@ -69,13 +73,14 @@ int main()
         clock.restart();
 
         // piston.move(time);
+        light.rotate(time, Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 100));
         manager.update(time);
 
         graph1.update(time, manager.getSize(), &graphCanvas);
 
         window.clear();
 
-            buttonManager.draw(&canvas);
+            buttonManager.draw(&canvas, &light, &vision);
                manager   .draw(&canvas);
 
             canvasTexture.loadFromImage(canvas);

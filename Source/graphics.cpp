@@ -28,20 +28,21 @@ int Graphics::draw(sf::Image *image, sf::Color color) {
 
 int Time_Molecules::update(double deltaTime, int molecules, sf::Image *image, sf::Color color) {
     catchNullptr(image, EXIT_FAILURE);
-    
+
     this -> updTime -= deltaTime;
     if (this -> updTime > 0) return EXIT_SUCCESS;
-
-    
 
     this -> updTime   = GRAPHIC_TIMER;
     this -> molecules =   molecules  ;
 
+    if (this -> getCurX() == -1) this -> draw(image);
+    if (this -> getCurX() >= this->getW() + this->getPosition().x)
+        this -> setCurX(this ->getPosition().x + 30);
     this->incCurX();
-    if (this -> getCurX() >= this->getW() + this->getPosition().x) this -> draw(image);
 
     for (int y = 1; y < molecules * 2; y++)
         image -> setPixel(this->getCurX(), this->getPosition().y + this->getH() * 4 / 5 - y, color);
+    image -> setPixel(this->getCurX(), this->getPosition().y + this->getH() * 4 / 5 - molecules * 2, sf::Color::Yellow);
 
     return EXIT_SUCCESS;
 }

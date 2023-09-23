@@ -27,7 +27,7 @@ class Button {
         isPressed (0)
         {}
 
-        int draw(sf::Image *image);
+        int draw(sf::Image *image, Light *light, Vision *vision);
 
         int setText(const char *text, const signed textSize, sf::Font *font);
 
@@ -126,7 +126,7 @@ class ButtonManager {
 
         int showText(sf::RenderWindow *window);
 
-        int draw(sf::Image *image);
+        int draw(sf::Image *image, Light *light, Vision *vision);
 
         int checkPression(sf::RenderWindow *window, const int buttonStatus);
 };

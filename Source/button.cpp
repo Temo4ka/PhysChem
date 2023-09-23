@@ -3,14 +3,15 @@
 // #define DEBUG_
 // #include "../Headers/Log.h"
 
-int Button::draw(sf:: Image *image) {
+int Button::draw(sf:: Image *image, Light *light, Vision *vision) {
+
     double a = this -> width  / 2;
     double b = this -> height / 2;
 
     double x0 = this -> position.x;
     double y0 = this -> position.y;
 
-    // this -> isPressed = 1;
+    Sphere cube(Vect3(x0, y0, 30), this->width, Vect3(1, 1, 1));
 
     for (double x = x0 - a; x <= x0 + a; x++)
         for (double y = y0 - b; y <= y0 + b; y++) {
@@ -18,7 +19,11 @@ int Button::draw(sf:: Image *image) {
             if (k <= 0) k = 0;
             if (this -> isPressed) k = 1 - k;
 
-            image -> setPixel(x, y, sf::Color(this->r * k * 255, this->g * k * 255, this-> b * k * 255));
+            k *= 0.8;
+
+            cube.setMaterial(Vect3(this->r * k, this->g * k, this-> b * k));
+
+            image -> setPixel(x, y, getPixelColor2(&cube, light, vision, Vect3(x - x0, y - y0, 1)));
         }
 
     return EXIT_SUCCESS;
@@ -82,11 +87,11 @@ int ButtonManager::addButton(Button *button) {
     return EXIT_SUCCESS;
 }
 
-int ButtonManager::draw(sf::Image *image) {
+int ButtonManager::draw(sf::Image *image, Light *light, Vision *vision) {
     catchNullptr(image, EXIT_FAILURE);
 
-    for (int curButton = 0; curButton < this -> size; curButton++)
-        ((this->array[curButton])->draw)(image);
+    for (int curButton = 0; curButton < this -> size; curButton++) 
+        ((this->array[curButton])->draw)(image, light, vision);
 
     return EXIT_SUCCESS;
 }

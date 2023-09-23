@@ -31,8 +31,8 @@ const double DELTA_PISTON = 12;
 const signed  MAX_MOLEC_NUM = 120;
 const signed MAX_BUTTON_NUM =  40;
 
-const signed BASE_TYPEA_RADIUS = 12;
-const signed BASE_TYPEB_RADIUS = 24;
+const signed BASE_TYPEA_RADIUS = 16;
+const signed BASE_TYPEB_RADIUS = 32;
 
 const double GRAPHIC_TIMER = 0.1;
 

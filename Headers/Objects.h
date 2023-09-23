@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Config.h"
 #include "Vect.h"
+#include "../RayCasting/Headers/GraphicObjects.h"
 
 enum Collision {
     NO_COLLISION = 0,
@@ -50,7 +51,7 @@ class Molecule {
         virtual int collide2(  TypeB  *b, MoleculeManager *manager) { return NO_COLLISION; }
         // virtual int collide(TypeB *b, MoleculeManager *manager) { return EXIT_FAILURE; }
 
-        virtual int draw(sf::Image *image) { return EXIT_FAILURE; }
+        virtual int draw(sf::Image *image, Light *light, Vision *vision) { return EXIT_FAILURE; }
 
 };
 
@@ -62,7 +63,7 @@ class TypeA : public Molecule {
         int collide2(  TypeA  *a, MoleculeManager *manager);
         int collide2(  TypeB  *a, MoleculeManager *manager);
 
-        int draw(sf::Image *image);
+        int draw(sf::Image *image, Light *light, Vision *vision);
 
         double getRadius() { return this -> radius; }
 
@@ -80,7 +81,7 @@ class TypeB : public Molecule {
         int collide2(  TypeA  *a, MoleculeManager *manager);
         int collide2(  TypeB  *a, MoleculeManager *manager);
 
-        int draw(sf::Image *image);
+        int draw(sf::Image *image, Light *light, Vision *vision);
 
         double getLen() { return len / 2; }
 
@@ -97,8 +98,12 @@ class MoleculeManager {
 
     Piston *piston;
 
+    Light *light;
+
+    Vision *vision;
+
     public:
-        MoleculeManager(Piston *piston);
+        MoleculeManager(Piston *piston, Light *light, Vision *vision);
         ~MoleculeManager();
 
         int createTypeA(Piston *piston);
@@ -151,7 +156,7 @@ class Graphics {
             position (pos),
                                h (h),
                                          w (w),
-        curX (pos.x + w)
+        curX (-1)
         {}
 
         ~Graphics() {}
@@ -161,6 +166,8 @@ class Graphics {
         int getCurX() { return this->curX; }
 
         void incCurX() { (this->curX)++;   }
+
+        void setCurX(int x) { this->curX = x; }
 
         Vect getPosition() { return this->position; }
 
