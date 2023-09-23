@@ -24,6 +24,24 @@ int Piston::move (const double deltaTime) {
     return EXIT_SUCCESS;
 }
 
+int Piston::moveButton(const double k) {
+    catchNullptr(this, EXIT_FAILURE);
+
+    sf::Vector2f pos = this -> pistonShape.getPosition();
+
+    pos.y += DELTA_PISTON * k;
+
+    if (pos.y < PISTON_Y) 
+        pos.y = PISTON_Y;
+        
+    if (pos.y > PISTON_LIMIT) 
+        pos.y = PISTON_LIMIT;
+
+    this -> pistonShape.setPosition(pos.x, pos.y);
+
+    return EXIT_SUCCESS;
+}
+
 int Piston::draw(sf::RenderWindow *window) {
     catchNullptr(window, EXIT_FAILURE);
 

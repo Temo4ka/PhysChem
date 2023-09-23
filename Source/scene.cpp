@@ -31,12 +31,19 @@ int organiseButtons(ButtonManager *buttonManager, MoleculeManager *manager, sf::
     AddTypeA* addTypeA_button = new AddTypeA(Vect(121, 31), 240, 60, 0, 1, 0, manager);
     addTypeA_button -> setText("Type_A", 6, font);
 
-
     AddTypeB* addTypeB_button = new AddTypeB(Vect(121, 91), 240, 60, 1, 0, 0, manager);
     addTypeB_button -> setText("Type_B", 6, font);
 
+    MoveUp* moveUp = new MoveUp(Vect(121, 151), 240, 60, 0, 0, 1, manager);
+    moveUp -> setText("Up", 2, font);
+
+    MoveDown* moveDown = new MoveDown(Vect(121, 211), 240, 60, 1, 1, 0, manager);
+    moveDown -> setText("Down", 4, font);
+
     buttonManager->addButton(addTypeA_button);
     buttonManager->addButton(addTypeB_button);
+    buttonManager->addButton(    moveDown   );
+    buttonManager->addButton(     moveUp    );
 
     return EXIT_SUCCESS;
 }

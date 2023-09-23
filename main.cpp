@@ -64,14 +64,14 @@ int main()
         double time = clock.getElapsedTime().asSeconds();
         clock.restart();
 
-        piston.move(time);
+        // piston.move(time);
         manager.update(time);
 
         window.clear();
 
-            manager.draw(&canvas);
-            
             buttonManager.draw(&canvas);
+            
+            manager.draw(&canvas);
 
             canvasTexture.loadFromImage(canvas);
              canvasSprite.setTexture(canvasTexture);

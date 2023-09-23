@@ -76,12 +76,39 @@ class AddTypeA : public ManagerButton {
 class AddTypeB : public ManagerButton {
 
     public:
-        AddTypeB(const Vect pos, const double w, const double h, const double r, const double g, const double b, 
-                                                                                                            MoleculeManager *manager):
+        AddTypeB(const Vect pos, const double w, const double h, const double r, const double g, const double b,
+                                                                                                                MoleculeManager *manager):
         ManagerButton(pos, w, h, r, g, b, manager)
         {}
         
         ~AddTypeB() {}
+
+        int run();
+};
+
+
+class MoveUp : public ManagerButton {
+
+    public:
+        MoveUp(const Vect pos, const double w, const double h, const double r, const double g, const double b,
+                                                                                                                MoleculeManager *manager):
+        ManagerButton(pos, w, h, r, g, b, manager)
+        {}
+        
+        ~MoveUp() {}
+
+        int run();
+};
+
+class MoveDown : public ManagerButton {
+
+    public:
+        MoveDown(const Vect pos, const double w, const double h, const double r, const double g, const double b, 
+                                                                                                            MoleculeManager *manager):
+        ManagerButton(pos, w, h, r, g, b, manager)
+        {}
+        
+        ~MoveDown() {}
 
         int run();
 };

@@ -11,11 +11,17 @@ Molecule::Molecule (const Vect startPos, const double weight) {
 
     this -> position = Vect(startPos.x + r1, startPos.y + r2);
 
-    this -> velocity = PISTON_VELOCITY + (rand() % MAX_START_VELOCITY);
+    double v = (PISTON_VELOCITY + (rand() % MAX_START_VELOCITY));
+
     this ->  weight  =            weight            ;
 
-    this -> dir.x = ((double) (1) / ((double) (rand() % 6 + 2)));
-    this -> dir.y = sqrt(1 - SQR(this -> dir.y));
+    this -> velocity.x = (((double) (1) / ((double) (rand() % 6 + 2))));
+    this -> velocity.y = (sqrt(1 - SQR(this -> velocity.x)));
+
+    this -> velocity = this -> velocity * v;
+
+    if (rand() % 2) this->velocity.x *= -1;
+    if (rand() % 2) this->velocity.y *= -1;
 
     return;
 }
@@ -28,25 +34,25 @@ int Molecule::setPosition(const Vect newPos) {
 }
 
 int Molecule::move(double deltaTime, const double PistonY) {
-    this -> position = this -> position + (this -> dir * (deltaTime * this -> velocity));
+    this -> position = this -> position + (this -> velocity * deltaTime);
 
     if (this -> position.x < LEFT_WALL) {
-        this -> dir.x *= -1;
+        this -> velocity.x *= -1;
         this -> position.x = LEFT_WALL;
     }
 
     if (this -> position.x > RIGHT_WALL) {
-        this -> dir.x *= -1;
+        this -> velocity.x *= -1;
         this -> position.x = RIGHT_WALL - 3;
     }
 
     if (this -> position.y > WINDOW_HEIGHT) {
-        this -> dir.y *= -1;
+        this -> velocity.y *= -1;
         this -> position.y = WINDOW_HEIGHT - 5;
     }
 
     if (this -> position.y <= PistonY) {
-        this -> dir.y *= -1;
+        this -> velocity.y *= -1;
         this -> position.y = PistonY + 5;
     }
 
@@ -135,12 +141,13 @@ int TypeA::collide2(TypeA *a, MoleculeManager *manager) {
 
     int dist = sqrt(SQR(distV.x) + SQR(distV.y));
 
-    if (SQR(this->getVelocity()) * this->getWeight() + SQR(a->getVelocity()) * a->getWeight() > REACTION_CONST &&
-                                                                                               dist < this->radius + a->getRadius())
+    if ((this->getVelocity(), this->getVelocity()) * this->getWeight() + (a->getVelocity(), a->getVelocity()) * a->getWeight()
+                                                                                                 > REACTION_CONST && dist < this->radius + a->getRadius())
     {
 
         TypeB *res = new TypeB(Vect(0, 0), a->getWeight() + this->getWeight(), BASE_TYPEB_RADIUS);
         res -> setPosition(a->getPosition() + distV * 0.5);
+        res -> setVelocity(this->getVelocity() + a->getVelocity());
 
         manager -> addMolecule(res);
 
@@ -162,12 +169,13 @@ int TypeA::collide2(TypeB *b, MoleculeManager *manager) {
 
     int dist = sqrt(SQR(distV.x) + SQR(distV.y));
 
-    if (SQR(this->getVelocity()) * this->getWeight() + SQR(b->getVelocity()) * b->getWeight() > REACTION_CONST &&
+    if ((this->getVelocity(), this->getVelocity()) * this->getWeight() + (b->getVelocity(), b->getVelocity()) * b->getWeight() &&
                                                                                          dist < this->radius + b->getLen())
     {
 
         TypeB *res = new TypeB(Vect(0, 0), b -> getWeight() + this->getWeight(), BASE_TYPEB_RADIUS);
         res -> setPosition(b -> getPosition());
+        res -> setVelocity(this->getVelocity() + b->getVelocity());
 
         manager -> addMolecule(res);
 
@@ -195,7 +203,7 @@ int TypeB::collide2(TypeB *b, MoleculeManager *manager) {
 
     int dist = sqrt(SQR(distV.x) + SQR(distV.y));
 
-    if (SQR(this->getVelocity()) * this->getWeight() + SQR(b->getVelocity()) * b->getWeight() > REACTION_CONST &&
+    if ((this->getVelocity(), this->getVelocity()) * this->getWeight() + (b->getVelocity(), b->getVelocity()) * b->getWeight() &&
                                                                                          dist < this->getLen() + b->getLen())
     {
         
@@ -240,6 +248,7 @@ int MoleculeManager::createTypeA(Piston *piston) {
     catchNullptr(piston, EXIT_FAILURE);
     
     TypeA *newMolecule = new TypeA(Vect(LEFT_WALL, piston->getPosition()), 1, BASE_TYPEA_RADIUS);
+
     this -> addMolecule(newMolecule);
 
     return EXIT_SUCCESS;
@@ -257,6 +266,16 @@ int MoleculeManager::createTypeB(Piston *piston) {
 int MoleculeManager::addMolecule(Molecule *molecule) {
     catchNullptr(molecule, EXIT_FAILURE);
     if (this -> size == MAX_MOLEC_NUM) return EXIT_SUCCESS;
+
+    Vect pos = molecule->getPosition();
+
+    if (pos.x <= LEFT_WALL + 20)  pos.x =  LEFT_WALL + 20;
+    if (pos.x >= RIGHT_WALL) pos.x = RIGHT_WALL;
+
+    if (pos.y >= WINDOW_HEIGHT - 20)    pos.y = WINDOW_HEIGHT - 20;
+    if (pos.y <= piston->getPosition()) pos.y = piston->getPosition() + 20;
+
+    molecule -> setPosition(pos);
 
     this -> array[this -> size] = molecule;
     this -> size++;

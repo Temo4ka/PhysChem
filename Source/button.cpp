@@ -131,3 +131,19 @@ int AddTypeB::run() {
 
     return EXIT_SUCCESS;
 }
+
+//--------------------------------------------------------------------------------------------------------------------
+int MoveUp::run() {
+
+    ((this->getManager())->getPiston())->moveButton(-1);
+
+    return EXIT_SUCCESS;
+}
+//--------------------------------------------------------------------------------------------------------------------
+
+int MoveDown::run() {
+
+    ((this->getManager())->getPiston())->moveButton(1);
+
+    return EXIT_SUCCESS;
+}

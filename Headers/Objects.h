@@ -22,9 +22,8 @@ class MoleculeManager;
 class Piston;
 
 class Molecule {
-    double velocity;
+    Vect   velocity;
     double  weight ;
-    Vect     dir   ;
     Vect   position;
 
     public:
@@ -32,9 +31,10 @@ class Molecule {
 
         ~Molecule() {}
 
-        double  getWeight()   { return this ->  weight;  }
-        double getVelocity()  { return this -> velocity; }
-        Vect   getPosition()  { return this -> position; }
+        double  getWeight (      )  { return this ->  weight;  }
+        Vect   getVelocity(      )  { return this -> velocity; }
+        Vect   getPosition(      )  { return this -> position; }
+        void   setVelocity(Vect v)  {    this -> velocity = v; }
         // Vect   getDirection() { return this ->    dir;   }
 
         int    setPosition(const Vect newPos);
@@ -43,7 +43,7 @@ class Molecule {
 
         int absorb(Molecule *molecule);
 
-        void reverseDir()     { this -> dir = this -> dir * -1; }
+        void reverseDir()     { this -> velocity = this -> velocity * -1; }
 
         virtual int collide (Molecule *m, MoleculeManager *manager) { return NO_COLLISION; }
         virtual int collide2(  TypeA  *a, MoleculeManager *manager) { return NO_COLLISION; }
@@ -131,7 +131,49 @@ class Piston {
 
         int move(const double deltaTime);
 
+        int moveButton(const double k);
+
         int draw(sf::RenderWindow *window);
 
         double getPosition();
 };
+
+class Graphics {
+    Vect position;
+
+    int w;
+    int h;
+
+    public:
+        Graphics(Vect pos, int h, int w):
+            position (pos),
+                               h (h),
+                                         w (w)
+        {}
+
+        ~Graphics() {}
+
+        int getH() { return this->h;}
+        int getW() { return this->w;}
+
+        Vect getPosition() { return this->position(); }
+
+        int draw(sf::Image *image, sf::Color color = sf::Color(0, 160, 0));
+};
+
+class Time_Molecules : public Graphics {
+    int molecules;
+
+    double updTime;
+
+    public:
+        Time_Molecules(Vect pos, int h, int w):
+                  position (pos),
+                                  h (h),
+                                         w (w)
+        {}
+
+        int update(double deltaTime, int molecules, sf::Image *image);
+
+        int showText(sf::RenderWindow *window, sf::Font *font);
+}
