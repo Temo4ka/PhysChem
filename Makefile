@@ -1,2 +1,2 @@
 all:
-	g++ -IC:\SFML-2.5.1\include -LC:\SFML-2.5.1\lib main.cpp ./source/scene.cpp ./source/vect.cpp ./source/molecule.cpp ./source/piston.cpp ./source/button.cpp -lm -o react.exe -lmingw32 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-main -mwindows 
+	g++ -IC:\SFML-2.5.1\include -LC:\SFML-2.5.1\lib main.cpp ./source/graphics.cpp ./source/scene.cpp ./source/vect.cpp ./source/molecule.cpp ./source/piston.cpp ./source/button.cpp -lm -o react.exe -lmingw32 -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lsfml-main -mwindows 

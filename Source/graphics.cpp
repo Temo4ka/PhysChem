@@ -3,13 +3,17 @@
 int Graphics::draw(sf::Image *image, sf::Color color) {
     catchNullptr(image, EXIT_FAILURE);
 
+    FILE* logFile = freopen("logFile", "w", stdout);
+    fprintf(logFile, "Here\n");
+    fclose(logFile);
+
     Vect position = this->position;
 
     for (int x0 = 0; x0 < this->w; x0++)
         for (int y0 = 0; y0 < this->h; y0++)
-            image->setPixel(x0, y0, color);
+            image->setPixel(position.x + x0, position.y + y0, color);
     
-    int x0 = position.x + this->w / 5; 
+    int x0 = position.x + 30; 
     for (int y = 0; y < this->h; y++)
         image -> setPixel(x0, position.y + y, sf::Color::White);
     this -> curX = x0;
@@ -24,18 +28,37 @@ int Graphics::draw(sf::Image *image, sf::Color color) {
 
 int Time_Molecules::update(double deltaTime, int molecules, sf::Image *image, sf::Color color) {
     catchNullptr(image, EXIT_FAILURE);
-
+    
     this -> updTime -= deltaTime;
     if (this -> updTime > 0) return EXIT_SUCCESS;
+
+    
 
     this -> updTime   = GRAPHIC_TIMER;
     this -> molecules =   molecules  ;
 
-    (this->curX)++;
-    if (this -> curX >= this->getW() + this->getPosition().x) this -> draw(image);
+    this->incCurX();
+    if (this -> getCurX() >= this->getW() + this->getPosition().x) this -> draw(image);
 
-    for (int y = this->getPosition().y + this->getH() * 4 / 5 - molecules; y++)
-        image -> setPixel(x, y, color);
+    for (int y = 1; y < molecules * 2; y++)
+        image -> setPixel(this->getCurX(), this->getPosition().y + this->getH() * 4 / 5 - y, color);
+
+    return EXIT_SUCCESS;
+}
+
+int Time_Molecules::showText(sf::RenderWindow *window, sf::Font *font) {
+    catchNullptr(window, EXIT_FAILURE);
+
+    sf::Text time = sf::Text("time", *font);
+    time.setPosition(680, 330);
+    time.setCharacterSize(10);
+
+    sf::Text molecules = sf::Text("mol", *font);
+    molecules.setPosition(2, 245);
+    molecules.setCharacterSize(8);
+
+    window -> draw(time);
+    window -> draw(molecules);
 
     return EXIT_SUCCESS;
 }

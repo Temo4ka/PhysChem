@@ -22,7 +22,7 @@ int main()
 
     MoleculeManager manager = MoleculeManager(&piston);
 
-    Time_Molecules graph1(Vect(0, WINDOW_HEIGHT / 3 + 3), GRAPHIC_HEIGHT, GRAPHIC_WIDTH);
+    Time_Molecules graph1(Vect(0, 0), GRAPHIC_HEIGHT, GRAPHIC_WIDTH);
 
     // for (int i = 0; i < 15; i++)
     //     manager.createTypeA(&piston);
@@ -32,8 +32,10 @@ int main()
     sf::Clock clock;
 
     sf::Image       canvas;
+    sf::Texture canvasTexture2;
     sf::Texture canvasTexture;
     sf::Sprite   canvasSprite;
+    sf::Sprite   canvasSprite2;
 
     sf::Font font;
     font.loadFromFile("./Fonts/newFont.ttf");
@@ -42,10 +44,10 @@ int main()
 
     if (organiseButtons(&buttonManager, &manager, &font) == EXIT_FAILURE) return EXIT_FAILURE;
 
+    sf::Image graphCanvas;
+    graphCanvas.create(720, 500, sf::Color::Black);
+
     while (window.isOpen()) {
-        FILE* logFile = freopen("logFile", "w", stdout);
-        fprintf(logFile, "%d active Molecules\n", manager.getSize());
-        fclose(logFile);
 
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -69,19 +71,25 @@ int main()
         // piston.move(time);
         manager.update(time);
 
+        graph1.update(time, manager.getSize(), &graphCanvas);
+
         window.clear();
 
             buttonManager.draw(&canvas);
                manager   .draw(&canvas);
-               graph1    .draw(&canvas);
 
             canvasTexture.loadFromImage(canvas);
              canvasSprite.setTexture(canvasTexture);
-
             window.draw(canvasSprite);
+
+            canvasTexture2.loadFromImage(graphCanvas);
+             canvasSprite2.setTexture(canvasTexture2);
+            canvasSprite2.setPosition(0, WINDOW_HEIGHT / 3 + 2);
+            window.draw(canvasSprite2);
 
             piston.draw(&window); 
             buttonManager.showText(&window);
+            graph1.showText(&window, &font);
 
             separateScreen(&window);
 

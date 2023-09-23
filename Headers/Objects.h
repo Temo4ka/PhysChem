@@ -151,17 +151,20 @@ class Graphics {
             position (pos),
                                h (h),
                                          w (w),
-        curX (pos.x)
+        curX (pos.x + w)
         {}
 
         ~Graphics() {}
 
-        int getH() { return this->h;}
-        int getW() { return this->w;}
+        int   getH () { return this->h;    }
+        int   getW () { return this->w;    }
+        int getCurX() { return this->curX; }
 
-        Vect getPosition() { return this->position(); }
+        void incCurX() { (this->curX)++;   }
 
-        int draw(sf::Image *image, sf::Color color = sf::Color(0, 160, 0));
+        Vect getPosition() { return this->position; }
+
+        int draw(sf::Image *image, sf::Color color = sf::Color(0, 80, 0));
 };
 
 class Time_Molecules : public Graphics {
@@ -171,13 +174,11 @@ class Time_Molecules : public Graphics {
 
     public:
         Time_Molecules(Vect pos, int h, int w):
-                  position (pos),
-                                  h (h),
-                                         w (w),
+        Graphics (pos, h, w),
         updTime (GRAPHIC_TIMER)
         {}
 
-        int update(double deltaTime, int molecules, sf::Image *image, sf::Color color = sf::Color(160, 160, 0));
+        int update(double deltaTime, int molecules, sf::Image *image, sf::Color color = sf::Color(160, 0, 160));
 
         int showText(sf::RenderWindow *window, sf::Font *font);
-}
+};
