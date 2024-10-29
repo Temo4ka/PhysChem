@@ -68,8 +68,12 @@ class Gas {
 class ProgramManager {
 
   public:
-    ProgramManager(Light *light, Vision *vision);
-    ~ProgramManager();
+    ProgramManager(const Light *light, const Vision *vision) :
+    light(light),
+    vision(vision)
+    {}
+
+    ~ProgramManager() {}
 
     int update(const double deltaTime);
 

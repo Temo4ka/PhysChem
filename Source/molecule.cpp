@@ -191,14 +191,6 @@ int Gas::collideWalls(Molecule &molecule) {
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
-ProgramManager::ProgramManager(Piston *piston, Light *light, Vision *vision) {
-    this -> vision = vision;
-    this -> light  =  light; 
-    this -> piston = piston;
-
-    return;
-}
-
 int ProgramManager::addMolecule(Molecule *molecule) {
     catchNullptr(molecule, EXIT_FAILURE);
     if (this -> size == MAX_MOLEC_NUM) return EXIT_SUCCESS;
