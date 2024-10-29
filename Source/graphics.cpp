@@ -40,9 +40,23 @@ int Time_Molecules::update(double deltaTime, int molecules, sf::Image *image, sf
         this -> setCurX(this ->getPosition().x + 30);
     this->incCurX();
 
-    for (int y = 1; y < molecules * 2; y++)
-        image -> setPixel(this->getCurX(), this->getPosition().y + this->getH() * 4 / 5 - y, color);
-    image -> setPixel(this->getCurX(), this->getPosition().y + this->getH() * 4 / 5 - molecules * 2, sf::Color::Yellow);
+    int   x  = this ->   getCurX  ();
+    Vect pos = this -> getPosition();
+    int   h  = this ->     getH   ();
+
+    for (int y = pos.y; y < pos.y + h; y++) {
+        if (y < pos.y + h * 4 / 5 - 2 * molecules ||  y > pos.y + h * 4 / 5)
+            image -> setPixel(x, y, sf::Color(0, 80, 0));
+        else if (y >= pos.y + h * 4 / 5 - 2 * molecules && y < pos.y + h * 4 / 5)
+            image -> setPixel(x, y, color);
+        else
+            image -> setPixel(x, y, sf::Color::White);
+
+    }
+    for (int y = pos.y; y < pos.y + h; y++) 
+            image -> setPixel(x + 1, y, sf::Color::White);
+
+    image -> setPixel(x, this->getPosition().y + h * 4 / 5 - molecules * 2, sf::Color::White);
 
     return EXIT_SUCCESS;
 }
@@ -54,11 +68,26 @@ int Time_Molecules::showText(sf::RenderWindow *window, sf::Font *font) {
     time.setPosition(680, 330);
     time.setCharacterSize(10);
 
+    sf::Text ten = sf::Text("10", *font);
+    ten.setPosition(12, 300);
+    ten.setCharacterSize(8);
+
+    sf::Text twenty = sf::Text("20", *font);
+    twenty.setPosition(12, 280);
+    twenty.setCharacterSize(8);
+
+    sf::Text thirty = sf::Text("30", *font);
+    thirty.setPosition(12, 260);
+    thirty.setCharacterSize(8);
+
     sf::Text molecules = sf::Text("mol", *font);
     molecules.setPosition(2, 245);
     molecules.setCharacterSize(8);
 
     window -> draw(time);
+    window -> draw(twenty);
+    window -> draw(thirty);
+    window -> draw(ten);
     window -> draw(molecules);
 
     return EXIT_SUCCESS;

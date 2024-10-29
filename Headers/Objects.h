@@ -59,7 +59,7 @@ class TypeA : public Molecule {
     double radius;
 
     public:
-        int collide( Molecule *m, MoleculeManager *manager);
+        int collide ( Molecule *m, MoleculeManager *manager);
         int collide2(  TypeA  *a, MoleculeManager *manager);
         int collide2(  TypeB  *a, MoleculeManager *manager);
 
@@ -77,7 +77,7 @@ class TypeB : public Molecule {
     double len;
     
     public:
-        int collide(Molecule *m, MoleculeManager *manager);
+        int collide (Molecule *m, MoleculeManager *manager);
         int collide2(  TypeA  *a, MoleculeManager *manager);
         int collide2(  TypeB  *a, MoleculeManager *manager);
 
