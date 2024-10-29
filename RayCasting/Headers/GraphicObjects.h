@@ -49,7 +49,7 @@ class Sphere {
 
         ~Sphere() {}
 
-        getR(){ return r; }
+        double getR() const { return r; }
 
         Vect3    getPos  () { return    pos;   }
         Vect3 getMaterial() { return material; }
