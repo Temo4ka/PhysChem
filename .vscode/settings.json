@@ -2,6 +2,8 @@
     "files.associations": {
         "type_traits": "cpp",
         "xutility": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "utility": "cpp",
+        "initializer_list": "cpp"
     }
 }

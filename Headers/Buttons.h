@@ -44,18 +44,18 @@ class Button {
 };
 
 class ManagerButton : public Button {
-    MoleculeManager *manager;
+    ProgramManager *manager;
 
     public:
         ManagerButton(const Vect pos, const double w, const double h, const double r, const double g, const double b,
-                                                                                                                MoleculeManager *manager):
+                                                                                                                ProgramManager *manager):
         Button(pos, w, h, r, g, b),
         manager (manager)
         {}
         
         ~ManagerButton() {}
 
-        MoleculeManager* getManager() { return this->manager; }
+        ProgramManager* getManager() { return this->manager; }
 
         int run() { return EXIT_FAILURE; }
 };
@@ -64,7 +64,7 @@ class AddTypeA : public ManagerButton {
 
     public:
         AddTypeA(const Vect pos, const double w, const double h, const double r, const double g, const double b,
-                                                                                                                MoleculeManager *manager):
+                                                                                                                ProgramManager *manager):
         ManagerButton(pos, w, h, r, g, b, manager)
         {}
         
@@ -77,7 +77,7 @@ class AddTypeB : public ManagerButton {
 
     public:
         AddTypeB(const Vect pos, const double w, const double h, const double r, const double g, const double b,
-                                                                                                                MoleculeManager *manager):
+                                                                                                                ProgramManager *manager):
         ManagerButton(pos, w, h, r, g, b, manager)
         {}
         
@@ -91,7 +91,7 @@ class MoveUp : public ManagerButton {
 
     public:
         MoveUp(const Vect pos, const double w, const double h, const double r, const double g, const double b,
-                                                                                                                MoleculeManager *manager):
+                                                                                                                ProgramManager *manager):
         ManagerButton(pos, w, h, r, g, b, manager)
         {}
         
@@ -104,7 +104,7 @@ class MoveDown : public ManagerButton {
 
     public:
         MoveDown(const Vect pos, const double w, const double h, const double r, const double g, const double b, 
-                                                                                                            MoleculeManager *manager):
+                                                                                                            ProgramManager *manager):
         ManagerButton(pos, w, h, r, g, b, manager)
         {}
         

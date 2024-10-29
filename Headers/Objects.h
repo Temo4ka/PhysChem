@@ -15,132 +15,73 @@ enum ButtonPressure {
     BUTTON_PRESSED = 1
 };
 
-class Molecule;
-class TypeA;
-class TypeB;
-class MoleculeManager;
-
-class Piston;
-
 class Molecule {
-    Vect   velocity;
-    double  weight ;
-    Vect   position;
+  public:
+    const double weight;
+    const double radius;
 
-    public:
-        Molecule (const Vect startPos, const double weight);
+    Vect velocity;
 
-        ~Molecule() {}
+    Molecule (const Vect &startPos, const double weight);
 
-        double  getWeight (      )  { return this ->  weight;  }
-        Vect   getVelocity(      )  { return this -> velocity; }
-        Vect   getPosition(      )  { return this -> position; }
-        void   setVelocity(Vect v)  {    this -> velocity = v; }
-        // Vect   getDirection() { return this ->    dir;   }
+    ~Molecule() {}
 
-        int    setPosition(const Vect newPos);
+    Vect getPosition() const { return position; }
 
-        int  move(const double deltaTime, const double PistonY);
+    int move(const double deltaTime) { position += velocity * deltaTime; }
 
-        int absorb(Molecule *molecule);
+    void reverseDir()     { this -> velocity = this -> velocity * -1; }
 
-        void reverseDir()     { this -> velocity = this -> velocity * -1; }
+    int collide (Molecule *m) { return NO_COLLISION; }
 
-        virtual int collide (Molecule *m, MoleculeManager *manager) { return NO_COLLISION; }
-        virtual int collide2(  TypeA  *a, MoleculeManager *manager) { return NO_COLLISION; }
-        virtual int collide2(  TypeB  *b, MoleculeManager *manager) { return NO_COLLISION; }
-        // virtual int collide(TypeB *b, MoleculeManager *manager) { return EXIT_FAILURE; }
+    int draw(sf::Image *image, Light *light, Vision *vision);
 
-        virtual int draw(sf::Image *image, Light *light, Vision *vision) { return EXIT_FAILURE; }
-
+  private:
+    Vect position;
 };
 
-class TypeA : public Molecule {
-    double radius;
+class Gas {
+  public:
 
-    public:
-        int collide ( Molecule *m, MoleculeManager *manager);
-        int collide2(  TypeA  *a, MoleculeManager *manager);
-        int collide2(  TypeB  *a, MoleculeManager *manager);
+    Gas(const Vect &DownLeftCorner, const Vect &UpRightCorner):
+    DownLeftCorner(DownLeftCorner),
+    UpRightCorner(UpRightCorner),
+    molecules()
+    {}
 
-        int draw(sf::Image *image, Light *light, Vision *vision);
+    int addMolecule(const Vect &startPos, const double weight) { molecules.emplace_back((DownLeftCorner + UpRightCorner) * 0.5, weight); }
 
-        double getRadius() { return this -> radius; }
+  private:
+    int  update(const double deltaTime);
+    void collide(Molecule &a, Molecule &b);
+    bool collideWalls()
 
-        TypeA(const Vect startPos, const double weight, const double radius):
-            Molecule(startPos, weight),
-            radius (radius)
-        {}
-};
+  
+    std::vector<Molecule> molecules;
 
-class TypeB : public Molecule {
-    double len;
-    
-    public:
-        int collide (Molecule *m, MoleculeManager *manager);
-        int collide2(  TypeA  *a, MoleculeManager *manager);
-        int collide2(  TypeB  *a, MoleculeManager *manager);
+    const Vect DownLeftCorner;
+    const Vect  UpRightCorner;
 
-        int draw(sf::Image *image, Light *light, Vision *vision);
+    friend ProgramManager;
+}
 
-        double getLen() { return len / 2; }
+class ProgramManager {
 
-        TypeB(const Vect startPos, const double weight, const double len):
-            Molecule(startPos, weight),
-            len (len)
-        {}
-};
+  public:
+    ProgramManager(Light *light, Vision *vision);
+    ~ProgramManager();
 
-class MoleculeManager {
-    signed size;
+    int update(const double deltaTime);
 
-    Molecule **array;
+    int addMolecules(size_t n) {}
 
-    Piston *piston;
+    int  draw (sf::Image *image);
 
-    Light *light;
+    Gas        gas;
 
+  private:
+    Light   *light;     //TODO: change
     Vision *vision;
-
-    public:
-        MoleculeManager(Piston *piston, Light *light, Vision *vision);
-        ~MoleculeManager();
-
-        int createTypeA(Piston *piston);
-        int createTypeB(Piston *piston);
-
-        int addMolecule(Molecule *newMolecule);
-
-        int eraseMolecule(const int ind);
-
-        int swap(Molecule **a, Molecule **b);
-
-        int update(const double deltaTime);
-
-        int  draw (sf::Image *image);
-
-        int      getSize()  { return this-> size;  }
-
-        Piston* getPiston() { return this->piston; }
-};
-
-class Piston {
-    double velocity;
-
-    sf::RectangleShape pistonShape;
-
-    public:
-        Piston (const Vect &startPos, const double w, const double h, const double velocity, const sf::Color color = sf::Color(0, 180, 0));
-
-        ~Piston() {};
-
-        int move(const double deltaTime);
-
-        int moveButton(const double k);
-
-        int draw(sf::RenderWindow *window);
-
-        double getPosition();
 };
 
 class Graphics {

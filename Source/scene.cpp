@@ -22,7 +22,7 @@ int separateScreen(sf::RenderWindow *window, sf::Color color) {
     return EXIT_SUCCESS;
 }
 
-int organiseButtons(ButtonManager *buttonManager, MoleculeManager *manager, sf::Font *font) {
+int organiseButtons(ButtonManager *buttonManager, ProgramManager *manager, sf::Font *font) {
     catchNullptr(    manager  , EXIT_FAILURE);
     catchNullptr(buttonManager, EXIT_FAILURE);
     catchNullptr(     font    , EXIT_FAILURE);

@@ -18,13 +18,11 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Reaction");
 
-    Piston piston(Vect(PISTON_X, PISTON_Y), PISTON_WIDTH, PISTON_HEIGHT, PISTON_VELOCITY);
-
 	Light light(Vect3(700, WINDOW_HEIGHT / 2, 100), WHITE_LIGHT);
 
     Vision vision(Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 500));
 
-    MoleculeManager manager = MoleculeManager(&piston, &light, &vision);
+    ProgramManager manager = ProgramManager(&light, &vision);
 
     Time_Molecules graph1(Vect(0, 0), GRAPHIC_HEIGHT, GRAPHIC_WIDTH);
 
