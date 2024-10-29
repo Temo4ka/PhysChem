@@ -1,5 +1,5 @@
-#include "../headers/GraphicObjects.h"
-#include "../headers/Config.h"
+#include "../Headers/GraphicObjects.h"
+#include "../Headers/Config.h"
 #include <cmath>
 
 // int scanForSphere(sf::Image *image, Sphere *sphere, Light *light, Vision *vis) {

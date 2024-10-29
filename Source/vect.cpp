@@ -1,5 +1,5 @@
-#include "../headers/Config.h"
-#include "../headers/Vect.h"
+#include "../Headers/Config.h"
+#include "../Headers/Vect.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <cmath>

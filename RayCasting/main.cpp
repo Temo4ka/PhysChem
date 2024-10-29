@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "headers/Config.h"
-#include "headers/GraphicObjects.h"
+#include "Headers/Config.h"
+#include "Headers/GraphicObjects.h"
 
 int main()
 {
