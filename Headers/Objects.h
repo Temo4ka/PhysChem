@@ -16,74 +16,75 @@ enum ButtonPressure {
 };
 
 class Molecule {
-  public:
-    const double weight;
-    const double radius;
+public:
+    Molecule(const Vect &DownLeftCorner, const Vect &UpRightCorner, const double weight);
+   ~Molecule() {}
 
-    Vect velocity;
+    Vect getPosition() const {
+        return position;
+    }
 
-    Molecule (const Vect &startPos, const double weight);
-
-    ~Molecule() {}
-
-    Vect getPosition() const { return position; }
-
-    int move(const double deltaTime) { position += velocity * deltaTime; }
-
-    void reverseDir()     { this -> velocity = this -> velocity * -1; }
-
-    int collide (Molecule *m) { return NO_COLLISION; }
+    void move(const double deltaTime) {
+        position += velocity * deltaTime;
+    }
 
     int draw(sf::Image *image, Light *light, Vision *vision);
 
-  private:
+public:
+    const double   weight;
+    const double   radius;
+    const sf::Color color;
+    Vect         velocity;
+private:
     Vect position;
 };
 
 class Gas {
-  public:
-
+public:
     Gas(const Vect &DownLeftCorner, const Vect &UpRightCorner):
     DownLeftCorner(DownLeftCorner),
     UpRightCorner(UpRightCorner),
     molecules()
     {}
 
-    int addMolecule(const Vect &startPos, const double weight) { molecules.emplace_back((DownLeftCorner + UpRightCorner) * 0.5, weight); }
+    void addMolecule(const Vect &startPos, const double weight) {
+        molecules.emplace_back((DownLeftCorner + UpRightCorner) * 0.5, weight);
+    }
 
-  private:
-    int  update(const double deltaTime);
-    void collide(Molecule &a, Molecule &b);
-    bool collideWalls()
+private:
+    int  update          (const double deltaTime);
+    void collideMolecules(Molecule &a, Molecule &b);
+    bool collideWalls    (Molecule &mlc);
 
-  
-    std::vector<Molecule> molecules;
-
+public:
     const Vect DownLeftCorner;
     const Vect  UpRightCorner;
+private:
+    std::vector<Molecule> molecules;
 
-    friend ProgramManager;
-}
+friend class rogramManager;
+};
 
 class ProgramManager {
-
-  public:
-    ProgramManager(const Light *light, const Vision *vision) :
-    light(light),
+public:
+    ProgramManager(
+        const Vect &DownLeftCorner, const Vect &UpRightCorner,
+        Light  *light,
+        Vision *vision):
+    gas   (DownLeftCorner, UpRightCorner),
+    light (light),
     vision(vision)
     {}
 
     ~ProgramManager() {}
 
-    int update(const double deltaTime);
+    int update      (const double deltaTime);
+    int addMolecules(size_t n);
+    int draw        (sf::Image *image);
 
-    int addMolecules(size_t n) {}
-
-    int  draw (sf::Image *image);
-
+public:
     Gas        gas;
-
-  private:
+private:
     Light   *light;     //TODO: change
     Vision *vision;
 };

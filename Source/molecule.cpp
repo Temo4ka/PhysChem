@@ -2,15 +2,20 @@
 #include "../RayCasting/Headers/GraphicObjects.h"
 #include <cmath>
 
-// #define DEBUG_
-// #include "../Headers/Log.h"
+Molecule::Molecule(const Vect &DownLeftCorner, const Vect &UpRightCorner, const double weight):
+weight  (weight),
+radius  (5),
+velocity(),
+position()
+{
+    const Vect RectSize = UpRightCorner - DownLeftCorner;
+    const Vect startPos = DownLeftCorner + Vect(radius, radius);
+    const Vect Offset(
+        rand() % (unsigned long long) (RectSize.x - radius + 1),
+        rand() % (unsigned long long) (RectSize.y - radius + 1)
+    );
 
-Molecule::Molecule (const Vect &startPos, const double weight) {
-
-    int r1 = rand() % RANGE_X - rand() % RANGE_X;
-    int r2 = rand() % RANGE_Y - rand() % RANGE_Y;
-
-    this -> position = Vect(startPos.x + r1, startPos.y + r2);
+    position = startPos + Offset;
 
     double v = (PISTON_VELOCITY + (rand() % MAX_START_VELOCITY));
 
