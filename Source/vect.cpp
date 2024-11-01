@@ -52,6 +52,18 @@ Vect operator * (const Vect &a, const double scalar) {
     return res;
 }
 
+Vect operator * (const double scalar, const Vect &a) {
+    Vect res(a.x * scalar, a.y * scalar);
+
+    return res;
+}
+
+Vect operator / (const Vect &a, const double scalar) {
+    Vect res(a.x / scalar, a.y / scalar);
+
+    return res;
+}
+
 // Vect operator ^ (const Vect& a, const double& angle) {
 // 	Vect res = a;
 	

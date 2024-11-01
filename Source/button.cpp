@@ -120,35 +120,10 @@ int ButtonManager::checkPression(sf::RenderWindow *window, const int buttonStatu
 }
 
 //--------------------------------------------------------------------------------------------------------------------
-int AddTypeA::run() {
+int AddMolecule::run() {
     catchNullptr(this->getManager(), EXIT_FAILURE);
 
-    (this->getManager())->createTypeA((this->getManager())->getPiston());
-
-    return EXIT_SUCCESS;
-}
-
-//--------------------------------------------------------------------------------------------------------------------
-int AddTypeB::run() {
-    catchNullptr(this->getManager(), EXIT_FAILURE);
-
-    (this->getManager())->createTypeB((this->getManager())->getPiston());
-
-    return EXIT_SUCCESS;
-}
-
-//--------------------------------------------------------------------------------------------------------------------
-int MoveUp::run() {
-
-    ((this->getManager())->getPiston())->moveButton(-1);
-
-    return EXIT_SUCCESS;
-}
-//--------------------------------------------------------------------------------------------------------------------
-
-int MoveDown::run() {
-
-    ((this->getManager())->getPiston())->moveButton(1);
+    getManager()->addMolecule();
 
     return EXIT_SUCCESS;
 }

@@ -33,10 +33,10 @@ public:
 public:
     const double   weight;
     const double   radius;
-    const sf::Color color;
     Vect         velocity;
-private:
-    Vect position;
+    Vect         position;
+    
+    const sf::Color color;
 };
 
 class Gas {
@@ -51,8 +51,11 @@ public:
         molecules.emplace_back((DownLeftCorner + UpRightCorner) * 0.5, weight);
     }
 
+    int update(const double deltaTime);
+
+    int draw(sf::Image *image, Light *light, Vision *vision);
+
 private:
-    int  update          (const double deltaTime);
     void collideMolecules(Molecule &a, Molecule &b);
     bool collideWalls    (Molecule &mlc);
 
@@ -80,7 +83,7 @@ public:
 
     int update      (const double deltaTime);
     int addMolecules(size_t n);
-    int draw        (sf::Image *image);
+    int draw        (sf::Image *image) { gas.draw(image, light, vision); }
 
 public:
     Gas        gas;

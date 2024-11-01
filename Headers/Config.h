@@ -11,7 +11,7 @@ const double  PISTON_WIDTH = WINDOW_WIDTH / 2 - 2;
 
 const double    PISTON_X   = WINDOW_WIDTH / 2 + 3;
 
-const double    PISTON_Y   =          20         ;
+const double    CEILING    =          20         ;
 
 const double PISTON_HEIGHT = 30;
 
