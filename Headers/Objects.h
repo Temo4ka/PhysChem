@@ -35,7 +35,7 @@ public:
     const double   radius;
     Vect         velocity;
     Vect         position;
-    
+
     const sf::Color color;
 };
 
@@ -81,9 +81,10 @@ public:
 
     ~ProgramManager() {}
 
-    int update      (const double deltaTime);
-    int addMolecules(size_t n);
-    int draw        (sf::Image *image) { gas.draw(image, light, vision); }
+    int update(const double deltaTime);
+    int draw(sf::Image *image) { gas.draw(image, light, vision); }
+    
+    int addMolecule() { gas.addMolecule()}
 
 public:
     Gas        gas;

@@ -35,7 +35,7 @@ class Button {
 
         int checkIsPressed(const Vect mousePosition, const int buttonStatus);
 
-        int getPression() { return this->isPressed; }
+        int getPression() { return isPressed; }
 
         virtual int run() { return EXIT_FAILURE; };
 
@@ -60,55 +60,15 @@ class ManagerButton : public Button {
         int run() { return EXIT_FAILURE; }
 };
 
-class AddTypeA : public ManagerButton {
+class AddMolecule : public ManagerButton {
 
     public:
-        AddTypeA(const Vect pos, const double w, const double h, const double r, const double g, const double b,
+        AddMolecule(const Vect pos, const double w, const double h, const double r, const double g, const double b,
                                                                                                                 ProgramManager *manager):
         ManagerButton(pos, w, h, r, g, b, manager)
         {}
         
-        ~AddTypeA() {}
-
-        int run();
-};
-
-class AddTypeB : public ManagerButton {
-
-    public:
-        AddTypeB(const Vect pos, const double w, const double h, const double r, const double g, const double b,
-                                                                                                                ProgramManager *manager):
-        ManagerButton(pos, w, h, r, g, b, manager)
-        {}
-        
-        ~AddTypeB() {}
-
-        int run();
-};
-
-
-class MoveUp : public ManagerButton {
-
-    public:
-        MoveUp(const Vect pos, const double w, const double h, const double r, const double g, const double b,
-                                                                                                                ProgramManager *manager):
-        ManagerButton(pos, w, h, r, g, b, manager)
-        {}
-        
-        ~MoveUp() {}
-
-        int run();
-};
-
-class MoveDown : public ManagerButton {
-
-    public:
-        MoveDown(const Vect pos, const double w, const double h, const double r, const double g, const double b, 
-                                                                                                            ProgramManager *manager):
-        ManagerButton(pos, w, h, r, g, b, manager)
-        {}
-        
-        ~MoveDown() {}
+        ~AddMolecule() {}
 
         int run();
 };

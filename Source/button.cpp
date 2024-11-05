@@ -121,7 +121,7 @@ int ButtonManager::checkPression(sf::RenderWindow *window, const int buttonStatu
 
 //--------------------------------------------------------------------------------------------------------------------
 int AddMolecule::run() {
-    catchNullptr(this->getManager(), EXIT_FAILURE);
+    catchNullptr(getManager(), EXIT_FAILURE);
 
     getManager()->addMolecule();
 
