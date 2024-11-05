@@ -69,8 +69,8 @@ void Gas::collideMolecules(Molecule &a, Molecule &b) {
 
     if (dist < b.radius + a.radius) {
 
-        Vect velocPrA = (distV, a.velocity) /  dist;
-        Vect velocPrB = (distV, b.velocity) / -dist;
+        double velocPrA = (distV, a.velocity) /  dist;
+        double velocPrB = (distV, b.velocity) / -dist;
 
         if (velocPrA + velocPrB > 0) {
             

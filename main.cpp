@@ -1,18 +1,18 @@
 #include "./Headers/Scene.h"
 
-//---------------------------------------------------------\\ 
-//                      Screen Sheme                       \\ 
-//---------------------------------------------------------\\ 
-//                           \                             \\   
-//      Buttons HERE         \                             \\    
-//                           \                             \\    
-// --------------------------\          Reaction           \\ 
-//                           \                             \\             
-//                           \                             \\ 
-//       Graphics HERE       \                             \\ 
-//                           \                             \\ 
-//                           \                             \\ 
-//---------------------------------------------------------\\ 
+//---------------------------------------------------------\\
+//                      Screen Sheme                       \\
+//---------------------------------------------------------\\
+//                           \                             \\
+//      Buttons HERE         \                             \\
+//                           \                             \\
+// --------------------------\          Reaction           \\
+//                           \                             \\
+//                           \                             \\
+//       Graphics HERE       \                             \\
+//                           \                             \\
+//                           \                             \\
+//---------------------------------------------------------\\
 
 int main()
 {
@@ -22,7 +22,7 @@ int main()
 
     Vision vision(Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 500));
 
-    ProgramManager manager = ProgramManager(&light, &vision);
+    ProgramManager manager = ProgramManager(Vect(WINDOW_WIDTH / 2, 0), Vect(WINDOW_WIDTH, WINDOW_HEIGHT), &light, &vision);
 
     Time_Molecules graph1(Vect(0, 0), GRAPHIC_HEIGHT, GRAPHIC_WIDTH);
 
@@ -74,8 +74,6 @@ int main()
         light.rotate(time, Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 100));
         manager.update(time);
 
-        graph1.update(time, manager.getSize(), &graphCanvas);
-
         window.clear();
 
             buttonManager.draw(&canvas, &light, &vision);
@@ -90,7 +88,6 @@ int main()
             canvasSprite2.setPosition(0, WINDOW_HEIGHT / 3 + 2);
             window.draw(canvasSprite2);
 
-            piston.draw(&window); 
             buttonManager.showText(&window);
             graph1.showText(&window, &font);
 

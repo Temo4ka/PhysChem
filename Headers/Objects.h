@@ -47,8 +47,8 @@ public:
     molecules()
     {}
 
-    void addMolecule(const Vect &startPos, const double weight) {
-        molecules.emplace_back((DownLeftCorner + UpRightCorner) * 0.5, weight);
+    void addMolecule(const double weight) {
+        molecules.emplace_back(DownLeftCorner, UpRightCorner, weight);
     }
 
     int update(const double deltaTime);
@@ -57,7 +57,7 @@ public:
 
 private:
     void collideMolecules(Molecule &a, Molecule &b);
-    bool collideWalls    (Molecule &mlc);
+    int collideWalls    (Molecule &mlc);
 
 public:
     const Vect DownLeftCorner;
@@ -81,10 +81,10 @@ public:
 
     ~ProgramManager() {}
 
-    int update(const double deltaTime);
-    int draw(sf::Image *image) { gas.draw(image, light, vision); }
+    int update(const double deltaTime) { return gas.update(deltaTime); }
+    int draw(sf::Image *image) { return gas.draw(image, light, vision); }
     
-    int addMolecule() { gas.addMolecule()}
+    void addMolecule() { gas.addMolecule(rand()); }
 
 public:
     Gas        gas;
