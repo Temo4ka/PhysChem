@@ -27,11 +27,27 @@ void Graph::update(double deltaTime, int value) {
 
 void Graph::draw(Vect &position, Vect &size, sf::Image *image, sf::Color color) {
     if (timer > 0) return;
-
     timer = GRAPHIC_TIMER;
+
     curX++;
     if (curX > position.x + size.x)
-        curX = position.x + offside;
+        curX = position.x + 30;
+
+    for (int y = pos.y; y < pos.y + size.y; y++) {
+        if (y < pos.y + size.y * 4 / 5 - 2 * valueY ||  y > pos.y + size.y * 4 / 5)
+            image -> setPixel(curX, y, sf::Color(0, 80, 0));
+        else if (y >= pos.y + size.y * 4 / 5 - 2 * valueY && y < pos.y + size.y * 4 / 5)
+            image -> setPixel(curX, y, color);
+        else
+            image -> setPixel(curX, y, sf::Color::White);
+
+    }
+    for (int y = pos.y; y < pos.y + size.y; y++) 
+            image -> setPixel(curX + 1, y, sf::Color::White);
+
+    image -> setPixel(curX, this->getPosition().y + h * 4 / 5 - valueY * 2, sf::Color::White);
+
+    return;
 }
 
 int Time_Molecules::update(double deltaTime, int molecules, sf::Image *image, sf::Color color) {
@@ -69,35 +85,23 @@ int Time_Molecules::update(double deltaTime, int molecules, sf::Image *image, sf
     return EXIT_SUCCESS;
 }
 
-int Time_Molecules::showText(sf::RenderWindow *window, sf::Font *font) {
+int Graph::showAllText(Vect &position, Vect &size, sf::RenderWindow *window, sf::Font &font) {
     catchNullptr(window, EXIT_FAILURE);
 
-    sf::Text time = sf::Text("time", *font);
-    time.setPosition(680, 330);
-    time.setCharacterSize(10);
-
-    sf::Text ten = sf::Text("10", *font);
-    ten.setPosition(12, 300);
-    ten.setCharacterSize(8);
-
-    sf::Text twenty = sf::Text("20", *font);
-    twenty.setPosition(12, 280);
-    twenty.setCharacterSize(8);
-
-    sf::Text thirty = sf::Text("30", *font);
-    thirty.setPosition(12, 260);
-    thirty.setCharacterSize(8);
-
-    sf::Text molecules = sf::Text("mol", *font);
-    molecules.setPosition(2, 245);
-    molecules.setCharacterSize(8);
-
-    window -> draw(time);
-    window -> draw(twenty);
-    window -> draw(thirty);
-    window -> draw(ten);
-    window -> draw(molecules);
+    window->draw(getText(Vect(position.x + size.x - text.size * charSize, position.y + size.y - charSize), size, font, legendX, 10));
+    window->draw(getText(Vect(0, 0), size, font, legendY, 10));
+    window->draw(getText(Vect(position.x + size.x - text.size * charSize, position.y + size.y - charSize), size, font, legendX, 10));
+    window->draw(getText(Vect(position.x + size.x - text.size * charSize, position.y + size.y - charSize), size, font, legendX, 10));
+    window->draw(getText(Vect(position.x + size.x - text.size * charSize, position.y + size.y - charSize), size, font, legendX, 10));
 
     return EXIT_SUCCESS;
+}
+
+sf::Text Graph::getText(const Vect &position, const Vect &size, const sf::Font &font, const std::string text_, const size_t charSize) {
+    sf::Text text = sf::Text(text_, font);
+    time.setPosition(position.x, position.y);
+    time.setCharacterSize(charSize);
+
+    return text;
 }
 
