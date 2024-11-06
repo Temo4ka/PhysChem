@@ -83,7 +83,7 @@ double operator , (const Vect& a, const Vect& b) {
     return a.x * b.x + a.y * b.y;
 }
 
-Vect Vect::operator - () {
+Vect& Vect::operator - () {
     this -> x *= -1;
     this -> y *= -1;
 
@@ -94,7 +94,7 @@ Vect Vect::operator - () {
 
 void shoot(double bullet, Vect *victim);
 
-Vect Vect::operator ~ () {
+Vect& Vect::operator ~ () {
     int bullet = (rand() % 6);
 	
     shoot(bullet, this);
@@ -114,7 +114,7 @@ void shoot(double bullet, Vect *victim) {
 
 //----------------------------------------------------------------
 
-Vect Vect::operator ! () {
+Vect& Vect::operator ! () {
     double length = sqrt(SQR(this -> x) + SQR(this -> y));
 
     this -> x /= length;

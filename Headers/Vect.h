@@ -9,9 +9,9 @@ struct Vect {
 	Vect& operator  *= (const Vect &other);
     Vect& operator  /= (const double scalar);
 
-    Vect operator - ();
-    Vect operator ~ ();                     //Russian roulet
-    Vect operator ! ();
+    Vect& operator - ();
+    Vect& operator ~ ();                     //Russian roulet
+    Vect& operator ! ();
 
     Vect(double x, double y) : 
              x (x),
