@@ -1,29 +1,34 @@
 #include "../Headers/Objects.h"
 
-int Graphics::draw(sf::Image *image, sf::Color color) {
+int Graph::drawBase(Vect &position, Vect &size, sf::Image *image, sf::Color color) {
     catchNullptr(image, EXIT_FAILURE);
 
-    FILE* logFile = freopen("logFile", "w", stdout);
-    fprintf(logFile, "Here\n");
-    fclose(logFile);
-
-    Vect position = this->position;
-
-    for (int x0 = 0; x0 < this->w; x0++)
-        for (int y0 = 0; y0 < this->h; y0++)
+    for (int x0 = 0; x0 < size.x; x0++)
+        for (int y0 = 0; y0 < size.y; y0++)
             image->setPixel(position.x + x0, position.y + y0, color);
     
     int x0 = position.x + 30; 
-    for (int y = 0; y < this->h; y++)
+    for (int y = 0; y < size.y; y++)
         image -> setPixel(x0, position.y + y, sf::Color::White);
     this -> curX = x0;
 
-    int y0 = position.y + 4 * this->h / 5;
-    for (int x = 0; x < this->w; x++)
+    int y0 = position.y + 4 * size.y / 5;
+    for (int x = 0; x < size.x; x++)
         image -> setPixel(x + position.x, y0, sf::Color::White);
 
 
     return EXIT_SUCCESS;
+}
+
+void Graph::update(double deltaTime, int value) {
+    timer -= deltatime;
+    valueY = value;
+}
+
+void Graph::draw(Vect &position, Vect &size, sf::Image *image, sf::Color color) {
+    if (timer > 0) return;
+
+    timer = GRAPHIC_TIMER;
 }
 
 int Time_Molecules::update(double deltaTime, int molecules, sf::Image *image, sf::Color color) {

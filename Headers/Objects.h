@@ -93,42 +93,40 @@ private:
     Vision *vision;
 };
 
-class Graphics {
-    Vect position;
+class Graph {
+  public:
+    Graphics(const std::string &name_, std::string &legendX_, std::string &legendY_):
+    name (name_),
+    legendX (leegendX_),
+    legendY (leegendY_),
+    timer (GRAPHIC_TIMER)
+    {}
 
-    int w;
-    int h;
+    ~Graphics() {}
 
-    int curX;
+    Vect getPosition() { return this->position; }
 
-    public:
-        Graphics(Vect pos, int h, int w):
-            position (pos),
-                               h (h),
-                                         w (w),
-        curX (-1)
-        {}
+    void update(double deltaTime, int value);
 
-        ~Graphics() {}
+    void drawBase(Vect &position, Vect &size, sf::Image *image, sf::Color color = sf::Color(0, 80, 0));
 
-        int   getH () { return this->h;    }
-        int   getW () { return this->w;    }
-        int getCurX() { return this->curX; }
+    void draw(Vect &position, Vect &size, sf::Image *image, sf::Color color = sf::Color(0, 80, 0));
 
-        void incCurX() { (this->curX)++;   }
+  private:
+    std::string name;
+    std::string legendX;
+    std::string legendY;
 
-        void setCurX(int x) { this->curX = x; }
+    int valY;
 
-        Vect getPosition() { return this->position; }
-
-        int draw(sf::Image *image, sf::Color color = sf::Color(0, 80, 0));
+    double timer;
 };
 
+class GraphManager {
+
+}
+
 class Time_Molecules : public Graphics {
-    int molecules;
-
-    double updTime;
-
     public:
         Time_Molecules(Vect pos, int h, int w):
         Graphics (pos, h, w),
