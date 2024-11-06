@@ -113,7 +113,7 @@
 
 namespace Units
 {
-    namespace
+    namespace detail
     {
         // 1 Virt_mole = (MOLE_UNIT) Phys_mole
         static constexpr double MOLE_UNIT = (1e22 /* кол-во моделей в жизни */) / (1.0 /* кол-во молекул в модели */);
@@ -143,14 +143,14 @@ namespace Units
     TYPEDEF_SCALAR(Phys_mole)
     TYPEDEF_SCALAR(Virt_mole)
 
-    SCALAR_PHYS_2_VIRT(mole, MOLE_UNIT)
+    SCALAR_PHYS_2_VIRT(mole, detail::MOLE_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_SCALAR(Phys_per_mole)
     TYPEDEF_SCALAR(Virt_per_mole)
 
-    SCALAR_PHYS_2_VIRT(per_mole, 1.0 / MOLE_UNIT)
+    SCALAR_PHYS_2_VIRT(per_mole, 1.0 / detail::MOLE_UNIT)
 
     extern const Phys_per_mole Phys_Na;
     extern const Virt_per_mole Virt_Na;
@@ -160,7 +160,7 @@ namespace Units
     TYPEDEF_SCALAR(Phys_g)
     TYPEDEF_SCALAR(Virt_g)
 
-    SCALAR_PHYS_2_VIRT(g, MASS_UNIT)
+    SCALAR_PHYS_2_VIRT(g, detail::MASS_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
@@ -170,8 +170,8 @@ namespace Units
     TYPEDEF_SCALAR(Kelvin)
     TYPEDEF_SCALAR(Celsius)
 
-    static Kelvin  Celsius2Kelvin(const Celsius val) { return val.val_ - CELSIUS_OFFSET; }
-    static Celsius Kelvin2Celsius(const Kelvin  val) { return val.val_ + CELSIUS_OFFSET; }
+    static Kelvin  Celsius2Kelvin(const Celsius val) { return val.val_ - detail::CELSIUS_OFFSET; }
+    static Celsius Kelvin2Celsius(const Kelvin  val) { return val.val_ + detail::CELSIUS_OFFSET; }
 
     //--------------------------------------------------------------------------------------------------
 
@@ -203,49 +203,49 @@ namespace Units
     TYPEDEF_VECTOR(Phys_m)
     TYPEDEF_VECTOR(Virt_m) // пиксели
 
-    VECTOR_PHYS_2_VIRT(m, DISTANCE_UNIT)
+    VECTOR_PHYS_2_VIRT(m, detail::DISTANCE_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_SCALAR(Phys_m2)
     TYPEDEF_SCALAR(Virt_m2)
 
-    SCALAR_PHYS_2_VIRT(m2, DISTANCE_UNIT * DISTANCE_UNIT)
+    SCALAR_PHYS_2_VIRT(m2, detail::DISTANCE_UNIT * detail::DISTANCE_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_SCALAR(Phys_m3)
     TYPEDEF_SCALAR(Virt_m3)
 
-    SCALAR_PHYS_2_VIRT(m3, DISTANCE_UNIT * DISTANCE_UNIT * DISTANCE_UNIT)
+    SCALAR_PHYS_2_VIRT(m3, detail::DISTANCE_UNIT * detail::DISTANCE_UNIT * detail::DISTANCE_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_SCALAR(Phys_sec)
     TYPEDEF_SCALAR(Virt_sec)
 
-    SCALAR_PHYS_2_VIRT(sec, TIME_UNIT)
+    SCALAR_PHYS_2_VIRT(sec, detail::TIME_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_VECTOR(Phys_m_per_sec)
     TYPEDEF_VECTOR(Virt_m_per_sec) // пиксели в секунду
 
-    VECTOR_PHYS_2_VIRT(m_per_sec, VELOCITY_UNIT)
+    VECTOR_PHYS_2_VIRT(m_per_sec, detail::VELOCITY_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_SCALAR(Phys_Joule)
     TYPEDEF_SCALAR(Virt_Joule)
 
-    SCALAR_PHYS_2_VIRT(Joule, JOULE_UNIT)
+    SCALAR_PHYS_2_VIRT(Joule, detail::JOULE_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_SCALAR(Phys_Joule_per_Kelvin)
     TYPEDEF_SCALAR(Virt_Joule_per_Kelvin)
 
-    SCALAR_PHYS_2_VIRT(Joule_per_Kelvin, JOULE_UNIT)
+    SCALAR_PHYS_2_VIRT(Joule_per_Kelvin, detail::JOULE_UNIT)
 
     extern const Phys_Joule_per_Kelvin Phys_kB;
     extern const Virt_Joule_per_Kelvin Virt_kB;
@@ -255,21 +255,21 @@ namespace Units
     TYPEDEF_SCALAR(Phys_Joule_per_mole_Kelvin)
     TYPEDEF_SCALAR(Virt_Joule_per_mole_Kelvin)
 
-    SCALAR_PHYS_2_VIRT(Joule_per_mole_Kelvin, JOULE_UNIT / MOLE_UNIT)
+    SCALAR_PHYS_2_VIRT(Joule_per_mole_Kelvin, detail::JOULE_UNIT / detail::MOLE_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_VECTOR(Phys_Newton)
     TYPEDEF_VECTOR(Virt_Newton)
 
-    VECTOR_PHYS_2_VIRT(Newton, NEWTON_UNIT)
+    VECTOR_PHYS_2_VIRT(Newton, detail::NEWTON_UNIT)
 
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_SCALAR(Phys_Pascal)
     TYPEDEF_SCALAR(Virt_Pascal)
 
-    SCALAR_PHYS_2_VIRT(Pascal, NEWTON_UNIT / (DISTANCE_UNIT * DISTANCE_UNIT))
+    SCALAR_PHYS_2_VIRT(Pascal, detail::NEWTON_UNIT / (detail::DISTANCE_UNIT * detail::DISTANCE_UNIT))
 }
 
 //==================================================================================================
