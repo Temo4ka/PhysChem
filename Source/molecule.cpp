@@ -75,22 +75,41 @@ int Molecule::draw(sf::Image *image, Light *light, Vision *vis) {
 
 //------------------------------------CRINGE_MOMENT--------------------------------------------------------------------------------------
 
-void Gas::collideMolecules(Molecule &a, Molecule &b) {
-/*
-    Vect distV = b.getPosition() - a.getPosition();
+void Gas::collideMolecules(Molecule &a, Molecule &b)
+{
+    const double radius_a     = Molecule::Molecules_table[a.type_].radius.val_;
+    const double radius_b     = Molecule::Molecules_table[b.type_].radius.val_;
 
-    double dist = sqrt(SQR(distV.x) + SQR(distV.y));
+    const double molar_mass_a = Molecule::Molecules_table[a.type_].molar_mass.val_;
+    const double molar_mass_b = Molecule::Molecules_table[b.type_].molar_mass.val_;
 
-    if (dist < b.radius + a.radius) {
+    double dist = (b.getPosition() - a.getPosition()).len().val_;
+    if (dist >= sqrt(SQR(radius_a) + SQR(radius_b)))
+        return;
 
-        double velocPrA = (distV, a.velocity) /  dist;
-        double velocPrB = (distV, b.velocity) / -dist;
+    Vect old_x_axis(1, 0);
+    Vect old_y_axis(0, 1);
 
-        if (velocPrA + velocPrB > 0) {
-            
-        }
-    }
-*/
+    Vect new_x_axis = !(a.position_.vect_ - b.position_.vect_);
+    Vect new_y_axis(-new_x_axis.y, new_x_axis.x);
+
+    Vect old_a_velocity((a.velocity_.vect_, new_x_axis), (a.velocity_.vect_, new_y_axis));
+    Vect old_b_velocity((b.velocity_.vect_, new_x_axis), (b.velocity_.vect_, new_y_axis));
+
+    printf("old_a_vel: (x = %lf, y = %lf, len = %lf)\n", old_a_velocity.x, old_a_velocity.y, old_a_velocity.len());
+    printf("old_b_vel: (x = %lf, y = %lf, len = %lf)\n", old_b_velocity.x, old_b_velocity.y, old_b_velocity.len());
+
+    Vect new_a_velocity = old_a_velocity + Vect(2*(b.velocity_.vect_.len() - a.velocity_.vect_.len())/(1.0 + molar_mass_a / molar_mass_b), 0);
+    Vect new_b_velocity = old_b_velocity + Vect(2*(a.velocity_.vect_.len() - b.velocity_.vect_.len())/(1.0 + molar_mass_b / molar_mass_a), 0);
+
+    printf("new_a_vel: (x = %lf, y = %lf)\n", new_a_velocity.x, new_a_velocity.y);
+    printf("new_b_vel: (x = %lf, y = %lf)\n", new_b_velocity.x, new_b_velocity.y);
+
+    a.velocity_.vect_ = Vect((new_a_velocity, old_x_axis), (new_a_velocity, old_y_axis));
+    b.velocity_.vect_ = Vect((new_b_velocity, old_x_axis), (new_b_velocity, old_y_axis));
+
+    printf("final a: (x = %lf, y = %lf)\n", a.velocity_.vect_.x, a.velocity_.vect_.y);
+    printf("final b: (x = %lf, y = %lf)\n", b.velocity_.vect_.x, b.velocity_.vect_.y);
 }
 
 int Gas::collideWalls(Molecule &molecule) {
@@ -134,14 +153,12 @@ int Gas::update(const double deltaTime) {
     for (auto& curMolecule : molecules)
         curMolecule.move(deltaTime);
 
-    // fprintf(logFile, "---------------------------------------\nSIZE:%d\n", this -> size);
     for (int firstPointer = 0; firstPointer < molecules.size(); firstPointer++) {
         for (int secondPointer = firstPointer + 1; secondPointer < molecules.size(); secondPointer++) {
             collideMolecules(molecules[firstPointer], molecules[secondPointer]);
         }
         collideWalls(molecules[firstPointer]);
     }
-    // fprintf(logFile, "\nSIZE:%d\n===================================\n", this -> size);
 
     return EXIT_SUCCESS;
 }

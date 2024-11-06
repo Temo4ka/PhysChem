@@ -50,9 +50,7 @@ public:
     }
 
     void move(const Virt_sec deltaTime) {
-        printf("position start : (x = %lf, y = %lf)\n", position_.vect_.x, position_.vect_.y);
         position_.vect_ += velocity_.vect_ * deltaTime.val_;
-        printf("position finish: (x = %lf, y = %lf)\n", position_.vect_.x, position_.vect_.y);
     }
 
     int draw(sf::Image *image, Light *light, Vision *vision);
