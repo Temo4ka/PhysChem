@@ -8,17 +8,17 @@
 
 const Molecule::Molecule_properties Molecule::Molecules_table[] =
 {
-    {sf::Color::White      , 1, Units::MolarMass_H },
-    {sf::Color::Magenta    , 1, Units::MolarMass_He},
-    {sf::Color::Red        , 2, Units::MolarMass_N },
-    {sf::Color::Blue       , 2, Units::MolarMass_O },
-    {sf::Color::Yellow     , 2, Units::MolarMass_F },
-    {sf::Color(252, 148, 3), 2, Units::MolarMass_Ne},
-    {sf::Color::Green      , 3, Units::MolarMass_Cl},
-    {sf::Color::Black      , 3, Units::MolarMass_Ar},
-    {sf::Color::Cyan       , 4, Units::MolarMass_Kr},
-    {sf::Color(252, 3, 227), 5, Units::MolarMass_Xe},
-    {sf::Color(163, 28, 28), 6, Units::MolarMass_Rn},
+    {sf::Color::White      , 4, Units::MolarMass_H },
+    {sf::Color::Magenta    , 4, Units::MolarMass_He},
+    {sf::Color::Red        , 5, Units::MolarMass_N },
+    {sf::Color::Blue       , 5, Units::MolarMass_O },
+    {sf::Color::Yellow     , 5, Units::MolarMass_F },
+    {sf::Color(252, 148, 3), 5, Units::MolarMass_Ne},
+    {sf::Color::Green      , 6, Units::MolarMass_Cl},
+    {sf::Color::Black      , 6, Units::MolarMass_Ar},
+    {sf::Color::Cyan       , 7, Units::MolarMass_Kr},
+    {sf::Color(252, 3, 227), 8, Units::MolarMass_Xe},
+    {sf::Color(163, 28, 28), 9, Units::MolarMass_Rn},
 };
 
 Molecule::Molecule(
@@ -61,7 +61,8 @@ int Molecule::draw(sf::Image *image, Light *light, Vision *vis) {
                 double k = 1 - (SQR(x - pos0.x) + SQR(y - pos0.y)) / SQR(radius);
                 k = (k > 1) ? 1 : k;
 
-                Vect3 curColor(0, 0, k);
+                const sf::Color color = Molecules_table[type_].color;
+                Vect3 curColor(k * color.r / 255.0, k * color.g / 255.0, k * color.b / 255.0);
                 curSphere.setMaterial(curColor);
 
                 double z = sqrt(SQR(radius) - SQR(x - pos0.x) - SQR(y - pos0.y));
@@ -130,7 +131,7 @@ int Gas::collideWalls(Molecule &molecule) {
 int Gas::update(const double deltaTime) {
     for (auto& curMolecule : molecules)
         curMolecule.move(deltaTime);
-    
+
     // fprintf(logFile, "---------------------------------------\nSIZE:%d\n", this -> size);
     for (int firstPointer = 0; firstPointer < molecules.size(); firstPointer++) {
         for (int secondPointer = firstPointer + 1; secondPointer < molecules.size(); secondPointer++) {

@@ -83,7 +83,7 @@ public:
     molecules()
     {}
 
-    void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_m_per_sec &MaxVelocity = 20) {
+    void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_m_per_sec &MaxVelocity = 200) {
         molecules.emplace_back(type, DownLeftCorner, UpRightCorner, MaxVelocity);
     }
 
