@@ -3,6 +3,8 @@
 
 #include "Vect.h"
 
+//==================================================================================================
+
 #define TYPEDEF_SCALAR(type_name)   \
     struct type_name                \
     {                               \
@@ -38,8 +40,6 @@
                                                     \
     static VectVirt_##unit_name VectPhys2Virt_##unit_name(const VectPhys_##unit_name vect) { return (1.0 / (unit_value)) * vect.vect_; }    \
     static VectPhys_##unit_name VectVirt2Phys_##unit_name(const VectVirt_##unit_name vect) { return (unit_value)         * vect.vect_; }
-
-//==================================================================================================
 
 class Units
 {
@@ -203,12 +203,68 @@ private:
     static constexpr double NEWTON_UNIT = (JOULE_UNIT / DISTANCE_UNIT);
 };
 
-//==================================================================================================
-
 #undef TYPEDEF_SCALAR
 #undef TYPEDEF_VECTOR
 
 #undef SCALAR_PHYS_2_VIRT
 #undef VECTOR_PHYS_2_VIRT
+
+//==================================================================================================
+
+#define SCALAR_UNIT_ALIAS(unit_name)    \
+    using unit_name = Units::unit_name;
+
+#define VECTOR_UNIT_ALIAS(unit_name)    \
+    SCALAR_UNIT_ALIAS(unit_name)        \
+    using Vect##unit_name = Units::Vect##unit_name;
+
+SCALAR_UNIT_ALIAS(Phys_mole)
+SCALAR_UNIT_ALIAS(Virt_mole)
+
+SCALAR_UNIT_ALIAS(Phys_per_mole)
+SCALAR_UNIT_ALIAS(Virt_per_mole)
+
+SCALAR_UNIT_ALIAS(Phys_g)
+SCALAR_UNIT_ALIAS(Virt_g)
+
+SCALAR_UNIT_ALIAS(Kelvin)
+SCALAR_UNIT_ALIAS(Celsius)
+
+SCALAR_UNIT_ALIAS(g_per_mole)
+
+VECTOR_UNIT_ALIAS(Phys_m)
+VECTOR_UNIT_ALIAS(Virt_m)
+
+SCALAR_UNIT_ALIAS(Phys_m2)
+SCALAR_UNIT_ALIAS(Virt_m2)
+
+SCALAR_UNIT_ALIAS(Phys_m3)
+SCALAR_UNIT_ALIAS(Virt_m3)
+
+SCALAR_UNIT_ALIAS(Phys_sec)
+SCALAR_UNIT_ALIAS(Virt_sec)
+
+VECTOR_UNIT_ALIAS(Phys_m_per_sec)
+VECTOR_UNIT_ALIAS(Virt_m_per_sec)
+
+SCALAR_UNIT_ALIAS(Phys_Joule)
+SCALAR_UNIT_ALIAS(Virt_Joule)
+
+SCALAR_UNIT_ALIAS(Phys_Joule_per_Kelvin)
+SCALAR_UNIT_ALIAS(Virt_Joule_per_Kelvin)
+
+SCALAR_UNIT_ALIAS(Phys_Joule_per_mole_Kelvin)
+SCALAR_UNIT_ALIAS(Virt_Joule_per_mole_Kelvin)
+
+VECTOR_UNIT_ALIAS(Phys_Newton)
+VECTOR_UNIT_ALIAS(Virt_Newton)
+
+SCALAR_UNIT_ALIAS(Phys_Pascal)
+SCALAR_UNIT_ALIAS(Virt_Pascal)
+
+#undef SCALAR_UNIT_ALIAS
+#undef VECTOR_UNIT_ALIAS
+
+//==================================================================================================
 
 #endif // PHYSICS_H
