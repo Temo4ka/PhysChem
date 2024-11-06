@@ -1,8 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Config.h"
+
 #include "Vect.h"
+#include "Config.h"
+#include "Physics.h"
 #include "../RayCasting/Headers/GraphicObjects.h"
 
 enum Collision {
@@ -16,27 +18,54 @@ enum ButtonPressure {
 };
 
 class Molecule {
+// static
 public:
-    Molecule(const Vect &DownLeftCorner, const Vect &UpRightCorner, const double weight);
+    enum MOLECULE_TYPE
+    {
+        H = 0   ,
+        He      ,
+        N       ,
+        O       ,
+        F       ,
+        Ne      ,
+        Cl      ,
+        Ar      ,
+        Kr      ,
+        Xe      ,
+        Rn      ,
+
+        NUM_MOLECULE_TYPE
+    };
+
+    struct
+    {
+        sf::Color  color;
+        Virt_m     radius;
+        g_per_mole molar_mass;
+    }
+    static const Molecules_table[NUM_MOLECULE_TYPE];
+
+// member functions
+public:
+    Molecule(MOLECULE_TYPE type, const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner);
    ~Molecule() {}
 
-    Vect getPosition() const {
-        return position;
+    VectVirt_m getPosition() const {
+        return position_;
     }
 
-    void move(const double deltaTime) {
-        position += velocity * deltaTime;
+    void move(const Virt_sec deltaTime) {
+        position_.vect_ += velocity_.vect_ * deltaTime.val_;
     }
 
     int draw(sf::Image *image, Light *light, Vision *vision);
 
+// member data
 public:
-    const double   weight;
-    const double   radius;
-    Vect         velocity;
-    Vect         position;
-
-    const sf::Color color;
+    MOLECULE_TYPE const type_;
+    VectVirt_m_per_sec  velocity_;
+private:
+    VectVirt_m          position_;
 };
 
 class Gas {

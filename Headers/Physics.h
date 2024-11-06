@@ -3,8 +3,6 @@
 
 #include "Vect.h"
 
-//==================================================================================================
-
 #define TYPEDEF_SCALAR(type_name)   \
     struct type_name                \
     {                               \
@@ -20,6 +18,10 @@
                                     \
     struct Vect##type_name          \
     {                               \
+        Vect##type_name():          \
+        vect_()                     \
+        {}                          \
+                                    \
         Vect##type_name(const Vect &vect): \
         vect_(vect)                 \
         {}                          \
@@ -28,22 +30,116 @@
         vect_(x, y)                 \
         {}                          \
                                     \
+        Vect##type_name& operator +=(const Vect##type_name &other) \
+        {                           \
+            vect_ += other.vect_;   \
+            return *this;           \
+        }                           \
+                                    \
+	    Vect##type_name& operator -=(const Vect##type_name &other) \
+        {                           \
+            vect_ -= other.vect_;   \
+            return *this;           \
+        }                           \
+                                    \
+        Vect##type_name& operator *=(const double scalar) \
+        {                           \
+            vect_ *= scalar;        \
+            return *this;           \
+        }                           \
+                                    \
+        Vect##type_name& operator /=(const double scalar) \
+        {                           \
+            vect_ /= scalar;        \
+            return *this;           \
+        }                           \
+                                    \
+        Vect##type_name& operator -() \
+        {                           \
+            vect_ = -vect_;         \
+            return *this;           \
+        }                           \
+                                    \
+        Vect##type_name& operator !() \
+        {                           \
+            vect_ = !vect_;         \
+            return *this;           \
+        }                           \
+                                    \
         Vect vect_;                 \
-    };
+    };                              \
+                                    \
+    inline Vect##type_name operator +(const Vect##type_name &a, const Vect##type_name &b) \
+    {                               \
+        return a.vect_ + b.vect_;   \
+    }                               \
+                                    \
+    inline Vect##type_name operator -(const Vect##type_name &a, const Vect##type_name &b) \
+    {                               \
+        return a.vect_ - b.vect_;   \
+    }                               \
+                                    \
+    inline double operator ,(const Vect##type_name &a, const Vect##type_name &b) \
+    {                               \
+        return (a.vect_, b.vect_);  \
+    }                               \
+                                    \
+    inline Vect##type_name operator *(const double scalar, const Vect##type_name &a) \
+    {                               \
+        return scalar * a.vect_;    \
+    }                               \
+                                    \
+    inline Vect##type_name operator *(const Vect##type_name &a, const double scalar) \
+    {                               \
+        return scalar * a.vect_;    \
+    }                               \
+                                    \
+    inline Vect##type_name operator /(const Vect##type_name &a, const double scalar) \
+    {                               \
+        return a.vect_ / scalar;    \
+    }
 
 #define SCALAR_PHYS_2_VIRT(unit_name, unit_value)   \
-    static Virt_##unit_name Phys2Virt_##unit_name(const Phys_##unit_name val) { return (1.0 / (unit_value)) * val.val_; }   \
-    static Phys_##unit_name Virt2Phys_##unit_name(const Virt_##unit_name val) { return (unit_value)         * val.val_; }
+    inline Virt_##unit_name Phys2Virt_##unit_name(const Phys_##unit_name val) { return (1.0 / (unit_value)) * val.val_; }   \
+    inline Phys_##unit_name Virt2Phys_##unit_name(const Virt_##unit_name val) { return (unit_value)         * val.val_; }
 
 #define VECTOR_PHYS_2_VIRT(unit_name, unit_value)   \
     SCALAR_PHYS_2_VIRT(unit_name, unit_value)       \
                                                     \
-    static VectVirt_##unit_name VectPhys2Virt_##unit_name(const VectPhys_##unit_name vect) { return (1.0 / (unit_value)) * vect.vect_; }    \
-    static VectPhys_##unit_name VectVirt2Phys_##unit_name(const VectVirt_##unit_name vect) { return (unit_value)         * vect.vect_; }
+    inline VectVirt_##unit_name VectPhys2Virt_##unit_name(const VectPhys_##unit_name vect) { return (1.0 / (unit_value)) * vect.vect_; }    \
+    inline VectPhys_##unit_name VectVirt2Phys_##unit_name(const VectVirt_##unit_name vect) { return (unit_value)         * vect.vect_; }
 
-class Units
+//==================================================================================================
+
+namespace Units
 {
-public:
+    namespace
+    {
+        // 1 Virt_mole = (MOLE_UNIT) Phys_mole
+        static constexpr double MOLE_UNIT = (1e22 /* кол-во моделей в жизни */) / (1.0 /* кол-во молекул в модели */);
+
+        // 1 Virt_g = (MASS_UNIT) Phys_g
+        static constexpr double MASS_UNIT = (MOLE_UNIT) /*!!! необходимо, чтобы физическая и виртуальная молярные массы были одинаковы */;
+
+        // Celsius = Kelvin + (CELSIUS_OFFSET)
+        static constexpr double CELSIUS_OFFSET = -273.15;
+
+        // 1 Virt_m = (DISTANCE_UNIT) Phys_m
+        static constexpr double DISTANCE_UNIT = (1.0 /* метр */) / (1000.0 /* пиксели */);
+
+        // 1 Virt_m_per_sec = (VELOCITY_UNIT) Phys_m_per_sec
+        static constexpr double VELOCITY_UNIT = (752.85 /* пиксели в секунду */) / (5.0 /* скорость молекулы углерода при 0 по цельсию, метры в cекунду */);
+
+        // 1 Virt_sec = (TIME_UNIT) Phys_sec
+        static constexpr double TIME_UNIT = DISTANCE_UNIT / VELOCITY_UNIT;
+
+        // 1 Virt_Joule = (JOULE_UNIT) Phys_Joule
+        static constexpr double JOULE_UNIT = (MASS_UNIT * VELOCITY_UNIT * VELOCITY_UNIT);
+
+        // 1 Virt_Newton = (NEWTON_UNIT) Phys_Newton
+        static constexpr double NEWTON_UNIT = (JOULE_UNIT / DISTANCE_UNIT);
+    }
+
     TYPEDEF_SCALAR(Phys_mole)
     TYPEDEF_SCALAR(Virt_mole)
 
@@ -56,8 +152,8 @@ public:
 
     SCALAR_PHYS_2_VIRT(per_mole, 1.0 / MOLE_UNIT)
 
-    static const Phys_per_mole Phys_Na;
-    static const Virt_per_mole Virt_Na;
+    extern const Phys_per_mole Phys_Na;
+    extern const Virt_per_mole Virt_Na;
 
     //--------------------------------------------------------------------------------------------------
 
@@ -86,7 +182,7 @@ public:
     TYPEDEF_SCALAR(g_per_mole)
 
     #define MOLAR_MASS(gas_name)    \
-        static const g_per_mole MolarMass_##gas_name;
+        extern const g_per_mole MolarMass_##gas_name;
 
     MOLAR_MASS(H)
     MOLAR_MASS(He)
@@ -151,8 +247,8 @@ public:
 
     SCALAR_PHYS_2_VIRT(Joule_per_Kelvin, JOULE_UNIT)
 
-    static const Phys_Joule_per_Kelvin Phys_kB;
-    static const Virt_Joule_per_Kelvin Virt_kB;
+    extern const Phys_Joule_per_Kelvin Phys_kB;
+    extern const Virt_Joule_per_Kelvin Virt_kB;
 
     //--------------------------------------------------------------------------------------------------
 
@@ -174,97 +270,14 @@ public:
     TYPEDEF_SCALAR(Virt_Pascal)
 
     SCALAR_PHYS_2_VIRT(Pascal, NEWTON_UNIT / (DISTANCE_UNIT * DISTANCE_UNIT))
+}
 
-    //--------------------------------------------------------------------------------------------------
-
-private:
-    // 1 Virt_mole = (MOLE_UNIT) Phys_mole
-    static constexpr double MOLE_UNIT = (1e22 /* кол-во моделей в жизни */) / (1.0 /* кол-во молекул в модели */);
-
-    // 1 Virt_g = (MASS_UNIT) Phys_g
-    static constexpr double MASS_UNIT = (MOLE_UNIT) /*!!! необходимо, чтобы физическая и виртуальная молярные массы были одинаковы */;
-
-    // Celsius = Kelvin + (CELSIUS_OFFSET)
-    static constexpr double CELSIUS_OFFSET = -273.15;
-
-    // 1 Virt_m = (DISTANCE_UNIT) Phys_m
-    static constexpr double DISTANCE_UNIT = (1.0 /* метр */) / (1000.0 /* пиксели */);
-
-    // 1 Virt_m_per_sec = (VELOCITY_UNIT) Phys_m_per_sec
-    static constexpr double VELOCITY_UNIT = (752.85 /* пиксели в секунду */) / (5.0 /* скорость молекулы углерода при 0 по цельсию, метры в cекунду */);
-
-    // 1 Virt_sec = (TIME_UNIT) Phys_sec
-    static constexpr double TIME_UNIT = DISTANCE_UNIT / VELOCITY_UNIT;
-
-    // 1 Virt_Joule = (JOULE_UNIT) Phys_Joule
-    static constexpr double JOULE_UNIT = (MASS_UNIT * VELOCITY_UNIT * VELOCITY_UNIT);
-
-    // 1 Virt_Newton = (NEWTON_UNIT) Phys_Newton
-    static constexpr double NEWTON_UNIT = (JOULE_UNIT / DISTANCE_UNIT);
-};
+//==================================================================================================
 
 #undef TYPEDEF_SCALAR
 #undef TYPEDEF_VECTOR
 
 #undef SCALAR_PHYS_2_VIRT
 #undef VECTOR_PHYS_2_VIRT
-
-//==================================================================================================
-
-#define SCALAR_UNIT_ALIAS(unit_name)    \
-    using unit_name = Units::unit_name;
-
-#define VECTOR_UNIT_ALIAS(unit_name)    \
-    SCALAR_UNIT_ALIAS(unit_name)        \
-    using Vect##unit_name = Units::Vect##unit_name;
-
-SCALAR_UNIT_ALIAS(Phys_mole)
-SCALAR_UNIT_ALIAS(Virt_mole)
-
-SCALAR_UNIT_ALIAS(Phys_per_mole)
-SCALAR_UNIT_ALIAS(Virt_per_mole)
-
-SCALAR_UNIT_ALIAS(Phys_g)
-SCALAR_UNIT_ALIAS(Virt_g)
-
-SCALAR_UNIT_ALIAS(Kelvin)
-SCALAR_UNIT_ALIAS(Celsius)
-
-SCALAR_UNIT_ALIAS(g_per_mole)
-
-VECTOR_UNIT_ALIAS(Phys_m)
-VECTOR_UNIT_ALIAS(Virt_m)
-
-SCALAR_UNIT_ALIAS(Phys_m2)
-SCALAR_UNIT_ALIAS(Virt_m2)
-
-SCALAR_UNIT_ALIAS(Phys_m3)
-SCALAR_UNIT_ALIAS(Virt_m3)
-
-SCALAR_UNIT_ALIAS(Phys_sec)
-SCALAR_UNIT_ALIAS(Virt_sec)
-
-VECTOR_UNIT_ALIAS(Phys_m_per_sec)
-VECTOR_UNIT_ALIAS(Virt_m_per_sec)
-
-SCALAR_UNIT_ALIAS(Phys_Joule)
-SCALAR_UNIT_ALIAS(Virt_Joule)
-
-SCALAR_UNIT_ALIAS(Phys_Joule_per_Kelvin)
-SCALAR_UNIT_ALIAS(Virt_Joule_per_Kelvin)
-
-SCALAR_UNIT_ALIAS(Phys_Joule_per_mole_Kelvin)
-SCALAR_UNIT_ALIAS(Virt_Joule_per_mole_Kelvin)
-
-VECTOR_UNIT_ALIAS(Phys_Newton)
-VECTOR_UNIT_ALIAS(Virt_Newton)
-
-SCALAR_UNIT_ALIAS(Phys_Pascal)
-SCALAR_UNIT_ALIAS(Virt_Pascal)
-
-#undef SCALAR_UNIT_ALIAS
-#undef VECTOR_UNIT_ALIAS
-
-//==================================================================================================
 
 #endif // PHYSICS_H
