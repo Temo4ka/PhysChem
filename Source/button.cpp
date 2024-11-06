@@ -123,7 +123,7 @@ int ButtonManager::checkPression(sf::RenderWindow *window, const int buttonStatu
 int AddMolecule::run() {
     catchNullptr(getManager(), EXIT_FAILURE);
 
-    getManager()->addMolecule();
+    getManager()->gas.addMolecule(Molecule::O);
 
     return EXIT_SUCCESS;
 }

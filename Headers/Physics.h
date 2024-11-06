@@ -30,6 +30,16 @@
         vect_(x, y)                 \
         {}                          \
                                     \
+                                    \
+        Vect##type_name(type_name x, type_name y): \
+        vect_(x.val_, y.val_)       \
+        {}                          \
+                                    \
+        type_name len() const       \
+        {                           \
+            return vect_.len();     \
+        }                           \
+                                    \
         Vect##type_name& operator +=(const Vect##type_name &other) \
         {                           \
             vect_ += other.vect_;   \

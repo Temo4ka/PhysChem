@@ -7,6 +7,8 @@
 #include "Physics.h"
 #include "../RayCasting/Headers/GraphicObjects.h"
 
+using namespace Units;
+
 enum Collision {
     NO_COLLISION = 0,
        COLLISION = 1
@@ -37,7 +39,7 @@ public:
         NUM_MOLECULE_TYPE
     };
 
-    struct
+    struct Molecule_properties
     {
         sf::Color  color;
         Virt_m     radius;
@@ -47,7 +49,10 @@ public:
 
 // member functions
 public:
-    Molecule(MOLECULE_TYPE type, const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner);
+    Molecule(
+        const MOLECULE_TYPE type,
+        const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner,
+        const Virt_m_per_sec &MaxVelocity);
    ~Molecule() {}
 
     VectVirt_m getPosition() const {
@@ -55,7 +60,9 @@ public:
     }
 
     void move(const Virt_sec deltaTime) {
+        printf("position start : (x = %lf, y = %lf)\n", position_.vect_.x, position_.vect_.y);
         position_.vect_ += velocity_.vect_ * deltaTime.val_;
+        printf("position finish: (x = %lf, y = %lf)\n", position_.vect_.x, position_.vect_.y);
     }
 
     int draw(sf::Image *image, Light *light, Vision *vision);
@@ -76,8 +83,8 @@ public:
     molecules()
     {}
 
-    void addMolecule(const double weight) {
-        molecules.emplace_back(DownLeftCorner, UpRightCorner, weight);
+    void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_m_per_sec &MaxVelocity = 20) {
+        molecules.emplace_back(type, DownLeftCorner, UpRightCorner, MaxVelocity);
     }
 
     int update(const double deltaTime);
@@ -112,8 +119,6 @@ public:
 
     int update(const double deltaTime) { return gas.update(deltaTime); }
     int draw(sf::Image *image) { return gas.draw(image, light, vision); }
-    
-    void addMolecule() { gas.addMolecule(rand()); }
 
 public:
     Gas        gas;

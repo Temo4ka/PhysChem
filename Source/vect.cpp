@@ -2,7 +2,6 @@
 #include "../Headers/Vect.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <cmath>
 
 Vect& Vect:: operator += (const Vect& other) {
     this -> x += other.x;
@@ -135,4 +134,16 @@ Vect& Vect::operator ! () {
     this -> y /= length;
 
     return *this;
+}
+
+//----------------------------------------------------------------
+
+Vect Vect::rand_unit_vect()
+{
+    double angle = rand() % 360;
+
+    angle = (angle < 0) ? (angle + 360) : angle;
+    angle = (angle / 360.0) * 2 * 3.14;
+
+    return Vect(cos(angle), sin(angle));
 }

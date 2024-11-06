@@ -1,8 +1,12 @@
 #pragma once
 
+#include <cmath>
+
 struct Vect {
     double x;
     double y;
+
+    double len() const { return sqrt(x*x + y*y); }
 
     Vect& operator  += (const Vect &other);
 	Vect& operator  -= (const Vect &other);
@@ -22,6 +26,7 @@ struct Vect {
     Vect() {}
    ~Vect() {}
 
+    static Vect rand_unit_vect();
 };
 
 Vect   operator  +  (const Vect &a, const Vect &b);
