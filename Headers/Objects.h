@@ -9,16 +9,6 @@
 
 using namespace Units;
 
-enum Collision {
-    NO_COLLISION = 0,
-       COLLISION = 1
-};
-
-enum ButtonPressure {
-    BUTTON_NOT_PRESSED = 0,
-    BUTTON_PRESSED = 1
-};
-
 class Molecule {
 // static
 public:

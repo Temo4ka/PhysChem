@@ -2,6 +2,11 @@
 
 #include "Objects.h"
 
+enum ButtonPressure {
+    BUTTON_NOT_PRESSED = 0,
+    BUTTON_PRESSED = 1
+};
+
 class Button {
     Vect   position;
     
