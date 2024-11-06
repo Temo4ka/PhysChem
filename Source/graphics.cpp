@@ -10,7 +10,7 @@ int Graph::drawBase(Vect &position, Vect &size, sf::Image *image, sf::Color colo
     int x0 = position.x + 30; 
     for (int y = 0; y < size.y; y++)
         image -> setPixel(x0, position.y + y, sf::Color::White);
-    this -> curX = x0;
+    curX = x0;
 
     int y0 = position.y + 4 * size.y / 5;
     for (int x = 0; x < size.x; x++)
@@ -29,6 +29,9 @@ void Graph::draw(Vect &position, Vect &size, sf::Image *image, sf::Color color) 
     if (timer > 0) return;
 
     timer = GRAPHIC_TIMER;
+    curX++;
+    if (curX > position.x + size.x)
+        curX = position.x + offside;
 }
 
 int Time_Molecules::update(double deltaTime, int molecules, sf::Image *image, sf::Color color) {

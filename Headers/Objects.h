@@ -118,6 +118,7 @@ class Graph {
     std::string legendY;
 
     int valY;
+    int curX;
 
     double timer;
 };
