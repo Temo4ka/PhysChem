@@ -7,6 +7,7 @@ struct Vect {
     Vect& operator  += (const Vect &other);
 	Vect& operator  -= (const Vect &other);
 	Vect& operator  *= (const Vect &other);
+    Vect& operator  *= (const double scalar);
     Vect& operator  /= (const double scalar);
 
     Vect& operator - ();

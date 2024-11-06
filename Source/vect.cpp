@@ -18,6 +18,20 @@ Vect& Vect:: operator *= (const Vect& other) {
 	return *this;
 }
 
+Vect& Vect:: operator *= (const double scalar) {
+    this -> x *= scalar;
+    this -> y *= scalar;
+
+    return *this;
+}
+
+Vect& Vect:: operator /= (const double scalar) {
+    this -> x /= scalar;
+    this -> y /= scalar;
+
+    return *this;
+}
+
 Vect& Vect:: operator -= (const Vect& other) {
     this -> x -= other.x;
     this -> y -= other.y;
