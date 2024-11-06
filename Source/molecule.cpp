@@ -94,35 +94,37 @@ void Gas::collideMolecules(Molecule &a, Molecule &b) {
 }
 
 int Gas::collideWalls(Molecule &molecule) {
-/*
-     if (molecule.position.x < LEFT_WALL + 5) {
-        molecule.velocity.x *= -1;
-        molecule.position.x = LEFT_WALL + 5;
+
+    const double radius = Molecule::Molecules_table[molecule.type_].radius.val_;
+
+    if (molecule.getPosition().vect_.x < DownLeftCorner.x + radius) {
+        molecule.velocity_.vect_.x *= -1;
+        molecule.position_.vect_.x = DownLeftCorner.x + radius;
 
         return 1;
     }
 
-    if (molecule.position.x > RIGHT_WALL) {
-        molecule.velocity.x *= -1;
-        molecule.position.x = RIGHT_WALL - 3;
+    if (molecule.getPosition().vect_.x > UpRightCorner.x - radius) {
+        molecule.velocity_.vect_.x *= -1;
+        molecule.position_.vect_.x = UpRightCorner.x - radius;
 
         return 1;
     }
 
-    if (molecule.position.y > WINDOW_HEIGHT) {
-        molecule.velocity.y *= -1;
-        molecule.position.y = WINDOW_HEIGHT - 5;
+    if (molecule.position_.vect_.y > UpRightCorner.y - radius) {
+        molecule.velocity_.vect_.y *= -1;
+        molecule.position_.vect_.y = UpRightCorner.y - radius;
 
         return 1;
     }
 
-    if (molecule.position.y <= CEILING) {
-        molecule.velocity.y *= -1;
-        molecule.position.y = CEILING + 5;
+    if (molecule.position_.vect_.y < DownLeftCorner.y + radius) {
+        molecule.velocity_.vect_.y *= -1;
+        molecule.position_.vect_.y = DownLeftCorner.y + radius;
 
         return 1;
     }
-*/
+
     return 0;
 }
 

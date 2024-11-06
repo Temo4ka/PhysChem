@@ -73,6 +73,8 @@ public:
     VectVirt_m_per_sec  velocity_;
 private:
     VectVirt_m          position_;
+
+friend class Gas;
 };
 
 class Gas {
