@@ -128,7 +128,7 @@ int Gas::collideWalls(Molecule &molecule) {
 //----------------------------------------------------------------------------------------------------------------------------------------
 
 int Gas::update(const double deltaTime) {
-    for (auto curMolecule : molecules)
+    for (auto& curMolecule : molecules)
         curMolecule.move(deltaTime);
     
     // fprintf(logFile, "---------------------------------------\nSIZE:%d\n", this -> size);
