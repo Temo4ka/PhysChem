@@ -125,6 +125,14 @@ piston_velocity_(0),
 piston_work_    (0)
 {
     piston_down();
+
+    printf(
+        "DownLeftCorner(.x = %lf, .y = %lf)\n"
+        "UpRightCorner (.x = %lf, .y = %lf)\n\n",
+
+        DownLeftCorner_.get_x().val_, DownLeftCorner_.get_y().val_,
+        UpRightCorner_ .get_x().val_, UpRightCorner_ .get_y().val_
+    );
 }
 
 //------------------------------------------------------------------------------------------------
