@@ -148,6 +148,12 @@ int Gas::collideWalls(Molecule &molecule)
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
+void Gas::addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount, const Virt_m_per_sec &MaxVelocity)
+{
+    for (double cnt = 0; cnt < amount * Virt_Na; ++cnt)
+        molecules.emplace_back(type, DownLeftCorner, UpRightCorner, MaxVelocity);
+}
+
 int Gas::update(const double deltaTime) {
     for (auto& curMolecule : molecules)
         curMolecule.move(deltaTime);
