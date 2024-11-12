@@ -187,22 +187,22 @@ namespace Units
      */
     TYPEDEF_SCALAR(g_per_mole)
 
-    #define MOLAR_MASS(gas_name)    \
-        extern const g_per_mole MolarMass_##gas_name;
+#define MOLAR_MASS(gas_name, mass_value)    \
+    static const g_per_mole MolarMass_##gas_name = mass_value;
 
-    MOLAR_MASS(H)
-    MOLAR_MASS(He)
-    MOLAR_MASS(N)
-    MOLAR_MASS(O)
-    MOLAR_MASS(F)
-    MOLAR_MASS(Ne)
-    MOLAR_MASS(Cl)
-    MOLAR_MASS(Ar)
-    MOLAR_MASS(Kr)
-    MOLAR_MASS(Xe)
-    MOLAR_MASS(Rn)
+    MOLAR_MASS(H , 1.008)
+    MOLAR_MASS(He, 4.0026)
+    MOLAR_MASS(N , 14.007)
+    MOLAR_MASS(O , 15.999)
+    MOLAR_MASS(F , 18.998)
+    MOLAR_MASS(Ne, 20.180)
+    MOLAR_MASS(Cl, 35.45)
+    MOLAR_MASS(Ar, 39.948)
+    MOLAR_MASS(Kr, 83.798)
+    MOLAR_MASS(Xe, 131.29)
+    MOLAR_MASS(Rn, 222)
 
-    #undef MOLAR_MASS
+#undef MOLAR_MASS
 
     //--------------------------------------------------------------------------------------------------
 

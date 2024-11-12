@@ -8,17 +8,17 @@
 
 const Molecule::Molecule_properties Molecule::Molecules_table[] =
 {
-    {sf::Color::White        , 4, Units::MolarMass_H },
-    {sf::Color::Magenta      , 4, Units::MolarMass_He},
-    {sf::Color::Red          , 5, Units::MolarMass_N },
-    {sf::Color::Blue         , 5, Units::MolarMass_O },
-    {sf::Color::Yellow       , 5, Units::MolarMass_F },
-    {sf::Color(252, 148,   3), 5, Units::MolarMass_Ne},
-    {sf::Color::Green        , 6, Units::MolarMass_Cl},
-    {sf::Color( 52, 235, 183), 6, Units::MolarMass_Ar},
-    {sf::Color::Cyan         , 7, Units::MolarMass_Kr},
-    {sf::Color(252,   3, 227), 8, Units::MolarMass_Xe},
-    {sf::Color(163,  28,  28), 9, Units::MolarMass_Rn},
+    {sf::Color::White        , 4, MolarMass_H },
+    {sf::Color::Magenta      , 4, MolarMass_He},
+    {sf::Color::Red          , 5, MolarMass_N },
+    {sf::Color::Blue         , 5, MolarMass_O },
+    {sf::Color::Yellow       , 5, MolarMass_F },
+    {sf::Color(252, 148,   3), 5, MolarMass_Ne},
+    {sf::Color::Green        , 6, MolarMass_Cl},
+    {sf::Color( 52, 235, 183), 6, MolarMass_Ar},
+    {sf::Color::Cyan         , 7, MolarMass_Kr},
+    {sf::Color(252,   3, 227), 8, MolarMass_Xe},
+    {sf::Color(163,  28,  28), 9, MolarMass_Rn},
 };
 
 //------------------------------------------------------------------------------------------------
