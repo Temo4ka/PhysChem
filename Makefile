@@ -6,3 +6,6 @@ mac:
 
 linux:
 	g++ main.cpp ./RayCasting/Source/rayCast.cpp ./RayCasting/Source/vect.cpp ./Source/graphics.cpp ./Source/scene.cpp ./Source/vect.cpp ./Source/molecule.cpp ./Source/button.cpp ./Source/Physics.cpp -lm -o react -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+
+linux_debug:
+	g++ main.cpp ./RayCasting/Source/rayCast.cpp ./RayCasting/Source/vect.cpp ./Source/graphics.cpp ./Source/scene.cpp ./Source/vect.cpp ./Source/molecule.cpp ./Source/button.cpp ./Source/Physics.cpp -lm -o react -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -D _DEBUG -ggdb3 -Wall -O0 -fcheck-new -fsized-deallocation -fstack-protector -fstrict-overflow -fno-omit-frame-pointer -pie -Wstack-usage=8192 -fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr
