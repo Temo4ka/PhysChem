@@ -75,8 +75,6 @@ int Molecule::draw(sf::Image *image, Light *light, Vision *vis)
     return EXIT_SUCCESS;
 }
 
-//------------------------------------CRINGE_MOMENT--------------------------------------------------------------------------------------
-
 void Gas::collideMolecules(Molecule &a, Molecule &b)
 {
     const Virt_m   radius_a = Molecule::Molecules_table[a.type_].radius;

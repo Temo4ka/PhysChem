@@ -24,8 +24,6 @@ int main()
 
     ProgramManager manager = ProgramManager(Vect(WINDOW_WIDTH / 2, 0), Vect(WINDOW_WIDTH, WINDOW_HEIGHT), &light, &vision);
 
-    Time_Molecules graph1(Vect(0, 0), GRAPHIC_HEIGHT, GRAPHIC_WIDTH);
-
     // for (int i = 0; i < 15; i++)
     //     manager.createTypeA(&piston);
     // for (int i = 0; i < 10; i++)
@@ -44,10 +42,19 @@ int main()
 
     ButtonManager buttonManager = ButtonManager();
 
+    GraphManager graphManager = GraphManager(Vect(0, 0), Vect(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3));
+
     if (organiseButtons(&buttonManager, &manager, &font) == EXIT_FAILURE) return EXIT_FAILURE;
 
     sf::Image graphCanvas;
     graphCanvas.create(720, 500, sf::Color::Black);
+
+    std::vector<sf::Text> textToDraw;
+    graphManager.init(&graphCanvas, font, textToDraw);
+    for (auto &text : textToDraw) {
+        sf::Vector2f pos = text.getPosition();
+        text.setPosition(pos.x, pos.y + WINDOW_HEIGHT / 3 + 2);
+    }
 
     while (window.isOpen()) {
 
@@ -73,25 +80,25 @@ int main()
         // piston.move(time);
         light.rotate(time, Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 100));
         manager.update(time);
+        graphManager.update(GraphManager::GraphTypes::MOLECULES, time, manager.getMoleculesNum());
+
+        graphManager.draw(&graphCanvas);
+        buttonManager.draw(&canvas, &light, &vision);
+            manager   .draw(&canvas);
 
         window.clear();
-
-            buttonManager.draw(&canvas, &light, &vision);
-               manager   .draw(&canvas);
-
             canvasTexture.loadFromImage(canvas);
-             canvasSprite.setTexture(canvasTexture);
+                canvasSprite.setTexture(canvasTexture);
             window.draw(canvasSprite);
 
             canvasTexture2.loadFromImage(graphCanvas);
-             canvasSprite2.setTexture(canvasTexture2);
+                canvasSprite2.setTexture(canvasTexture2);
             canvasSprite2.setPosition(0, WINDOW_HEIGHT / 3 + 2);
             window.draw(canvasSprite2);
 
             buttonManager.showText(&window);
-            graph1.showText(&window, &font);
-
-            separateScreen(&window);
+            for (auto text : textToDraw)
+                window.draw(text);
 
         window.display();
     }
