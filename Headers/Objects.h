@@ -66,7 +66,7 @@ public:
     molecules()
     {}
 
-    void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount = 0.01, const Virt_m_per_sec &MaxVelocity = 400);
+    void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount = 1, const Virt_m_per_sec &MaxVelocity = 400);
     int update(const double deltaTime);
     int draw(sf::Image *image, Light *light, Vision *vision);
 

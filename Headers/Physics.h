@@ -122,7 +122,7 @@ namespace Units
     namespace detail
     {
         // 1 Virt_mole = (MOLE_UNIT) Phys_mole
-        static constexpr double MOLE_UNIT = (1e22 /* кол-во моделей в жизни */) / (1.0 /* кол-во молекул в модели */);
+        static constexpr double MOLE_UNIT = (1.0 /* кол-во молекул в модели */) / (1e22 /* кол-во моделей в жизни */);
 
         // 1 Virt_g = (MASS_UNIT) Phys_g
         static constexpr double MASS_UNIT = (MOLE_UNIT) /*!!! необходимо, чтобы физическая и виртуальная молярные массы были одинаковы */;
