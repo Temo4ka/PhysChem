@@ -10,7 +10,12 @@
         val_(val)                   \
         {}                          \
                                     \
-        double val_;                \
+        operator double() const     \
+        {                           \
+            return val_;            \
+        }                           \
+                                    \
+        double val_ = 0.0;          \
     };
 
 #define TYPEDEF_VECTOR(type_name)   \
@@ -39,6 +44,22 @@
         {                           \
             return vect_.len();     \
         }                           \
+                                    \
+        type_name get_x() const     \
+        {                           \
+            return vect_.x;         \
+        }                           \
+                                    \
+        type_name get_y() const     \
+        {                           \
+            return vect_.y;         \
+        }                           \
+                                    \
+        operator Vect() const       \
+        {                           \
+            return vect_;           \
+        }                           \
+                                    \
                                     \
         Vect##type_name& operator +=(const Vect##type_name &other) \
         {                           \
@@ -87,26 +108,6 @@
     inline Vect##type_name operator -(const Vect##type_name &a, const Vect##type_name &b) \
     {                               \
         return a.vect_ - b.vect_;   \
-    }                               \
-                                    \
-    inline double operator ,(const Vect##type_name &a, const Vect##type_name &b) \
-    {                               \
-        return (a.vect_, b.vect_);  \
-    }                               \
-                                    \
-    inline Vect##type_name operator *(const double scalar, const Vect##type_name &a) \
-    {                               \
-        return scalar * a.vect_;    \
-    }                               \
-                                    \
-    inline Vect##type_name operator *(const Vect##type_name &a, const double scalar) \
-    {                               \
-        return scalar * a.vect_;    \
-    }                               \
-                                    \
-    inline Vect##type_name operator /(const Vect##type_name &a, const double scalar) \
-    {                               \
-        return a.vect_ / scalar;    \
     }
 
 #define SCALAR_PHYS_2_VIRT(unit_name, unit_value)   \
