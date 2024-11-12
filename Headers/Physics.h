@@ -31,11 +31,6 @@
         vect_(vect)                 \
         {}                          \
                                     \
-        Vect##type_name(double x, double y): \
-        vect_(x, y)                 \
-        {}                          \
-                                    \
-                                    \
         Vect##type_name(type_name x, type_name y): \
         vect_(x.val_, y.val_)       \
         {}                          \

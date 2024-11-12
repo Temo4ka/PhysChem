@@ -15,7 +15,7 @@ const Molecule::Molecule_properties Molecule::Molecules_table[] =
     {sf::Color::Yellow       , 5, Units::MolarMass_F },
     {sf::Color(252, 148,   3), 5, Units::MolarMass_Ne},
     {sf::Color::Green        , 6, Units::MolarMass_Cl},
-    {sf::Color(255,  51, 255), 6, Units::MolarMass_Ar},
+    {sf::Color( 52, 235, 183), 6, Units::MolarMass_Ar},
     {sf::Color::Cyan         , 7, Units::MolarMass_Kr},
     {sf::Color(252,   3, 227), 8, Units::MolarMass_Xe},
     {sf::Color(163,  28,  28), 9, Units::MolarMass_Rn},
@@ -79,10 +79,40 @@ int Molecule::draw(sf::Image *image, Light *light, Vision *vis)
 
 void Gas::collideMolecules(Molecule &a, Molecule &b)
 {
+    const Virt_m   radius_a = Molecule::Molecules_table[a.type_].radius;
+    const Virt_m   radius_b = Molecule::Molecules_table[b.type_].radius;
+
+    VectVirt_m dist = a.position_ - b.position_;
+    if (dist.len() > radius_a + radius_b)
+        return;
+
+    const g_per_mole mass_a = Molecule::Molecules_table[a.type_].molar_mass;
+    const g_per_mole mass_b = Molecule::Molecules_table[b.type_].molar_mass;
+
+    VectVirt_m main_x_axis(1, 0);
+    VectVirt_m main_y_axis(0, 1);
+
+    VectVirt_m tmp_x_axis = dist; !tmp_x_axis;
+    VectVirt_m tmp_y_axis(tmp_x_axis.get_y(), -tmp_x_axis.get_x());
+
+    VectVirt_m_per_sec a_velocity_tmp((tmp_x_axis, a.velocity_), (tmp_y_axis, a.velocity_));
+    VectVirt_m_per_sec b_velocity_tmp((tmp_x_axis, b.velocity_), (tmp_y_axis, b.velocity_));
+
+    VectVirt_m_per_sec a_velocity_tmp_delta(2*(b_velocity_tmp.get_x() - a_velocity_tmp.get_x()) / (1 + mass_a / mass_b), 0);
+    VectVirt_m_per_sec b_velocity_tmp_delta(2*(a_velocity_tmp.get_x() - b_velocity_tmp.get_x()) / (1 + mass_b / mass_a), 0);
+
+    a_velocity_tmp += a_velocity_tmp_delta;
+    b_velocity_tmp += b_velocity_tmp_delta;
+
+    a.velocity_.vect_.x = a_velocity_tmp.get_x() * (tmp_x_axis, main_x_axis) + a_velocity_tmp.get_y() * (tmp_y_axis, main_x_axis);
+    a.velocity_.vect_.y = a_velocity_tmp.get_x() * (tmp_x_axis, main_y_axis) + a_velocity_tmp.get_y() * (tmp_y_axis, main_y_axis);
+
+    b.velocity_.vect_.x = b_velocity_tmp.get_x() * (tmp_x_axis, main_x_axis) + b_velocity_tmp.get_y() * (tmp_y_axis, main_x_axis);
+    b.velocity_.vect_.y = b_velocity_tmp.get_x() * (tmp_x_axis, main_y_axis) + b_velocity_tmp.get_y() * (tmp_y_axis, main_y_axis);
 }
 
-int Gas::collideWalls(Molecule &molecule) {
-
+int Gas::collideWalls(Molecule &molecule)
+{
     const Virt_m radius = Molecule::Molecules_table[molecule.type_].radius;
 
     if (molecule.position_.get_x() < DownLeftCorner.get_x() + radius) {
