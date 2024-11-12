@@ -6,6 +6,10 @@
 #define TYPEDEF_SCALAR(type_name)   \
     struct type_name                \
     {                               \
+        type_name():                \
+        val_()                      \
+        {}                          \
+                                    \
         type_name(double val):      \
         val_(val)                   \
         {}                          \
@@ -39,7 +43,7 @@
             return *this;           \
         }                           \
                                     \
-        double val_ = 0.0;          \
+        double val_;                \
     };                              \
     inline type_name operator +(const type_name &a, const type_name &b) \
     {                               \

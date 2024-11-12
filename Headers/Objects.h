@@ -62,8 +62,7 @@ class Gas {
 public:
     Gas(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner):
     DownLeftCorner(DownLeftCorner),
-    UpRightCorner(UpRightCorner),
-    molecules()
+    UpRightCorner (UpRightCorner )
     {}
 
     void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount = 0.25, const Virt_m_per_sec &MaxVelocity = 400);
@@ -82,7 +81,12 @@ public:
 private:
     std::vector<Molecule> molecules;
 
-friend class rogramManager;
+    struct gas_group
+    {
+        Virt_mole  amount;
+        Virt_Joule kinetic_energy;
+    }
+    gas_groups[Molecule::NUM_MOLECULE_TYPE];
 };
 
 class ProgramManager {
