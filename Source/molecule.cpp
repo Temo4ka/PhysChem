@@ -128,6 +128,17 @@ void Gas::collideMolecules(Molecule &a, Molecule &b)
     if (dist.len() > radius_a + radius_b)
         return;
 
+    printf(
+        "===================\n"
+        "COLLIDING MOLECULES\n\n"
+
+        "before, in \"main\" system:\n"
+        "a.velocity_(.x = %lf, .y = %lf)\n"
+        "b.velocity_(.x = %lf, .y = %lf)\n\n",
+
+        a.velocity_.get_x().val_, a.velocity_.get_y().val_,
+        b.velocity_.get_x().val_, b.velocity_.get_y().val_);
+
     a.free_run_ = 0;
     b.free_run_ = 0;
 
@@ -140,20 +151,62 @@ void Gas::collideMolecules(Molecule &a, Molecule &b)
     VectVirt_m tmp_x_axis = dist; !tmp_x_axis;
     VectVirt_m tmp_y_axis(tmp_x_axis.get_y(), -tmp_x_axis.get_x());
 
+    printf(
+        "\"tmp\" system in \"main\" coordinates:\n"
+        "x_axis(.x = %lf, .y = %lf)\n"
+        "y_axis(.x = %lf, .y = %lf)\n\n",
+
+        tmp_x_axis.get_x().val_, tmp_x_axis.get_y().val_,
+        tmp_y_axis.get_x().val_, tmp_y_axis.get_y().val_);
+
+
     VectVirt_m_per_sec a_velocity_tmp((tmp_x_axis, a.velocity_), (tmp_y_axis, a.velocity_));
     VectVirt_m_per_sec b_velocity_tmp((tmp_x_axis, b.velocity_), (tmp_y_axis, b.velocity_));
+
+    printf(
+        "before, in \"tmp\" system:\n"
+        "a.velocity_(.x = %lf, .y = %lf)\n"
+        "b.velocity_(.x = %lf, .y = %lf)\n\n",
+
+        a_velocity_tmp.get_x().val_, a_velocity_tmp.get_y().val_,
+        b_velocity_tmp.get_x().val_, b_velocity_tmp.get_y().val_);
 
     VectVirt_m_per_sec a_velocity_tmp_delta(2*(b_velocity_tmp.get_x() - a_velocity_tmp.get_x()) / (1 + mass_a / mass_b), 0);
     VectVirt_m_per_sec b_velocity_tmp_delta(2*(a_velocity_tmp.get_x() - b_velocity_tmp.get_x()) / (1 + mass_b / mass_a), 0);
 
+    printf(
+        "delta, in \"tmp\" system:\n"
+        "a.velocity_(.x = %lf, .y = %lf)\n"
+        "b.velocity_(.x = %lf, .y = %lf)\n\n",
+
+        a_velocity_tmp_delta.get_x().val_, a_velocity_tmp_delta.get_y().val_,
+        b_velocity_tmp_delta.get_x().val_, b_velocity_tmp_delta.get_y().val_);
+
     a_velocity_tmp += a_velocity_tmp_delta;
     b_velocity_tmp += b_velocity_tmp_delta;
+
+    printf(
+        "after, in \"tmp\" system:\n"
+        "a.velocity_(.x = %lf, .y = %lf)\n"
+        "b.velocity_(.x = %lf, .y = %lf)\n\n",
+
+        a_velocity_tmp.get_x().val_, a_velocity_tmp.get_y().val_,
+        b_velocity_tmp.get_x().val_, b_velocity_tmp.get_y().val_);
 
     a.velocity_.vect_.x = a_velocity_tmp.get_x() * (tmp_x_axis, main_x_axis) + a_velocity_tmp.get_y() * (tmp_y_axis, main_x_axis);
     a.velocity_.vect_.y = a_velocity_tmp.get_x() * (tmp_x_axis, main_y_axis) + a_velocity_tmp.get_y() * (tmp_y_axis, main_y_axis);
 
     b.velocity_.vect_.x = b_velocity_tmp.get_x() * (tmp_x_axis, main_x_axis) + b_velocity_tmp.get_y() * (tmp_y_axis, main_x_axis);
     b.velocity_.vect_.y = b_velocity_tmp.get_x() * (tmp_x_axis, main_y_axis) + b_velocity_tmp.get_y() * (tmp_y_axis, main_y_axis);
+
+    printf(
+        "after, in \"main\" system:\n"
+        "a.velocity_(.x = %lf, .y = %lf)\n"
+        "b.velocity_(.x = %lf, .y = %lf)\n"
+        "===================\n\n",
+
+        a.velocity_.get_x().val_, a.velocity_.get_y().val_,
+        b.velocity_.get_x().val_, b.velocity_.get_y().val_);
 }
 
 //------------------------------------------------------------------------------------------------
@@ -239,10 +292,18 @@ void Gas::calc_free_run()
 
 void Gas::addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount, const Virt_m_per_sec &MaxVelocity)
 {
+    printf(
+        "===================\n"
+        "ADD MOLECULE in progress...\n\n"
+
+        "number of molecules to add = %lf\n", amount * Virt_Na);
+
     amount_ += amount;
     gas_groups_[type].amount += amount;
     for (double cnt = 0; cnt < amount * Virt_Na; ++cnt)
         molecules_.emplace_back(type, DownLeftCorner_, UpRightCorner_, MaxVelocity);
+
+    printf("===================\n\n");
 }
 
 //------------------------------------------------------------------------------------------------
