@@ -72,7 +72,7 @@ public:
 
 private:
     void collideMolecules(Molecule &a, Molecule &b);
-    int  collideWalls    (Molecule &mlc);
+    void collideWalls    (Molecule &mlc);
 
 public:
     const VectVirt_m DownLeftCorner;

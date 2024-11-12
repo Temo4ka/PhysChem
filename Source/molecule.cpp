@@ -111,39 +111,29 @@ void Gas::collideMolecules(Molecule &a, Molecule &b)
     b.velocity_.vect_.y = b_velocity_tmp.get_x() * (tmp_x_axis, main_y_axis) + b_velocity_tmp.get_y() * (tmp_y_axis, main_y_axis);
 }
 
-int Gas::collideWalls(Molecule &molecule)
+void Gas::collideWalls(Molecule &molecule)
 {
     const Virt_m radius = Molecule::Molecules_table[molecule.type_].radius;
 
     if (molecule.position_.get_x() < DownLeftCorner.get_x() + radius) {
         molecule.velocity_.vect_.x *= -1;
         molecule.position_.vect_.x = DownLeftCorner.get_x() + radius;
-
-        return 1;
     }
 
     if (molecule.position_.get_x() > UpRightCorner.get_x() - radius) {
         molecule.velocity_.vect_.x *= -1;
         molecule.position_.vect_.x = UpRightCorner.get_x() - radius;
-
-        return 1;
     }
 
     if (molecule.position_.get_y() > UpRightCorner.get_y() - radius) {
         molecule.velocity_.vect_.y *= -1;
         molecule.position_.vect_.y = UpRightCorner.get_y() - radius;
-
-        return 1;
     }
 
     if (molecule.position_.get_y() < DownLeftCorner.get_y() + radius) {
         molecule.velocity_.vect_.y *= -1;
         molecule.position_.vect_.y = DownLeftCorner.get_y() + radius;
-
-        return 1;
     }
-
-    return 0;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------
