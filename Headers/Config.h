@@ -38,6 +38,7 @@ const double GRAPHIC_TIMER = 0.1;
 
 const int GRAPHIC_WIDTH  = 720;
 const int GRAPHIC_HEIGHT = 100;
+const int GRAPH_POS = 300;
 
 #define catchNullptr(POINTER, RETURN_IN_CASE_OF_FAILURE) {                                                         \
     if ((POINTER) == nullptr) {                                                                                     \

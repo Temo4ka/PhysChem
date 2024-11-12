@@ -55,6 +55,8 @@ public:
 
     int draw(sf::Image *image, Light *light, Vision *vision);
 
+    int getMoleculesNum() { return molecules.size(); }
+
 private:
     void collideMolecules(Molecule &a, Molecule &b);
     int collideWalls    (Molecule &mlc);
@@ -86,6 +88,8 @@ public:
     
     void addMolecule() { gas.addMolecule(rand()); }
 
+    int getMoleculesNum() { return gas.getMoleculesNum(); }
+
 public:
     Gas        gas;
 private:
@@ -95,46 +99,76 @@ private:
 
 class Graph {
   public:
-    Graphics(const std::string &name_, std::string &legendX_, std::string &legendY_):
+    Graph(const std::string &name_, std::string &legendX_, std::string &legendY_, const int max_x, const int max_y):
     name (name_),
-    legendX (leegendX_),
-    legendY (leegendY_),
+    legendX (legendX_),
+    legendY (legendY_),
+    MAX_X (max_x),
+    MAX_Y (max_y),
     timer (GRAPHIC_TIMER)
     {}
 
-    ~Graphics() {}
-
-    Vect getPosition() { return this->position; }
+    ~Graph() {}
 
     void update(double deltaTime, int value);
 
-    void drawBase(Vect &position, Vect &size, sf::Image *image, sf::Color color = sf::Color(0, 80, 0));
+    void drawBase(Vect &position, Vect &size, sf::Image *image, sf::Font &font, sf::RenderWindow *window);
 
-    void draw(Vect &position, Vect &size, sf::Image *image, sf::Color color = sf::Color(0, 80, 0));
+    void draw(Vect &position, Vect &size, sf::Image *image);
 
   private:
+    void showAllText(Vect &position, Vect &size, sf::RenderWindow *window, sf::Font &font);
+
+    sf::Text getText(const Vect &position, const sf::Font &font, const std::string text_, const size_t charSize);
+
     std::string name;
     std::string legendX;
     std::string legendY;
 
-    int valY;
+    int curY;
     int curX;
+
+    const int MAX_X;
+    const int MAX_Y;
 
     double timer;
 };
 
 class GraphManager {
+  public:
+    enum GraphTypes {
+        MOLECULES,
+    };
 
-}
+    GraphManager(const Vect &LeftUpperCorner_, const Vect &RightLowerCorner_):
+        LeftUpperCorner(LeftUpperCorner_),
+        RightLowerCorner(RightLowerCorner_)
+    {}
 
-class Time_Molecules : public Graphics {
-    public:
-        Time_Molecules(Vect pos, int h, int w):
-        Graphics (pos, h, w),
-        updTime (GRAPHIC_TIMER)
-        {}
 
-        int update(double deltaTime, int molecules, sf::Image *image, sf::Color color = sf::Color(160, 0, 160));
+    void update(const GraphTypes type, const double deltaTime, const int value) { graphs[type].update(deltaTime, value); }
 
-        int showText(sf::RenderWindow *window, sf::Font *font);
+    void draw(sf::Image *image, sf::Font &font) {
+        Vect size = (RightLowerCorner - LeftUpperCorner) / 2;
+
+        for (int curGraph = 0; curGraph < graphs.size(); curGraph++)
+            graph[curGraph].draw(LeftUpperCorner + size * curGraph, size, image, font);
+    }
+
+    void init(sf::Image *image, sf::Font &font, sf::RenderWindow *window) {
+        Vect size = (RightLowerCorner - LeftUpperCorner) / 2;
+
+        for (int curGraph = 0; curGraph < graphs.size(); curGraph++)
+            graph[curGraph].drawBase(LeftUpperCorner + size * curGraph, size, image, font, window);
+    }
+
+
+
+  private:
+    std::vector<Graph> graphs = {
+        Graph("Molecules", "time", "mols", 100, 100)
+    };
+
+    Vect LeftUpperCorner;
+    Vect RightLowerCorner;
 };

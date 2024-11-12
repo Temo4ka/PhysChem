@@ -44,10 +44,14 @@ int main()
 
     ButtonManager buttonManager = ButtonManager();
 
+    GraphManager graphManager = GraphManager(Vect(0, GRAPH_POS), Vect(WINDOW_WIDTH / 2, WINDOW_HEIGHT));
+
     if (organiseButtons(&buttonManager, &manager, &font) == EXIT_FAILURE) return EXIT_FAILURE;
 
     sf::Image graphCanvas;
     graphCanvas.create(720, 500, sf::Color::Black);
+
+    graphManager.init(&graphCanvas, font, &window);
 
     while (window.isOpen()) {
 
@@ -73,25 +77,24 @@ int main()
         // piston.move(time);
         light.rotate(time, Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 100));
         manager.update(time);
+        graphManager.update(GraphManager::GraphTypes::MOLECULES, time, manager.getMoleculesNum());
 
-        window.clear();
+        graphManager.draw(&graphCanvas, font);
 
-            buttonManager.draw(&canvas, &light, &vision);
-               manager   .draw(&canvas);
+        buttonManager.draw(&canvas, &light, &vision);
+            manager   .draw(&canvas);
 
-            canvasTexture.loadFromImage(canvas);
-             canvasSprite.setTexture(canvasTexture);
-            window.draw(canvasSprite);
+        canvasTexture.loadFromImage(canvas);
+            canvasSprite.setTexture(canvasTexture);
+        window.draw(canvasSprite);
 
-            canvasTexture2.loadFromImage(graphCanvas);
-             canvasSprite2.setTexture(canvasTexture2);
-            canvasSprite2.setPosition(0, WINDOW_HEIGHT / 3 + 2);
-            window.draw(canvasSprite2);
+        canvasTexture2.loadFromImage(graphCanvas);
+            canvasSprite2.setTexture(canvasTexture2);
+        canvasSprite2.setPosition(0, WINDOW_HEIGHT / 3 + 2);
+        window.draw(canvasSprite2);
 
-            buttonManager.showText(&window);
-            graph1.showText(&window, &font);
-
-            separateScreen(&window);
+        buttonManager.showText(&window);
+        graph1.showText(&window, &font);
 
         window.display();
     }
