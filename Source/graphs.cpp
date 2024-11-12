@@ -1,14 +1,14 @@
 #include "../Headers/Objects.h"
 #include "../Headers/GraphConfig.h"
 
-void Graph::drawBase(Vect &position, Vect &size, sf::Image *image, sf::Font &font, sf::RenderWindow *window) {
+void Graph::drawBase(const Vect &position, const Vect &size, sf::Image *image, const sf::Font &font, std::vector<sf::Text> &textToDraw) {
     for (int x0 = 0; x0 < size.x; x0++)
         for (int y0 = 0; y0 < size.y; y0++)
-            image->setPixel(position.x + x0, position.y + y0, GRAPH_BACK_GROUND_COLOR);
+            image->setPixel(position.x + x0, position.y + y0, GRAPH_BACKGROUND_COLOR);
     
     int x0 = position.x + size.x / 5; 
     for (int y = 0; y < size.y; y++)
-        image -> setPixel(x0, position.y + y, GRAPH_BACKGROUND_COLOR);
+        image -> setPixel(x0, position.y + y, GRAPH_LEGEND_COLOR);
     curX = x0;
 
     int y0 = position.y + 4 * size.y / 5;
@@ -17,27 +17,25 @@ void Graph::drawBase(Vect &position, Vect &size, sf::Image *image, sf::Font &fon
 
     Vect offside = Vect(4 * size.x / (5 * GRAPH_PARTS), 4 * size.y / (5 * GRAPH_PARTS));
     
-    int charSize = size.y / 12;
+    int charSize = std::min(size.y, size.x) / CHAR_COEFF;
     for (int curPart = 1; curPart < GRAPH_PARTS; curPart++) {
-        window->draw(getText(Vect(x0 + curPart * offside.x, position.y + size.y - charSize - 1),
+        textToDraw.push_back(getText(Vect(x0 + curPart * offside.x, position.y + size.y * 4 / 5 + 2), font,
                                                            std::to_string(MAX_X * curPart / GRAPH_PARTS), charSize));
     }
-
-    charSize = size.x / 12;
     for (int curPart = 1; curPart < GRAPH_PARTS; curPart++) {
-        window->draw(getText(Vect(position.x, position.y + 4 * size.y / 5 - curPart * offside.y),
+        textToDraw.push_back(getText(Vect(position.x + size.x / 5 - std::to_string(MAX_Y).size() * charSize - 1, position.y + 4 * size.y / 5 - curPart * offside.y), font,
                                                            std::to_string(MAX_Y * curPart / GRAPH_PARTS), charSize));
     }
 
-    showAllText(position, size, window, font);
+    showAllText(position, size, textToDraw, font);
 }
 
-void Graph::update(double deltaTime, int value) {
-    timer -= deltatime;
+void Graph::update(const double deltaTime, const int value) {
+    timer -= deltaTime;
     curY = value;
 }
 
-void Graph::draw(Vect &position, Vect &size, sf::Image *image) {
+void Graph::draw(const Vect &position, const Vect &size, sf::Image *image) {
     if (timer > 0) return;
     timer = GRAPHIC_TIMER;
 
@@ -47,9 +45,9 @@ void Graph::draw(Vect &position, Vect &size, sf::Image *image) {
 
     for (int y = position.y; y < position.y + 4 * size.y / 5; y++) {
         if (y < position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y))
-            image -> setPixel(curX, y, GRAPH_DIAGRAM_COLOR);
-        else 
             image -> setPixel(curX, y, GRAPH_BACKGROUND_COLOR);
+        else 
+            image -> setPixel(curX, y, GRAPH_DIAGRAM_COLOR);
 
     }
     for (int y = position.y; y < position.y + 4 * size.y / 5; y++) 
@@ -59,21 +57,19 @@ void Graph::draw(Vect &position, Vect &size, sf::Image *image) {
 }
 
 
-void Graph::showAllText(Vect &position, Vect &size, sf::RenderWindow *window, sf::Font &font) {
-    catchNullptr(window, EXIT_FAILURE);
+void Graph::showAllText(const Vect &position, const Vect &size, std::vector<sf::Text> &textToDraw, const sf::Font &font) {
+    int charSize = std::min(size.y, size.x) / CHAR_COEFF;
 
-    int charSizeX = size.y / 12;
-    int charSizeY = size.x / 12;
-
-    window->draw(getText(Vect(position.x + size.x - text.size * charSizeX, position.y + size.y - charSizeX), size, font, legendX, charSizeX));
-    window->draw(getText(Vect(charSizeX, charSizeY), font, legendY, charSizeY));
-    window->draw(getText(Vect(charSizeX, position.y + size.y - charSizeY), font, name, std::min(charSizeX, charSizeY));
+    textToDraw.push_back(getText(Vect(position.x + size.x - legendX.size() * charSize, position.y + size.y - charSize), font, legendX, charSize));
+    textToDraw.push_back(getText(Vect(charSize, charSize), font, legendY, charSize));
+    textToDraw.push_back(getText(Vect(charSize, position.y + size.y - charSize), font, name, std::min(charSize, charSize)));
 }
 
 sf::Text Graph::getText(const Vect &position, const sf::Font &font, const std::string text_, const size_t charSize) {
     sf::Text text = sf::Text(text_, font);
-    time.setPosition(position.x, position.y);
-    time.setCharacterSize(charSize);
+    text.setColor(GRAPH_LEGEND_COLOR);
+    text.setPosition(position.x, position.y);
+    text.setCharacterSize(charSize);
 
     return text;
 }

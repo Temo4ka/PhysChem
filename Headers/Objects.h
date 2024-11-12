@@ -99,7 +99,7 @@ private:
 
 class Graph {
   public:
-    Graph(const std::string &name_, std::string &legendX_, std::string &legendY_, const int max_x, const int max_y):
+    Graph(const std::string &name_, const std::string &legendX_, const std::string &legendY_, const int max_x, const int max_y):
     name (name_),
     legendX (legendX_),
     legendY (legendY_),
@@ -110,14 +110,14 @@ class Graph {
 
     ~Graph() {}
 
-    void update(double deltaTime, int value);
+    void update(const double deltaTime, const int value);
 
-    void drawBase(Vect &position, Vect &size, sf::Image *image, sf::Font &font, sf::RenderWindow *window);
+    void drawBase(const Vect &position, const Vect &size, sf::Image *image, const sf::Font &font, std::vector<sf::Text> &textToDraw);
 
-    void draw(Vect &position, Vect &size, sf::Image *image);
+    void draw(const Vect &position, const Vect &size, sf::Image *image);
 
   private:
-    void showAllText(Vect &position, Vect &size, sf::RenderWindow *window, sf::Font &font);
+    void showAllText(const Vect &position, const Vect &size, std::vector<sf::Text> &textToDraw, const sf::Font &font);
 
     sf::Text getText(const Vect &position, const sf::Font &font, const std::string text_, const size_t charSize);
 
@@ -148,18 +148,18 @@ class GraphManager {
 
     void update(const GraphTypes type, const double deltaTime, const int value) { graphs[type].update(deltaTime, value); }
 
-    void draw(sf::Image *image, sf::Font &font) {
+    void draw(sf::Image *image) {
         Vect size = (RightLowerCorner - LeftUpperCorner) / 2;
 
         for (int curGraph = 0; curGraph < graphs.size(); curGraph++)
-            graph[curGraph].draw(LeftUpperCorner + size * curGraph, size, image, font);
+            graphs[curGraph].draw(LeftUpperCorner + size * curGraph, size, image);
     }
 
-    void init(sf::Image *image, sf::Font &font, sf::RenderWindow *window) {
+    void init(sf::Image *image, sf::Font &font, std::vector<sf::Text> &textToDraw) {
         Vect size = (RightLowerCorner - LeftUpperCorner) / 2;
 
         for (int curGraph = 0; curGraph < graphs.size(); curGraph++)
-            graph[curGraph].drawBase(LeftUpperCorner + size * curGraph, size, image, font, window);
+            graphs[curGraph].drawBase(LeftUpperCorner + size * curGraph, size, image, font, textToDraw);
     }
 
 
