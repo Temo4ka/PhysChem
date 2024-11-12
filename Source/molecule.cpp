@@ -83,6 +83,16 @@ int Molecule::draw(sf::Image *image, Light *light, Vision *vis) const
     const Virt_m   radius = Molecules_table[type_].radius;
     const sf::Color color = Molecules_table[type_].color;
 
+    printf(
+        "===================\n"
+        "DRAWING MOLECULE\n\n"
+
+        "(.x = [%lf, %lf], .y = [%lf, %lf])\n"
+        "===================\n\n",
+
+        (position_.get_x() - radius).val_, (position_.get_x() + radius).val_,
+        (position_.get_y() - radius).val_, (position_.get_y() + radius).val_);
+
     Sphere curSphere(Vect3(position_.get_x(), position_.get_y(), 0), radius, Vect3(0.3, 0.3, 0.3));
     for (Virt_m x = position_.get_x() - radius; x <= position_.get_x() + radius; x.val_++)
         for (Virt_m y = position_.get_y() - radius; y <= position_.get_y() + radius; y.val_++)
