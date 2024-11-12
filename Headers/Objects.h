@@ -45,10 +45,6 @@ public:
         const Virt_m_per_sec &MaxVelocity);
    ~Molecule() {}
 
-    VectVirt_m getPosition() const {
-        return position_;
-    }
-
     void move(const Virt_sec deltaTime) {
         position_.vect_ += velocity_.vect_ * deltaTime.val_;
     }
@@ -59,15 +55,12 @@ public:
 public:
     MOLECULE_TYPE const type_;
     VectVirt_m_per_sec  velocity_;
-private:
     VectVirt_m          position_;
-
-friend class Gas;
 };
 
 class Gas {
 public:
-    Gas(const Vect &DownLeftCorner, const Vect &UpRightCorner):
+    Gas(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner):
     DownLeftCorner(DownLeftCorner),
     UpRightCorner(UpRightCorner),
     molecules()
@@ -83,11 +76,11 @@ public:
 
 private:
     void collideMolecules(Molecule &a, Molecule &b);
-    int collideWalls    (Molecule &mlc);
+    int  collideWalls    (Molecule &mlc);
 
 public:
-    const Vect DownLeftCorner;
-    const Vect  UpRightCorner;
+    const VectVirt_m DownLeftCorner;
+    const VectVirt_m  UpRightCorner;
 private:
     std::vector<Molecule> molecules;
 

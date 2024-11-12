@@ -8,17 +8,17 @@
 
 const Molecule::Molecule_properties Molecule::Molecules_table[] =
 {
-    {sf::Color::White      , 4, Units::MolarMass_H },
-    {sf::Color::Magenta    , 4, Units::MolarMass_He},
-    {sf::Color::Red        , 5, Units::MolarMass_N },
-    {sf::Color::Blue       , 5, Units::MolarMass_O },
-    {sf::Color::Yellow     , 5, Units::MolarMass_F },
-    {sf::Color(252, 148, 3), 5, Units::MolarMass_Ne},
-    {sf::Color::Green      , 6, Units::MolarMass_Cl},
-    {sf::Color::Black      , 6, Units::MolarMass_Ar},
-    {sf::Color::Cyan       , 7, Units::MolarMass_Kr},
-    {sf::Color(252, 3, 227), 8, Units::MolarMass_Xe},
-    {sf::Color(163, 28, 28), 9, Units::MolarMass_Rn},
+    {sf::Color::White        , 4, Units::MolarMass_H },
+    {sf::Color::Magenta      , 4, Units::MolarMass_He},
+    {sf::Color::Red          , 5, Units::MolarMass_N },
+    {sf::Color::Blue         , 5, Units::MolarMass_O },
+    {sf::Color::Yellow       , 5, Units::MolarMass_F },
+    {sf::Color(252, 148,   3), 5, Units::MolarMass_Ne},
+    {sf::Color::Green        , 6, Units::MolarMass_Cl},
+    {sf::Color(255,  51, 255), 6, Units::MolarMass_Ar},
+    {sf::Color::Cyan         , 7, Units::MolarMass_Kr},
+    {sf::Color(252,   3, 227), 8, Units::MolarMass_Xe},
+    {sf::Color(163,  28,  28), 9, Units::MolarMass_Rn},
 };
 
 //------------------------------------------------------------------------------------------------
@@ -83,32 +83,32 @@ void Gas::collideMolecules(Molecule &a, Molecule &b)
 
 int Gas::collideWalls(Molecule &molecule) {
 
-    const double radius = Molecule::Molecules_table[molecule.type_].radius.val_;
+    const Virt_m radius = Molecule::Molecules_table[molecule.type_].radius;
 
-    if (molecule.getPosition().vect_.x < DownLeftCorner.x + radius) {
+    if (molecule.position_.get_x() < DownLeftCorner.get_x() + radius) {
         molecule.velocity_.vect_.x *= -1;
-        molecule.position_.vect_.x = DownLeftCorner.x + radius;
+        molecule.position_.vect_.x = DownLeftCorner.get_x() + radius;
 
         return 1;
     }
 
-    if (molecule.getPosition().vect_.x > UpRightCorner.x - radius) {
+    if (molecule.position_.get_x() > UpRightCorner.get_x() - radius) {
         molecule.velocity_.vect_.x *= -1;
-        molecule.position_.vect_.x = UpRightCorner.x - radius;
+        molecule.position_.vect_.x = UpRightCorner.get_x() - radius;
 
         return 1;
     }
 
-    if (molecule.position_.vect_.y > UpRightCorner.y - radius) {
+    if (molecule.position_.get_y() > UpRightCorner.get_y() - radius) {
         molecule.velocity_.vect_.y *= -1;
-        molecule.position_.vect_.y = UpRightCorner.y - radius;
+        molecule.position_.vect_.y = UpRightCorner.get_y() - radius;
 
         return 1;
     }
 
-    if (molecule.position_.vect_.y < DownLeftCorner.y + radius) {
+    if (molecule.position_.get_y() < DownLeftCorner.get_y() + radius) {
         molecule.velocity_.vect_.y *= -1;
-        molecule.position_.vect_.y = DownLeftCorner.y + radius;
+        molecule.position_.vect_.y = DownLeftCorner.get_y() + radius;
 
         return 1;
     }
@@ -122,11 +122,11 @@ int Gas::update(const double deltaTime) {
     for (auto& curMolecule : molecules)
         curMolecule.move(deltaTime);
 
-    for (int firstPointer = 0; firstPointer < molecules.size(); firstPointer++) {
-        for (int secondPointer = firstPointer + 1; secondPointer < molecules.size(); secondPointer++) {
-            collideMolecules(molecules[firstPointer], molecules[secondPointer]);
+    for (int first_idx = 0; first_idx < molecules.size(); first_idx++) {
+        for (int second_idx = first_idx + 1; second_idx < molecules.size(); second_idx++) {
+            collideMolecules(molecules[first_idx], molecules[second_idx]);
         }
-        collideWalls(molecules[firstPointer]);
+        collideWalls(molecules[first_idx]);
     }
 
     return EXIT_SUCCESS;
