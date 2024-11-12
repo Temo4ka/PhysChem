@@ -15,8 +15,41 @@
             return val_;            \
         }                           \
                                     \
+        type_name& operator +=(const type_name &other) \
+        {                           \
+            val_ += other.val_;     \
+            return *this;           \
+        }                           \
+                                    \
+	    type_name& operator -=(const type_name &other) \
+        {                           \
+            val_ -= other.val_;     \
+            return *this;           \
+        }                           \
+                                    \
+        type_name& operator *=(const double scalar) \
+        {                           \
+            val_ *= scalar;         \
+            return *this;           \
+        }                           \
+                                    \
+        type_name& operator /=(const double scalar) \
+        {                           \
+            val_ /= scalar;         \
+            return *this;           \
+        }                           \
+                                    \
         double val_ = 0.0;          \
-    };
+    };                              \
+    inline type_name operator +(const type_name &a, const type_name &b) \
+    {                               \
+        return a.val_ + b.val_;     \
+    }                               \
+                                    \
+    inline type_name operator -(const type_name &a, const type_name &b) \
+    {                               \
+        return a.val_ - b.val_;     \
+    }
 
 #define TYPEDEF_VECTOR(type_name)   \
     TYPEDEF_SCALAR(type_name)       \
