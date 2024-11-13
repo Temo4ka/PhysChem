@@ -93,6 +93,9 @@ public:
         return gas_groups[type];
     }
 
+    Kelvin            get_temperature() const { return temperature_; }
+    Virt_Newton_per_m get_pressure   () const { return pressure_; }
+
 private:
     void collideMolecules(Molecule &a, Molecule &b);
     void collideWalls    (Molecule &mlc);
