@@ -87,6 +87,7 @@ int main()
             manager   .draw(&canvas);
 
         window.clear();
+
             canvasTexture.loadFromImage(canvas);
                 canvasSprite.setTexture(canvasTexture);
             window.draw(canvasSprite);
@@ -95,6 +96,8 @@ int main()
                 canvasSprite2.setTexture(canvasTexture2);
             canvasSprite2.setPosition(0, WINDOW_HEIGHT / 3 + 2);
             window.draw(canvasSprite2);
+
+            separateScreen(&window);
 
             buttonManager.showText(&window);
             for (auto text : textToDraw)
