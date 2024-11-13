@@ -209,7 +209,8 @@ class GraphManager {
 
   private:
     std::vector<Graph> graphs = {
-        Graph("Molecules", "time", "mols", 100, 100)
+        Graph("Molecules", "time", "mols", 100, 1000)
+
     };
 
     Vect LeftUpperCorner;
