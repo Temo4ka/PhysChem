@@ -51,9 +51,10 @@ void Graph::draw(const Vect &position, const Vect &size, sf::Image *image) {
 
     }
     for (int y = position.y; y < position.y + 4 * size.y / 5; y++) 
-            image -> setPixel(curX + 1, y, GRAPH_LEGEND_COLOR);
+        image -> setPixel(curX + 1, y, GRAPH_LEGEND_COLOR);
 
-    image -> setPixel(curX, position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y), GRAPH_LEGEND_COLOR);
+    if (position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y) > 0)
+        image -> setPixel(curX, position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y), GRAPH_LEGEND_COLOR);
 }
 
 
