@@ -3,8 +3,8 @@
 #include <cmath>
 
 struct Vect {
-    double x;
-    double y;
+    double x = 0.0;
+    double y = 0.0;
 
     double len() const { return sqrt(x*x + y*y); }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <SFML/Graphics.hpp>
 
 #include "Vect.h"
@@ -49,6 +50,8 @@ public:
         position_.vect_ += velocity_.vect_ * deltaTime.val_;
     }
 
+    Virt_Joule get_kinetic_energy() const;
+
     int draw(sf::Image *image, Light *light, Vision *vision);
 
 // member data
@@ -60,33 +63,53 @@ public:
 
 class Gas {
 public:
-    Gas(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner):
-    DownLeftCorner(DownLeftCorner),
-    UpRightCorner (UpRightCorner )
-    {}
-
-    void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount = 0.25, const Virt_m_per_sec &MaxVelocity = 400);
-    int update(const double deltaTime);
-    int draw(sf::Image *image, Light *light, Vision *vision);
-
-    int getMoleculesNum() { return molecules.size(); }
-
-private:
-    void collideMolecules(Molecule &a, Molecule &b);
-    void collideWalls    (Molecule &mlc);
-
-public:
-    const VectVirt_m DownLeftCorner;
-    const VectVirt_m  UpRightCorner;
-private:
-    std::vector<Molecule> molecules;
-
     struct gas_group
     {
         Virt_mole  amount;
         Virt_Joule kinetic_energy;
+        Kelvin     temperature;
+    };
+
+public:
+    Gas(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner):
+    DownLeftCorner(DownLeftCorner),
+    UpRightCorner (UpRightCorner ),
+    perimeter     (2*((UpRightCorner - DownLeftCorner).get_x() + (UpRightCorner - DownLeftCorner).get_y())),
+    square        ((UpRightCorner - DownLeftCorner).get_x() * (UpRightCorner - DownLeftCorner).get_y())
+    {}
+
+    void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount = 0.25, const Virt_m_per_sec &MaxVelocity = 400);
+    int update(const Virt_sec deltaTime);
+    int draw(sf::Image *image, Light *light, Vision *vision);
+
+    int getMoleculesNum() const
+    {
+        return molecules.size();
     }
-    gas_groups[Molecule::NUM_MOLECULE_TYPE];
+
+    const gas_group &get_gas_group(Molecule::MOLECULE_TYPE type) const
+    {
+        assert(type >= 0 && type < Molecule::NUM_MOLECULE_TYPE);
+        return gas_groups[type];
+    }
+
+private:
+    void collideMolecules(Molecule &a, Molecule &b);
+    void collideWalls    (Molecule &mlc);
+    void calc_temperature();
+
+public:
+    const VectVirt_m DownLeftCorner;
+    const VectVirt_m  UpRightCorner;
+    const Virt_m          perimeter;
+    const Virt_m2            square;
+
+private:
+    std::vector<Molecule> molecules;
+    gas_group             gas_groups[Molecule::NUM_MOLECULE_TYPE];
+
+    Kelvin                temperature_;
+    Virt_Newton_per_m     pressure_; // так как у нас 2D-задача, то и давление будет в Ньютонах на метр.
 };
 
 class ProgramManager {

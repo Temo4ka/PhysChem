@@ -7,7 +7,7 @@
     struct type_name                \
     {                               \
         type_name():                \
-        val_()                      \
+        val_(0.0)                   \
         {}                          \
                                     \
         type_name(double val):      \
@@ -257,10 +257,10 @@ namespace Units
 
     //--------------------------------------------------------------------------------------------------
 
-    TYPEDEF_SCALAR(Phys_m3)
-    TYPEDEF_SCALAR(Virt_m3)
+    TYPEDEF_SCALAR(Phys_per_m2)
+    TYPEDEF_SCALAR(Virt_per_m2)
 
-    SCALAR_PHYS_2_VIRT(m3, detail::DISTANCE_UNIT * detail::DISTANCE_UNIT * detail::DISTANCE_UNIT)
+    SCALAR_PHYS_2_VIRT(per_m2, 1 / (detail::DISTANCE_UNIT * detail::DISTANCE_UNIT))
 
     //--------------------------------------------------------------------------------------------------
 
@@ -309,10 +309,10 @@ namespace Units
 
     //--------------------------------------------------------------------------------------------------
 
-    TYPEDEF_SCALAR(Phys_Pascal)
-    TYPEDEF_SCALAR(Virt_Pascal)
+    TYPEDEF_SCALAR(Phys_Newton_per_m)
+    TYPEDEF_SCALAR(Virt_Newton_per_m)
 
-    SCALAR_PHYS_2_VIRT(Pascal, detail::NEWTON_UNIT / (detail::DISTANCE_UNIT * detail::DISTANCE_UNIT))
+    SCALAR_PHYS_2_VIRT(Newton_per_m, detail::NEWTON_UNIT / detail::DISTANCE_UNIT)
 }
 
 //==================================================================================================
