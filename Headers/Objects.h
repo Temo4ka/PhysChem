@@ -2,7 +2,7 @@
 
 #include <cassert>
 #include <SFML/Graphics.hpp>
-
+#include "GraphConfig.h"
 #include "Vect.h"
 #include "Config.h"
 #include "Physics.h"
@@ -141,13 +141,27 @@ private:
 
 class Graph {
   public:
-    Graph(const std::string &name_, const std::string &legendX_, const std::string &legendY_, const int max_x, const int max_y):
+     struct GraphColors {
+        sf::Color GRAPH_BACKGROUND_COLOR = sf::Color(0, 80, 0);
+        sf::Color   GRAPH_LEGEND_COLOR   = sf::Color::White;
+        sf::Color   GRAPH_DIAGRAM_COLOR  = sf::Color(80, 0, 0);
+
+        GraphColors() {}
+        GraphColors(const sf::Color &back, const sf::Color &legend, const sf::Color &diag):
+        GRAPH_BACKGROUND_COLOR(back),
+        GRAPH_LEGEND_COLOR(legend),
+        GRAPH_DIAGRAM_COLOR(diag)
+        {}
+    } colorScheme;
+
+    Graph(const std::string &name_, const std::string &legendX_, const std::string &legendY_, const int max_x, const int max_y, const GraphColors &colorScheme):
     name (name_),
     legendX (legendX_),
     legendY (legendY_),
     MAX_X (max_x),
     MAX_Y (max_y),
-    timer (GRAPHIC_TIMER)
+    timer (GRAPHIC_TIMER),
+    colorScheme(colorScheme)
     {}
 
     ~Graph() {}
@@ -209,14 +223,16 @@ class GraphManager {
             graphs[curGraph].drawBase(Vect(LeftUpperCorner.x, LeftUpperCorner.y + size.y * curGraph), size, image, font, textToDraw);
     }
 
-
-
   private:
+
     std::vector<Graph> graphs = {
-        Graph("Pressure", "time", "press, N/m", 100, 50),
-        Graph("H", "time", "Ek, J", 100, 40000),
-        Graph("N", "time", "Ek, J", 100, 40000),
-        Graph("F", "time", "Ek, J", 100, 40000),
+        Graph("Pressure", "time", "press, N/m", 100, 100, Graph::GraphColors()),
+        Graph("H", "time", "Ek, J", 100, 40000, Graph::GraphColors(GRAPH_BACKGROUND_COLOR,
+                                                            GRAPH_LEGEND_COLOR, Molecule::Molecules_table[Molecule::H].color)),
+        Graph("N", "time", "Ek, J", 100, 40000, Graph::GraphColors(GRAPH_BACKGROUND_COLOR,
+                                                            GRAPH_LEGEND_COLOR, Molecule::Molecules_table[Molecule::N].color)),
+        Graph("F", "time", "Ek, J", 100, 40000, Graph::GraphColors(GRAPH_BACKGROUND_COLOR,
+                                                            GRAPH_LEGEND_COLOR, Molecule::Molecules_table[Molecule::F].color)),
     };
 
     Vect LeftUpperCorner;

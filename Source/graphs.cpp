@@ -4,16 +4,16 @@
 void Graph::drawBase(const Vect &position, const Vect &size, sf::Image *image, const sf::Font &font, std::vector<sf::Text> &textToDraw) {
     for (int x0 = 0; x0 < size.x; x0++)
         for (int y0 = 0; y0 < size.y; y0++)
-            image->setPixel(position.x + x0, position.y + y0, GRAPH_BACKGROUND_COLOR);
+            image->setPixel(position.x + x0, position.y + y0, colorScheme.GRAPH_BACKGROUND_COLOR);
     
     int x0 = position.x + size.x / 5; 
     for (int y = 0; y < size.y; y++)
-        image -> setPixel(x0, position.y + y, GRAPH_LEGEND_COLOR);
+        image -> setPixel(x0, position.y + y, colorScheme.GRAPH_LEGEND_COLOR);
     curX = x0;
 
     int y0 = position.y + 4 * size.y / 5;
     for (int x = 0; x < size.x; x++)
-        image -> setPixel(x + position.x, y0, GRAPH_LEGEND_COLOR);
+        image -> setPixel(x + position.x, y0, colorScheme.GRAPH_LEGEND_COLOR);
 
     Vect offside = Vect(4 * size.x / (5 * GRAPH_PARTS), 4 * size.y / (5 * GRAPH_PARTS));
     
@@ -45,19 +45,19 @@ void Graph::draw(const Vect &position, const Vect &size, sf::Image *image) {
 
     for (int y = position.y; y < position.y + 4 * size.y / 5; y++) {
         if (y < position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y))
-            image -> setPixel(curX, y, GRAPH_BACKGROUND_COLOR);
+            image -> setPixel(curX, y, colorScheme.GRAPH_BACKGROUND_COLOR);
         else if (y >= position.y)
-            image -> setPixel(curX, y, GRAPH_DIAGRAM_COLOR);
+            image -> setPixel(curX, y,colorScheme.GRAPH_DIAGRAM_COLOR);
 
     }
     for (int x = position.x; x < position.x + size.x; x++)
-        image -> setPixel(x, position.y, GRAPH_LEGEND_COLOR);
+        image -> setPixel(x, position.y, colorScheme.GRAPH_LEGEND_COLOR);
 
     for (int y = position.y; y < position.y + 4 * size.y / 5; y++) 
-        image -> setPixel(curX + 1, y, GRAPH_LEGEND_COLOR);
+        image -> setPixel(curX + 1, y, colorScheme.GRAPH_LEGEND_COLOR);
 
     if (position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y) > 0 && position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y) > position.y)
-        image -> setPixel(curX, position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y), GRAPH_LEGEND_COLOR);
+        image -> setPixel(curX, position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y), colorScheme.GRAPH_LEGEND_COLOR);
 }
 
 
