@@ -81,9 +81,11 @@ int main()
         // piston.move(time);
         light.rotate(time, Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 100));
         manager.update(time);
-        graphManager.update(GraphManager::GraphTypes::MOLECULES, time, manager.getMoleculesNum());
-        // std::cout << (int) (manager.gas.get_temperature() /1e6) << '\n';
-        graphManager.update(GraphManager::GraphTypes::TEMPERATURE, time, (int) (manager.gas.get_temperature() /1e5));
+
+        graphManager.update(GraphManager::GraphTypes::PRESSURE, time, (int) manager.gas.get_pressure().val_);
+        graphManager.update(GraphManager::GraphTypes::H, time, (int) manager.gas.get_gas_group(Molecule::H).kinetic_energy.val_);
+        graphManager.update(GraphManager::GraphTypes::N, time, (int) manager.gas.get_gas_group(Molecule::N).kinetic_energy.val_);
+        graphManager.update(GraphManager::GraphTypes::F, time, (int) manager.gas.get_gas_group(Molecule::F).kinetic_energy.val_);
 
         graphManager.draw(&graphCanvas);
         buttonManager.draw(&canvas, &light, &vision);

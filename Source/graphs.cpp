@@ -46,14 +46,17 @@ void Graph::draw(const Vect &position, const Vect &size, sf::Image *image) {
     for (int y = position.y; y < position.y + 4 * size.y / 5; y++) {
         if (y < position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y))
             image -> setPixel(curX, y, GRAPH_BACKGROUND_COLOR);
-        else 
+        else if (y >= position.y)
             image -> setPixel(curX, y, GRAPH_DIAGRAM_COLOR);
 
     }
+    for (int x = position.x; x < position.x + size.x; x++)
+        image -> setPixel(x, position.y, GRAPH_LEGEND_COLOR);
+
     for (int y = position.y; y < position.y + 4 * size.y / 5; y++) 
         image -> setPixel(curX + 1, y, GRAPH_LEGEND_COLOR);
 
-    if (position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y) > 0)
+    if (position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y) > 0 && position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y) > position.y)
         image -> setPixel(curX, position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y), GRAPH_LEGEND_COLOR);
 }
 
@@ -63,7 +66,7 @@ void Graph::showAllText(const Vect &position, const Vect &size, std::vector<sf::
 
     textToDraw.push_back(getText(Vect(position.x + size.x - legendX.size() * charSize, position.y + size.y - charSize), font, legendX, charSize));
     textToDraw.push_back(getText(Vect(charSize, position.y + charSize), font, legendY, charSize));
-    textToDraw.push_back(getText(Vect(charSize, position.y + size.y - charSize), font, name, std::min(charSize, charSize)));
+    textToDraw.push_back(getText(Vect(charSize, position.y + size.y * 4 / 5 + charSize), font, name, std::min(charSize, charSize)));
 }
 
 sf::Text Graph::getText(const Vect &position, const sf::Font &font, const std::string text_, const size_t charSize) {

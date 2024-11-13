@@ -179,8 +179,10 @@ class Graph {
 class GraphManager {
   public:
     enum GraphTypes {
-        MOLECULES,
-        TEMPERATURE
+        PRESSURE,
+        H,
+        N,
+        F
     };
 
     GraphManager(const Vect &LeftUpperCorner_, const Vect &RightLowerCorner_):
@@ -211,9 +213,10 @@ class GraphManager {
 
   private:
     std::vector<Graph> graphs = {
-        Graph("Molecules", "time", "mols", 100, 1000),
-        Graph("Temperature", "time", "temp, K", 100, 1e5)
-
+        Graph("Pressure", "time", "press, N/m", 100, 50),
+        Graph("H", "time", "Ek, J", 100, 40000),
+        Graph("N", "time", "Ek, J", 100, 40000),
+        Graph("F", "time", "Ek, J", 100, 40000),
     };
 
     Vect LeftUpperCorner;
