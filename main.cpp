@@ -1,4 +1,5 @@
 #include "./Headers/Scene.h"
+#include <iostream>
 
 //---------------------------------------------------------\\
 //                      Screen Sheme                       \\
@@ -42,7 +43,7 @@ int main()
 
     ButtonManager buttonManager = ButtonManager();
 
-    GraphManager graphManager = GraphManager(Vect(0, 0), Vect(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 3));
+    GraphManager graphManager = GraphManager(Vect(0, 0), Vect(WINDOW_WIDTH / 2, 2 * WINDOW_HEIGHT / 3));
 
     if (organiseButtons(&buttonManager, &manager, &font) == EXIT_FAILURE) return EXIT_FAILURE;
 
@@ -81,6 +82,8 @@ int main()
         light.rotate(time, Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 100));
         manager.update(time);
         graphManager.update(GraphManager::GraphTypes::MOLECULES, time, manager.getMoleculesNum());
+        // std::cout << (int) (manager.gas.get_temperature() /1e6) << '\n';
+        graphManager.update(GraphManager::GraphTypes::TEMPERATURE, time, (int) (manager.gas.get_temperature() /1e5));
 
         graphManager.draw(&graphCanvas);
         buttonManager.draw(&canvas, &light, &vision);

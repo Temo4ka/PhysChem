@@ -130,7 +130,6 @@ public:
 
     int update(const double deltaTime) { return gas.update(deltaTime); }
     int draw(sf::Image *image) { return gas.draw(image, light, vision); }
-
     int getMoleculesNum() { return gas.getMoleculesNum(); }
 
 public:
@@ -181,6 +180,7 @@ class GraphManager {
   public:
     enum GraphTypes {
         MOLECULES,
+        TEMPERATURE
     };
 
     GraphManager(const Vect &LeftUpperCorner_, const Vect &RightLowerCorner_):
@@ -192,24 +192,27 @@ class GraphManager {
     void update(const GraphTypes type, const double deltaTime, const int value) { graphs[type].update(deltaTime, value); }
 
     void draw(sf::Image *image) {
-        Vect size = (RightLowerCorner - LeftUpperCorner) / 2;
+        Vect size = RightLowerCorner - LeftUpperCorner;
+        size.y /= graphs.size();
 
         for (int curGraph = 0; curGraph < graphs.size(); curGraph++)
-            graphs[curGraph].draw(LeftUpperCorner + size * curGraph, size, image);
+            graphs[curGraph].draw(Vect(LeftUpperCorner.x, LeftUpperCorner.y + size.y * curGraph), size, image);
     }
 
     void init(sf::Image *image, sf::Font &font, std::vector<sf::Text> &textToDraw) {
-        Vect size = (RightLowerCorner - LeftUpperCorner) / 2;
+        Vect size = RightLowerCorner - LeftUpperCorner;
+        size.y /= graphs.size();
 
         for (int curGraph = 0; curGraph < graphs.size(); curGraph++)
-            graphs[curGraph].drawBase(LeftUpperCorner + size * curGraph, size, image, font, textToDraw);
+            graphs[curGraph].drawBase(Vect(LeftUpperCorner.x, LeftUpperCorner.y + size.y * curGraph), size, image, font, textToDraw);
     }
 
 
 
   private:
     std::vector<Graph> graphs = {
-        Graph("Molecules", "time", "mols", 100, 1000)
+        Graph("Molecules", "time", "mols", 100, 1000),
+        Graph("Temperature", "time", "temp, K", 100, 1e5)
 
     };
 

@@ -41,7 +41,7 @@ void Graph::draw(const Vect &position, const Vect &size, sf::Image *image) {
 
     curX++;
     if (curX > position.x + size.x)
-        curX = position.x + size.x / 5;
+        curX = position.x + size.x / 5 + 1;
 
     for (int y = position.y; y < position.y + 4 * size.y / 5; y++) {
         if (y < position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y))
@@ -62,7 +62,7 @@ void Graph::showAllText(const Vect &position, const Vect &size, std::vector<sf::
     int charSize = std::min(size.y, size.x) / CHAR_COEFF;
 
     textToDraw.push_back(getText(Vect(position.x + size.x - legendX.size() * charSize, position.y + size.y - charSize), font, legendX, charSize));
-    textToDraw.push_back(getText(Vect(charSize, charSize), font, legendY, charSize));
+    textToDraw.push_back(getText(Vect(charSize, position.y + charSize), font, legendY, charSize));
     textToDraw.push_back(getText(Vect(charSize, position.y + size.y - charSize), font, name, std::min(charSize, charSize)));
 }
 
