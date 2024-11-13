@@ -23,6 +23,11 @@ static Virt_m2 inline calc_square(const VectVirt_m &DownLeftCorner, const VectVi
     return diagonal.get_x() * diagonal.get_y();
 }
 
+static Virt_Joule temperature_2_kinetic_energy(Kelvin temperature)
+{
+    return (3.0/2.0) * Virt_kB * temperature;
+}
+
 //==================================================================================================
 
 const Molecule::Molecule_properties Molecule::Molecules_table[] =
@@ -283,4 +288,40 @@ int Gas::draw(sf::Image *image, Light *light, Vision *vision) const {
         curMolecule.draw(image, light, vision);
 
     return EXIT_SUCCESS;
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+int ProgramManager::update(const double deltaTime)
+{
+    int ret = gas.update(deltaTime);
+
+    printf(
+        "===================\n"
+        "MEASUREMENTS (virtual):\n\n"
+
+        "T  = %lf K\n"
+        "P  = %lf H/м\n"
+        "/\\ = %lf м\n"
+        "Ek = %lf Дж\n\n",
+
+        gas.get_temperature().val_,
+        gas.get_pressure   ().val_,
+        gas.get_free_run   ().val_,
+        temperature_2_kinetic_energy(gas.get_temperature()).val_);
+
+    printf("per molecule types:\n");
+    for (unsigned type = 0; type < Molecule::NUM_MOLECULE_TYPE; ++type)
+    {
+        printf(
+            "%2u: Nu = %lf mole, T = %lf К, Ek = %lf Дж\n",
+
+            type,
+            gas.get_gas_group((Molecule::MOLECULE_TYPE) type).amount.val_,
+            gas.get_gas_group((Molecule::MOLECULE_TYPE) type).temperature.val_,
+            gas.get_gas_group((Molecule::MOLECULE_TYPE) type).kinetic_energy.val_);
+    }
+    printf("===================\n\n");
+
+    return ret;
 }

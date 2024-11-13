@@ -144,7 +144,8 @@ public:
 
     ~ProgramManager() {}
 
-    int update(const double deltaTime) { return gas.update(deltaTime); }
+    int update(const double deltaTime);
+
     int draw(sf::Image *image) { return gas.draw(image, light, vision); }
     int getMoleculesNum() { return gas.getMoleculesNum(); }
 
