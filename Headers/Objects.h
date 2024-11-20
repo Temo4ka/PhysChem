@@ -47,7 +47,10 @@ public:
    ~Molecule() {}
 
     void move(const Virt_sec deltaTime) {
-        position_.vect_ += velocity_.vect_ * deltaTime.val_;
+        VectVirt_m deltaPos = velocity_ * deltaTime;
+
+        position_ += deltaPos;
+        free_run_ += deltaPos.len();
     }
 
     Virt_Joule get_kinetic_energy() const;
@@ -59,6 +62,7 @@ public:
     MOLECULE_TYPE const type_;
     VectVirt_m_per_sec  velocity_;
     VectVirt_m          position_;
+    Virt_m              free_run_;
 };
 
 class Gas {
@@ -95,11 +99,13 @@ public:
 
     Kelvin            get_temperature() const { return temperature_; }
     Virt_Newton_per_m get_pressure   () const { return pressure_; }
+    Virt_m            get_free_run   () const { return free_run_; }
 
 private:
     void collideMolecules(Molecule &a, Molecule &b);
     void collideWalls    (Molecule &mlc);
     void calc_temperature();
+    void calc_free_run   ();
 
 public:
     const VectVirt_m DownLeftCorner;
@@ -113,6 +119,7 @@ private:
 
     Kelvin                temperature_;
     Virt_Newton_per_m     pressure_; // так как у нас 2D-задача, то и давление будет в Ньютонах на метр.
+    Virt_m                free_run_;
 };
 
 class ProgramManager {
