@@ -158,8 +158,8 @@ namespace Units
 {
     namespace detail
     {
-        // 1 Virt_mole = (MOLE_UNIT) Phys_mole
-        static constexpr double MOLE_UNIT = (1.0 /* кол-во молекул в модели */) / (1e22 /* кол-во моделей в жизни */);
+        // 1 Virt_mole = (MOLE_UNIT) Phys_mole (в одном Virt_mole 100 молекул)
+        static constexpr double MOLE_UNIT = (1.0 /* кол-во молекул в модели */) / (6.02e21 /* кол-во молекул в жизни */);
 
         // 1 Virt_g = (MASS_UNIT) Phys_g
         static constexpr double MASS_UNIT = (MOLE_UNIT) /*!!! необходимо, чтобы физическая и виртуальная молярные массы были одинаковы */;
@@ -171,7 +171,7 @@ namespace Units
         static constexpr double DISTANCE_UNIT = (1.0 /* метр */) / (1000.0 /* пиксели */);
 
         // 1 Virt_m_per_sec = (VELOCITY_UNIT) Phys_m_per_sec
-        static constexpr double VELOCITY_UNIT = (752.85 /* пиксели в секунду */) / (5.0 /* скорость молекулы углерода при 0 по цельсию, метры в cекунду */);
+        static constexpr double VELOCITY_UNIT = (752.85 /* скорость молекулы углерода при 0 по цельсию, метры в cекунду */) / (100.0 /* пиксели в секунду */);
 
         // 1 Virt_sec = (TIME_UNIT) Phys_sec
         static constexpr double TIME_UNIT = DISTANCE_UNIT / VELOCITY_UNIT;

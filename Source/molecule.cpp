@@ -56,7 +56,7 @@ position_(0, 0)
 Virt_Joule Molecule::get_kinetic_energy() const
 {
     const Virt_g mass = Molecule::Molecules_table[type_].molar_mass / Virt_Na;
-    return mass * velocity_.len() * velocity_.len() / 2;
+    return mass * velocity_.len() * velocity_.len() / 2000 /* Virt_g to Virt_kg */;
 }
 
 //------------------------------------------------------------------------------------------------
