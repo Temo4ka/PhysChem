@@ -36,7 +36,8 @@ Molecule::Molecule(
     const Virt_m_per_sec &MaxVelocity):
 type_    (type),
 velocity_(Vect::rand_unit_vect()),
-position_(0, 0)
+position_(0, 0),
+free_run_(0)
 {
     assert(type_ >= 0 && type_ < NUM_MOLECULE_TYPE);
 
@@ -98,6 +99,9 @@ void Gas::collideMolecules(Molecule &a, Molecule &b)
     VectVirt_m dist = a.position_ - b.position_;
     if (dist.len() > radius_a + radius_b)
         return;
+
+    a.free_run_ = 0;
+    b.free_run_ = 0;
 
     const g_per_mole mass_a = Molecule::Molecules_table[a.type_].molar_mass;
     const g_per_mole mass_b = Molecule::Molecules_table[b.type_].molar_mass;
@@ -193,6 +197,18 @@ void Gas::calc_temperature()
 
 //----------------------------------------------------------------------------------------------------------------------------------------
 
+void Gas::calc_free_run()
+{
+    free_run_ = 0.0;
+
+    for (auto &curMolecule : molecules)
+        free_run_ += curMolecule.free_run_;
+
+    free_run_ /= molecules.size();
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+
 void Gas::addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount, const Virt_m_per_sec &MaxVelocity)
 {
     gas_groups[type].amount += amount;
@@ -213,6 +229,7 @@ int Gas::update(const Virt_sec deltaTime) {
 
     pressure_ /= (perimeter * deltaTime);
     calc_temperature();
+    calc_free_run();
 
     return EXIT_SUCCESS;
 }
