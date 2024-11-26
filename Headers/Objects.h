@@ -53,9 +53,8 @@ public:
         free_run_ += deltaPos.len();
     }
 
-    Virt_Joule get_kinetic_energy() const;
-
-    int draw(sf::Image *image, Light *light, Vision *vision);
+    Virt_Joule get_kinetic_energy()                                               const;
+    int        draw              (sf::Image *image, Light *light, Vision *vision) const;
 
 // member data
 public:
@@ -75,31 +74,31 @@ public:
     };
 
 public:
-    Gas(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner):
-    DownLeftCorner(DownLeftCorner),
-    UpRightCorner (UpRightCorner ),
-    perimeter     (2*((UpRightCorner - DownLeftCorner).get_x() + (UpRightCorner - DownLeftCorner).get_y())),
-    square        ((UpRightCorner - DownLeftCorner).get_x() * (UpRightCorner - DownLeftCorner).get_y())
-    {}
+    Gas(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner);
 
     void addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount = 0.25, const Virt_m_per_sec &MaxVelocity = 400);
-    int update(const Virt_sec deltaTime);
-    int draw(sf::Image *image, Light *light, Vision *vision);
+    int  update     (const Virt_sec deltaTime);
+    int  draw       (sf::Image *image, Light *light, Vision *vision) const;
+
+    void piston_up  () { piston_velocity_ = -30; };
+    void piston_down() { piston_velocity_ =  30; };
+    void piston_stop() { piston_velocity_ =   0; };
 
     int getMoleculesNum() const
     {
-        return molecules.size();
+        return molecules_.size();
     }
 
     const gas_group &get_gas_group(Molecule::MOLECULE_TYPE type) const
     {
         assert(type >= 0 && type < Molecule::NUM_MOLECULE_TYPE);
-        return gas_groups[type];
+        return gas_groups_[type];
     }
 
     Kelvin            get_temperature() const { return temperature_; }
     Virt_Newton_per_m get_pressure   () const { return pressure_;    }
     Virt_mole         get_amount     () const { return amount_;      }
+    Virt_Joule        get_energy     () const { return energy_;      }
     Virt_m            get_free_run   () const { return free_run_;    }
 
 private:
@@ -109,19 +108,23 @@ private:
     void calc_free_run   ();
 
 public:
-    const VectVirt_m DownLeftCorner;
-    const VectVirt_m  UpRightCorner;
-    const Virt_m          perimeter;
-    const Virt_m2            square;
-
+    VectVirt_m const UpRightCorner_;
 private:
-    std::vector<Molecule> molecules;
-    gas_group             gas_groups[Molecule::NUM_MOLECULE_TYPE];
+    VectVirt_m      DownLeftCorner_;
+    Virt_m               perimeter_;
+    Virt_m2                 square_;
 
-    Kelvin                temperature_;
-    Virt_Newton_per_m     pressure_; // так как у нас 2D-задача, то и давление будет в Ньютонах на метр.
-    Virt_mole             amount_;
-    Virt_m                free_run_;
+    Virt_m_per_sec piston_velocity_;
+    Virt_Joule     piston_work_;
+
+    std::vector<Molecule> molecules_;
+    gas_group             gas_groups_[Molecule::NUM_MOLECULE_TYPE];
+
+    Kelvin                temperature_ = 0;
+    Virt_Newton_per_m     pressure_    = 0; // так как у нас 2D-задача, то и давление будет в Ньютонах на метр.
+    Virt_mole             amount_      = 0;
+    Virt_Joule            energy_      = 0;
+    Virt_m                free_run_    = 0;
 };
 
 class ProgramManager {

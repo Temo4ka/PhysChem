@@ -11,7 +11,19 @@ static Kelvin kinetic_energy_2_temperature(Virt_Joule kinetic_energy)
     return (2 * kinetic_energy) / (3 * Virt_kB);
 }
 
-//------------------------------------------------------------------------------------------------
+static Virt_m inline calc_perimeter(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner)
+{
+    VectVirt_m diagonal = UpRightCorner - DownLeftCorner;
+    return 2 * (diagonal.get_x() + diagonal.get_y());
+}
+
+static Virt_m2 inline calc_square(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner)
+{
+    VectVirt_m diagonal = UpRightCorner - DownLeftCorner;
+    return diagonal.get_x() * diagonal.get_y();
+}
+
+//==================================================================================================
 
 const Molecule::Molecule_properties Molecule::Molecules_table[] =
 {
@@ -62,7 +74,7 @@ Virt_Joule Molecule::get_kinetic_energy() const
 
 //------------------------------------------------------------------------------------------------
 
-int Molecule::draw(sf::Image *image, Light *light, Vision *vis)
+int Molecule::draw(sf::Image *image, Light *light, Vision *vis) const
 {
     catchNullptr(image, EXIT_FAILURE);
     catchNullptr(light, EXIT_FAILURE);
@@ -91,10 +103,24 @@ int Molecule::draw(sf::Image *image, Light *light, Vision *vis)
     return EXIT_SUCCESS;
 }
 
+//==================================================================================================
+
+Gas::Gas(const VectVirt_m &DownLeftCorner, const VectVirt_m &UpRightCorner):
+UpRightCorner_  (UpRightCorner ),
+DownLeftCorner_ (DownLeftCorner),
+perimeter_      (calc_perimeter(DownLeftCorner_, UpRightCorner_)),
+square_         (calc_square   (DownLeftCorner_, UpRightCorner_)),
+
+piston_velocity_(0),
+piston_work_    (0)
+{}
+
+//------------------------------------------------------------------------------------------------
+
 void Gas::collideMolecules(Molecule &a, Molecule &b)
 {
-    const Virt_m   radius_a = Molecule::Molecules_table[a.type_].radius;
-    const Virt_m   radius_b = Molecule::Molecules_table[b.type_].radius;
+    const Virt_m radius_a = Molecule::Molecules_table[a.type_].radius;
+    const Virt_m radius_b = Molecule::Molecules_table[b.type_].radius;
 
     VectVirt_m dist = a.position_ - b.position_;
     if (dist.len() > radius_a + radius_b)
@@ -128,6 +154,8 @@ void Gas::collideMolecules(Molecule &a, Molecule &b)
     b.velocity_.vect_.y = b_velocity_tmp.get_x() * (tmp_x_axis, main_y_axis) + b_velocity_tmp.get_y() * (tmp_y_axis, main_y_axis);
 }
 
+//------------------------------------------------------------------------------------------------
+
 /* Накапливает в поле pressure изменение импульса.
  * После обработки всех столкновений нужно будет поделить на периметр и дельта-время, чтобы получить давление.
  */
@@ -136,32 +164,33 @@ void Gas::collideWalls(Molecule &molecule)
     const Virt_m radius = Molecule::Molecules_table[molecule.type_].radius;
     const Virt_g mass   = Molecule::Molecules_table[molecule.type_].molar_mass / Virt_Na;
 
-    if (molecule.position_.get_x() < DownLeftCorner.get_x() + radius) {
+    if (molecule.position_.get_x() < DownLeftCorner_.get_x() + radius) {
         molecule.velocity_.vect_.x *= -1;
-        molecule.position_.vect_.x = DownLeftCorner.get_x() + radius;
+        molecule.position_.vect_.x = DownLeftCorner_.get_x() + radius;
 
         pressure_ += 2 * mass * fabs(molecule.velocity_.get_x());
     }
 
-    if (molecule.position_.get_x() > UpRightCorner.get_x() - radius) {
+    if (molecule.position_.get_x() > UpRightCorner_.get_x() - radius) {
         molecule.velocity_.vect_.x *= -1;
-        molecule.position_.vect_.x = UpRightCorner.get_x() - radius;
+        molecule.position_.vect_.x = UpRightCorner_.get_x() - radius;
 
         pressure_ += 2 * mass * fabs(molecule.velocity_.get_x());
     }
 
-    if (molecule.position_.get_y() > UpRightCorner.get_y() - radius) {
+    if (molecule.position_.get_y() > UpRightCorner_.get_y() - radius) {
         molecule.velocity_.vect_.y *= -1;
-        molecule.position_.vect_.y = UpRightCorner.get_y() - radius;
+        molecule.position_.vect_.y = UpRightCorner_.get_y() - radius;
 
         pressure_ += 2 * mass * fabs(molecule.velocity_.get_y());
     }
 
-    if (molecule.position_.get_y() < DownLeftCorner.get_y() + radius) {
-        molecule.velocity_.vect_.y *= -1;
-        molecule.position_.vect_.y = DownLeftCorner.get_y() + radius;
+    // piston
+    if (molecule.position_.get_y() < DownLeftCorner_.get_y() + radius) {
+        pressure_ += 2 * mass * fabs(molecule.velocity_.get_y() - piston_velocity_);
 
-        pressure_ += 2 * mass * fabs(molecule.velocity_.get_y());
+        molecule.velocity_.vect_.y = -molecule.velocity_.get_y() + 2*piston_velocity_;
+        molecule.position_.vect_.y = DownLeftCorner_.get_y() + radius;
     }
 }
 
@@ -169,42 +198,39 @@ void Gas::collideWalls(Molecule &molecule)
 
 void Gas::calc_temperature()
 {
-    Virt_Joule kinetic_energy = 0.0;
+    energy_ = 0.0;
 
     for (unsigned type = 0; type < Molecule::NUM_MOLECULE_TYPE; ++type)
     {
-        gas_groups[type].kinetic_energy = 0.0;
-        gas_groups[type].temperature    = 0.0;
+        gas_groups_[type].kinetic_energy = 0.0;
+        gas_groups_[type].temperature    = 0.0;
     }
 
-    for (auto &curMolecule : molecules)
+    for (auto &curMolecule : molecules_)
     {
         Virt_Joule cur_kinetic_energy = curMolecule.get_kinetic_energy();
 
-        kinetic_energy += cur_kinetic_energy;
-        gas_groups[curMolecule.type_].kinetic_energy += cur_kinetic_energy;
+        energy_ += cur_kinetic_energy;
+        gas_groups_[curMolecule.type_].kinetic_energy += cur_kinetic_energy;
     }
 
-    kinetic_energy /= molecules.size();
-    temperature_ = kinetic_energy_2_temperature(kinetic_energy);
+    temperature_ = kinetic_energy_2_temperature(energy_ / molecules_.size());
 
     for (unsigned type = 0; type < Molecule::NUM_MOLECULE_TYPE; ++type)
     {
-        gas_groups[type].kinetic_energy /= (gas_groups[type].amount * Virt_Na);
-        gas_groups[type].temperature     = kinetic_energy_2_temperature(gas_groups[type].kinetic_energy);
+        gas_groups_[type].kinetic_energy /= (gas_groups_[type].amount * Virt_Na);
+        gas_groups_[type].temperature     = kinetic_energy_2_temperature(gas_groups_[type].kinetic_energy);
     }
 }
-
-//----------------------------------------------------------------------------------------------------------------------------------------
 
 void Gas::calc_free_run()
 {
     free_run_ = 0.0;
 
-    for (auto &curMolecule : molecules)
+    for (auto &curMolecule : molecules_)
         free_run_ += curMolecule.free_run_;
 
-    free_run_ /= molecules.size();
+    free_run_ /= molecules_.size();
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------
@@ -212,31 +238,41 @@ void Gas::calc_free_run()
 void Gas::addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount, const Virt_m_per_sec &MaxVelocity)
 {
     amount_ += amount;
-    gas_groups[type].amount += amount;
+    gas_groups_[type].amount += amount;
     for (double cnt = 0; cnt < amount * Virt_Na; ++cnt)
-        molecules.emplace_back(type, DownLeftCorner, UpRightCorner, MaxVelocity);
+        molecules_.emplace_back(type, DownLeftCorner_, UpRightCorner_, MaxVelocity);
 }
 
-int Gas::update(const Virt_sec deltaTime) {
-    for (auto& curMolecule : molecules)
-        curMolecule.move(deltaTime);
+//------------------------------------------------------------------------------------------------
 
-    for (int first_idx = 0; first_idx < molecules.size(); first_idx++) {
-        for (int second_idx = first_idx + 1; second_idx < molecules.size(); second_idx++) {
-            collideMolecules(molecules[first_idx], molecules[second_idx]);
+int Gas::update(const Virt_sec deltaTime) {
+    for (auto& curMolecule : molecules_)
+        curMolecule.move(deltaTime);
+    DownLeftCorner_.vect_.y += piston_velocity_ * deltaTime;
+
+    perimeter_ = calc_perimeter(DownLeftCorner_, UpRightCorner_);
+    square_    = calc_square   (DownLeftCorner_, UpRightCorner_);
+
+    for (int first_idx = 0; first_idx < molecules_.size(); first_idx++) {
+        for (int second_idx = first_idx + 1; second_idx < molecules_.size(); second_idx++) {
+            collideMolecules(molecules_[first_idx], molecules_[second_idx]);
         }
-        collideWalls(molecules[first_idx]);
+        collideWalls(molecules_[first_idx]);
     }
 
-    pressure_ /= (1000 /* Virt_g to Virt_kg */ * perimeter * deltaTime);
+    pressure_    /= (1000 /* Virt_g to Virt_kg */ * perimeter_ * deltaTime);
+    piston_work_ += pressure_ * piston_velocity_ * (UpRightCorner_ - DownLeftCorner_).get_x() * deltaTime;
+
     calc_temperature();
     calc_free_run();
 
     return EXIT_SUCCESS;
 }
 
-int Gas::draw(sf::Image *image, Light *light, Vision *vision) {
-    for (auto curMolecule : molecules)
+//------------------------------------------------------------------------------------------------
+
+int Gas::draw(sf::Image *image, Light *light, Vision *vision) const {
+    for (auto curMolecule : molecules_)
         curMolecule.draw(image, light, vision);
 
     return EXIT_SUCCESS;
