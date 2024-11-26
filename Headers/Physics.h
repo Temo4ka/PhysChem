@@ -300,6 +300,9 @@ namespace Units
 
     SCALAR_PHYS_2_VIRT(Joule_per_mole_Kelvin, detail::JOULE_UNIT / detail::MOLE_UNIT)
 
+    extern const Phys_Joule_per_mole_Kelvin Phys_R;
+    extern const Virt_Joule_per_mole_Kelvin Virt_R;
+
     //--------------------------------------------------------------------------------------------------
 
     TYPEDEF_VECTOR(Phys_Newton)
