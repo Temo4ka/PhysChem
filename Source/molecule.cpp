@@ -300,21 +300,27 @@ int ProgramManager::update(const double deltaTime)
         "===================\n"
         "MEASUREMENTS (virtual):\n\n"
 
+        "nu = %lf моль\n"
         "T  = %lf K\n"
         "P  = %lf H/м\n"
         "/\\ = %lf м\n"
-        "Ek = %lf Дж\n\n",
+        "Ek = %lf Дж\n\n"
 
+        "PS/nuRT = %lf\n\n",
+
+        gas.get_amount().val_,
         gas.get_temperature().val_,
         gas.get_pressure   ().val_,
         gas.get_free_run   ().val_,
-        temperature_2_kinetic_energy(gas.get_temperature()).val_);
+        temperature_2_kinetic_energy(gas.get_temperature()).val_,
+
+        (gas.get_pressure() * gas.square) / (gas.get_amount() * Virt_R * gas.get_temperature()));
 
     printf("per molecule types:\n");
     for (unsigned type = 0; type < Molecule::NUM_MOLECULE_TYPE; ++type)
     {
         printf(
-            "%2u: Nu = %lf mole, T = %lf К, Ek = %lf Дж\n",
+            "%2u: nu = %lf моль, T = %lf К, Ek = %lf Дж\n",
 
             type,
             gas.get_gas_group((Molecule::MOLECULE_TYPE) type).amount.val_,
