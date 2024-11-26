@@ -211,6 +211,7 @@ void Gas::calc_free_run()
 
 void Gas::addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount, const Virt_m_per_sec &MaxVelocity)
 {
+    amount_ += amount;
     gas_groups[type].amount += amount;
     for (double cnt = 0; cnt < amount * Virt_Na; ++cnt)
         molecules.emplace_back(type, DownLeftCorner, UpRightCorner, MaxVelocity);
