@@ -23,11 +23,6 @@ static Virt_m2 inline calc_square(const VectVirt_m &DownLeftCorner, const VectVi
     return diagonal.get_x() * diagonal.get_y();
 }
 
-static Virt_Joule temperature_2_kinetic_energy(Kelvin temperature)
-{
-    return (3.0/2.0) * Virt_kB * temperature;
-}
-
 //==================================================================================================
 
 const Molecule::Molecule_properties Molecule::Molecules_table[] =
@@ -303,8 +298,10 @@ int ProgramManager::update(const double deltaTime)
         "nu = %lf моль\n"
         "T  = %lf K\n"
         "P  = %lf H/м\n"
-        "/\\ = %lf м\n"
-        "Ek = %lf Дж\n\n"
+        "/\\ = %lf м\n\n"
+
+        "U        = %lf Дж\n"
+        "A_piston = %lf Дж\n\n"
 
         "PS/nuRT = %lf\n\n",
 
@@ -312,9 +309,11 @@ int ProgramManager::update(const double deltaTime)
         gas.get_temperature().val_,
         gas.get_pressure   ().val_,
         gas.get_free_run   ().val_,
-        temperature_2_kinetic_energy(gas.get_temperature()).val_,
 
-        (gas.get_pressure() * gas.square) / (gas.get_amount() * Virt_R * gas.get_temperature()));
+        gas.get_energy     ().val_,
+        gas.get_piston_work().val_,
+
+        (gas.get_pressure() * gas.get_square()) / (gas.get_amount() * Virt_R * gas.get_temperature()));
 
     printf("per molecule types:\n");
     for (unsigned type = 0; type < Molecule::NUM_MOLECULE_TYPE; ++type)
