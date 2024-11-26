@@ -228,7 +228,7 @@ int Gas::update(const Virt_sec deltaTime) {
         collideWalls(molecules[first_idx]);
     }
 
-    pressure_ /= (perimeter * deltaTime);
+    pressure_ /= (1000 /* Virt_g to Virt_kg */ * perimeter * deltaTime);
     calc_temperature();
     calc_free_run();
 
