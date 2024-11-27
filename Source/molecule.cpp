@@ -300,8 +300,7 @@ int ProgramManager::update(const double deltaTime)
         "P  = %lf H/м\n"
         "/\\ = %lf м\n\n"
 
-        "U        = %lf Дж\n"
-        "A_piston = %lf Дж\n\n"
+        "U - A_piston = %lf Дж\n\n"
 
         "PS/nuRT = %lf\n\n",
 
@@ -310,8 +309,7 @@ int ProgramManager::update(const double deltaTime)
         gas.get_pressure   ().val_,
         gas.get_free_run   ().val_,
 
-        gas.get_energy     ().val_,
-        gas.get_piston_work().val_,
+        (gas.get_energy() - gas.get_piston_work()).val_,
 
         (gas.get_pressure() * gas.get_square()) / (gas.get_amount() * Virt_R * gas.get_temperature()));
 
@@ -319,7 +317,7 @@ int ProgramManager::update(const double deltaTime)
     for (unsigned type = 0; type < Molecule::NUM_MOLECULE_TYPE; ++type)
     {
         printf(
-            "%2u: nu = %lf моль, T = %lf К, Ek = %lf Дж\n",
+            "%2u: nu = %lf моль, T = %lf К, <Ek> = %lf Дж\n",
 
             type,
             gas.get_gas_group((Molecule::MOLECULE_TYPE) type).amount.val_,
