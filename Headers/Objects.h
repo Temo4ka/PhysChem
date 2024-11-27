@@ -98,8 +98,12 @@ public:
     Kelvin            get_temperature() const { return temperature_; }
     Virt_Newton_per_m get_pressure   () const { return pressure_;    }
     Virt_mole         get_amount     () const { return amount_;      }
-    Virt_Joule        get_energy     () const { return energy_;      }
     Virt_m            get_free_run   () const { return free_run_;    }
+
+    Virt_Joule        get_energy     () const { return energy_;      }
+    Virt_Joule        get_piston_work() const { return piston_work_; }
+
+    Virt_m2           get_square     () const { return square_;      }
 
 private:
     void collideMolecules(Molecule &a, Molecule &b);
