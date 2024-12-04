@@ -209,7 +209,6 @@ class Graph {
 class GraphManager {
   public:
     enum GraphTypes {
-        PRESSURE,
         PS_nuRT,
         E_Ap
     };
@@ -241,7 +240,6 @@ class GraphManager {
   private:
 
     std::vector<Graph> graphs = {
-        Graph("Pressure", "time", "press, N/m", 100, 100, Graph::GraphColors()),
         Graph("PS/nuRT", "time", "PS/nuRT", 100, 10, Graph::GraphColors()),
         Graph("E-Ap", "time", "E, J", 100, 15000, Graph::GraphColors()),
     };

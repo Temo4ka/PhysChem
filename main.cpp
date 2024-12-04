@@ -85,7 +85,6 @@ int main()
         double PS_nuRT = (manager.gas.get_pressure() * manager.gas.get_square())
                     / (manager.gas.get_amount() * Virt_R * manager.gas.get_temperature());
 
-        graphManager.update(GraphManager::GraphTypes::PRESSURE, time, (int) manager.gas.get_pressure().val_);
         graphManager.update(GraphManager::GraphTypes::PS_nuRT, time, PS_nuRT);
         graphManager.update(GraphManager::GraphTypes::E_Ap, time, (manager.gas.get_energy() - manager.gas.get_piston_work()).val_);
 
