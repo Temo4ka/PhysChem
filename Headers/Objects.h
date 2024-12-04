@@ -182,7 +182,7 @@ class Graph {
 
     ~Graph() {}
 
-    void update(const double deltaTime, const int value);
+    void update(const double deltaTime, const double value);
 
     void drawBase(const Vect &position, const Vect &size, sf::Image *image, const sf::Font &font, std::vector<sf::Text> &textToDraw);
 
@@ -197,7 +197,7 @@ class Graph {
     std::string legendX;
     std::string legendY;
 
-    int curY;
+    double curY;
     int curX;
 
     const int MAX_X;
@@ -210,9 +210,8 @@ class GraphManager {
   public:
     enum GraphTypes {
         PRESSURE,
-        H,
-        N,
-        F
+        PS_nuRT,
+        E_Ap
     };
 
     GraphManager(const Vect &LeftUpperCorner_, const Vect &RightLowerCorner_):
@@ -221,7 +220,7 @@ class GraphManager {
     {}
 
 
-    void update(const GraphTypes type, const double deltaTime, const int value) { graphs[type].update(deltaTime, value); }
+    void update(const GraphTypes type, const double deltaTime, const double value) { graphs[type].update(deltaTime, value); }
 
     void draw(sf::Image *image) {
         Vect size = RightLowerCorner - LeftUpperCorner;
@@ -243,12 +242,8 @@ class GraphManager {
 
     std::vector<Graph> graphs = {
         Graph("Pressure", "time", "press, N/m", 100, 100, Graph::GraphColors()),
-        Graph("H", "time", "Ek, J", 100, 40000, Graph::GraphColors(GRAPH_BACKGROUND_COLOR,
-                                                            GRAPH_LEGEND_COLOR, Molecule::Molecules_table[Molecule::H].color)),
-        Graph("N", "time", "Ek, J", 100, 40000, Graph::GraphColors(GRAPH_BACKGROUND_COLOR,
-                                                            GRAPH_LEGEND_COLOR, Molecule::Molecules_table[Molecule::N].color)),
-        Graph("F", "time", "Ek, J", 100, 40000, Graph::GraphColors(GRAPH_BACKGROUND_COLOR,
-                                                            GRAPH_LEGEND_COLOR, Molecule::Molecules_table[Molecule::F].color)),
+        Graph("PS/nuRT", "time", "PS/nuRT", 100, 10, Graph::GraphColors()),
+        Graph("E-Ap", "time", "E, J", 100, 40, Graph::GraphColors()),
     };
 
     Vect LeftUpperCorner;

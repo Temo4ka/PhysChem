@@ -82,10 +82,12 @@ int main()
         light.rotate(time, Vect3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 100));
         manager.update(time);
 
+        double PS_nuRT = (manager.gas.get_pressure() * manager.gas.get_square())
+                    / (manager.gas.get_amount() * Virt_R * manager.gas.get_temperature());
+
         graphManager.update(GraphManager::GraphTypes::PRESSURE, time, (int) manager.gas.get_pressure().val_);
-        graphManager.update(GraphManager::GraphTypes::H, time, (int) manager.gas.get_gas_group(Molecule::H).kinetic_energy.val_);
-        graphManager.update(GraphManager::GraphTypes::N, time, (int) manager.gas.get_gas_group(Molecule::N).kinetic_energy.val_);
-        graphManager.update(GraphManager::GraphTypes::F, time, (int) manager.gas.get_gas_group(Molecule::F).kinetic_energy.val_);
+        graphManager.update(GraphManager::GraphTypes::PS_nuRT, time, PS_nuRT);
+        graphManager.update(GraphManager::GraphTypes::E_Ap, time, (manager.gas.get_energy() - manager.gas.get_piston_work()).val_);
 
         graphManager.draw(&graphCanvas);
         buttonManager.draw(&canvas, &light, &vision);

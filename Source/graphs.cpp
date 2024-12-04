@@ -30,7 +30,7 @@ void Graph::drawBase(const Vect &position, const Vect &size, sf::Image *image, c
     showAllText(position, size, textToDraw, font);
 }
 
-void Graph::update(const double deltaTime, const int value) {
+void Graph::update(const double deltaTime, const double value) {
     timer -= deltaTime;
     curY = value;
 }
@@ -43,8 +43,10 @@ void Graph::draw(const Vect &position, const Vect &size, sf::Image *image) {
     if (curX > position.x + size.x)
         curX = position.x + size.x / 5 + 1;
 
-    for (int y = position.y; y < position.y + 4 * size.y / 5; y++) {
-        if (y < position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y))
+    int graphY = double(double(size.y) * 4.0 / 5.0 - curY * 4.0 * double(size.y) / (5.0 * double(MAX_Y)));
+
+    for (int y = position.y; y < position.y + 4.0 * size.y / 5.0; y++) {
+        if (y < position.y + graphY)
             image -> setPixel(curX, y, colorScheme.GRAPH_BACKGROUND_COLOR);
         else if (y >= position.y)
             image -> setPixel(curX, y,colorScheme.GRAPH_DIAGRAM_COLOR);
@@ -53,11 +55,11 @@ void Graph::draw(const Vect &position, const Vect &size, sf::Image *image) {
     for (int x = position.x; x < position.x + size.x; x++)
         image -> setPixel(x, position.y, colorScheme.GRAPH_LEGEND_COLOR);
 
-    for (int y = position.y; y < position.y + 4 * size.y / 5; y++) 
+    for (int y = position.y; y < position.y + 4.0 * size.y / 5.0; y++) 
         image -> setPixel(curX + 1, y, colorScheme.GRAPH_LEGEND_COLOR);
 
-    if (position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y) > 0 && position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y) > position.y)
-        image -> setPixel(curX, position.y + size.y * 4 / 5 - curY * 4 * size.y / (5 * MAX_Y), colorScheme.GRAPH_LEGEND_COLOR);
+    if (position.y + graphY > 0 && position.y + graphY > position.y)
+        image -> setPixel(curX, position.y + graphY, colorScheme.GRAPH_LEGEND_COLOR);
 }
 
 
