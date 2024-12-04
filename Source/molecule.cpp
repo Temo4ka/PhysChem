@@ -113,7 +113,9 @@ square_         (calc_square   (DownLeftCorner_, UpRightCorner_)),
 
 piston_velocity_(0),
 piston_work_    (0)
-{}
+{
+    piston_down();
+}
 
 //------------------------------------------------------------------------------------------------
 
@@ -248,7 +250,12 @@ void Gas::addMolecule(const Molecule::MOLECULE_TYPE type, const Virt_mole amount
 int Gas::update(const Virt_sec deltaTime) {
     for (auto& curMolecule : molecules_)
         curMolecule.move(deltaTime);
+
     DownLeftCorner_.vect_.y += piston_velocity_ * deltaTime;
+    if ((UpRightCorner_ - DownLeftCorner_).get_y() < 30)
+        piston_up();
+    else if ((DownLeftCorner_.get_y() < 30))
+        piston_down();
 
     perimeter_ = calc_perimeter(DownLeftCorner_, UpRightCorner_);
     square_    = calc_square   (DownLeftCorner_, UpRightCorner_);
