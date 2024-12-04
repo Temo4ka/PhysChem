@@ -243,7 +243,7 @@ class GraphManager {
     std::vector<Graph> graphs = {
         Graph("Pressure", "time", "press, N/m", 100, 100, Graph::GraphColors()),
         Graph("PS/nuRT", "time", "PS/nuRT", 100, 10, Graph::GraphColors()),
-        Graph("E-Ap", "time", "E, J", 100, 40, Graph::GraphColors()),
+        Graph("E-Ap", "time", "E, J", 100, 20000, Graph::GraphColors()),
     };
 
     Vect LeftUpperCorner;
